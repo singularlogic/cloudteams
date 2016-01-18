@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Login &mdash; SPRING-BOOT-SKELETON</title>
+
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />	
+        <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+        <!-- CSS import -->
+        <link href="http://cdn.jsdelivr.net/webjars/bootstrap/3.3.5/css/bootstrap.min.css" th:href="@{/webjars/bootstrap/3.3.5/css/bootstrap.min.css}" rel="stylesheet" media="screen" />
+        <link rel="stylesheet" href="../static/css/dashboard.css" th:href="@{css/dashboard.css}" />
+    </head>
+    <body>
+
+        <div class="container">
+
+            <img src="images/cloudteams.png" width="400px" max-width="100vw" th:src="@{images/sbs-logo.png}" />
+
+            <!-- Login form -->
+            <form role="form" th:action="@{/login}" method="post" class="login-form" autocomplete="off">
+                <input th:if="${_csrf}" type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
+                <div th:if="${param.error}" class="alert alert-danger" role="alert">Wrong username or password.</div>
+                <div th:if="${new_registration}" class="alert alert-success" role="alert"><p th:text="${new_registration}"></p></div>
+
+                <h5 class="heading">Log in with your account</h5>
+
+                <label for="username" class="sr-only">Username</label>
+                <input type="text" id="username" name="username" class="form-control" placeholder="Email address" />
+
+                <label for="password" class="sr-only">Password</label>
+                <input type="password" id="password" name="password" class="form-control" placeholder="Password"  />
+
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" value="remember-me" id="remember-me" /> Stay signed in
+                    </label>
+                </div>
+
+                <input type="submit" value="Sign in" class="btn btn-lg btn-danger btn-block"/>
+                <input type="submit" value="Forgot password?" class="btn btn-link"/>
+            </form>
+
+        </div>
+
+        <!-- JS import -->
+        <script src="http://cdn.jsdelivr.net/webjars/jquery/2.1.4/jquery.min.js" th:src="@{/webjars/jquery/2.1.4/jquery.min.js}"></script>
+
+    </body>
+</html>

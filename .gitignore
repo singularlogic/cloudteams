@@ -1,0 +1,11 @@
+target
+dist
+nbproject
+.idea
+*.directory
+*.iml
+.DS_Store
+*.epoch
+.lck
+*.log
+nb-configuration.xml
