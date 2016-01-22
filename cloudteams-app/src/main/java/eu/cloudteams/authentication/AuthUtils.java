@@ -8,6 +8,7 @@ import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import org.joda.time.DateTime;
+import org.springframework.beans.factory.annotation.Value;
 
 /**
  *
@@ -16,7 +17,11 @@ import org.joda.time.DateTime;
 public class AuthUtils {
 
     private static final JWSHeader JWT_HEADER = new JWSHeader(JWSAlgorithm.HS256);
-    private static final String TOKEN_SECRET = "aliceinwonderland";
+
+    @Value("${token.secret}")
+    private static String TOKEN_SECRET;
+    
+//    private static final String TOKEN_SECRET = "thecakeisalie";
     public static final String AUTH_HEADER_KEY = "Authorization";
 
     /**
