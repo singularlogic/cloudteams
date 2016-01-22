@@ -1,5 +1,6 @@
 package eu.cloudteams.repository.domain;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
@@ -63,6 +64,7 @@ public class User implements Serializable {
     @NotNull
     @Column(name = "isFirstLogin")
     private boolean isFirstLogin = true;
+    @JsonManagedReference
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "userId")
     private UserRole userRole;
 

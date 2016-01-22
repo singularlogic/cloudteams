@@ -1,5 +1,6 @@
 package eu.cloudteams.repository.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -32,6 +33,7 @@ public class UserRole implements Serializable {
     @Size(min = 1, max = 250)
     @Column(name = "name")
     private String name;
+    @JsonBackReference
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     @OneToOne(optional = false)
     private User userId;

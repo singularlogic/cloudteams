@@ -77,11 +77,11 @@
         </dependency>     
         
            
-        <dependency>
+        <!--        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
             <version>${org.springframework.boot}</version>
-        </dependency>   
+        </dependency>   -->
 
         <!-- Mysql Driver -->
         <dependency>
@@ -136,6 +136,20 @@
             <version>${org.springframework.boot}</version>
             <optional>true</optional>
         </dependency>
+        
+        
+        <!-- JWT Library -->
+        <dependency>
+            <groupId>com.nimbusds</groupId>
+            <artifactId>nimbus-jose-jwt</artifactId>
+            <version>3.1.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
+            <version>2.7</version>
+        </dependency>
 
         <!-- WEBJARS -->
         <dependency>
@@ -143,11 +157,36 @@
             <artifactId>bootstrap</artifactId>
             <version>3.3.5</version>
         </dependency>
+        
         <dependency>
             <groupId>org.webjars</groupId>
             <artifactId>jquery</artifactId>
             <version>2.1.4</version>
         </dependency>
+        
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>angularjs</artifactId>
+            <version>1.4.7</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>angular-ui-router</artifactId>
+            <version>0.2.15</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>angular-toastr</artifactId>
+            <version>1.5.0</version>
+        </dependency>
+   
+        <!--           <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>angular-router</artifactId>
+            <version>0.2.15</version>
+        </dependency>-->
    
     </dependencies>
     <build>
