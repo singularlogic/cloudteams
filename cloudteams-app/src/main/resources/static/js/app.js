@@ -2,20 +2,20 @@ var widget = angular.module('widget', ['ngResource', 'ngMessages', 'ngAnimate', 
         .config(function ($stateProvider, $urlRouterProvider, $authProvider) {
             $stateProvider
                     .state('home', {
-                        url: '/',
+//                        url: '/',
                         controller: 'HomeCtrl',
                         templateUrl: null
                     })
                     .state('login', {
-                        url: '/login',
-                        templateUrl: 'views/remote-data',
+//                        url: '/login',
+                        templateUrl: 'templates/remote-data.html',
                         controller: 'LoginCtrl',
                         resolve: {
                             skipIfLoggedIn: skipIfLoggedIn
                         }
                     });
 
-            $urlRouterProvider.otherwise('/');
+//            $urlRouterProvider.otherwise('/');
             $authProvider.github({
                 clientId: 'fdd1aeb4d0737dc97652'
             });
