@@ -82,17 +82,6 @@ widget.controller('LoginCtrl', function ($scope, $location, $auth, toastr) {
 });
 
 
-
-
 widget.controller('HomeCtrl', function ($scope, $http) {
     console.log("Home contoller is loaded!");
 });
-
-
-
-
-//    var window_dimensions = "toolbars=no,menubar=no,location=no,scrollbars=yes,resizable=yes,status=yes"
-//    window.opener = self
-//    window.open("https://github.com/login/oauth/authorize?client_id=fdd1aeb4d0737dc97652&scope=user&state=gf8g8fgfggf454&redirect_uri=http://cloudteams.euprojects.net?uid=1", "_blank", window_dimensions);
-//    window.moveTo(0, 0);
-//    window.resizeTo(screen.width, screen.height - 100);
