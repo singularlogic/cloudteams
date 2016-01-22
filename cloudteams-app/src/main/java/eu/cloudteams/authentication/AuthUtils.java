@@ -37,6 +37,7 @@ public class AuthUtils {
         claim.setIssuer(host);
         claim.setIssueTime(DateTime.now().toDate());
         claim.setExpirationTime(DateTime.now().plusDays(14).toDate());
+        System.out.println("Token is: "+ TOKEN_SECRET);
         JWSSigner signer = new MACSigner(TOKEN_SECRET);
         SignedJWT jwt = new SignedJWT(JWT_HEADER, claim);
         jwt.sign(signer);
