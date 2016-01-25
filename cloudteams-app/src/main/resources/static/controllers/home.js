@@ -32,7 +32,9 @@ angular.module('ct-widgets')
                         .then(function () {
                             toastr.success('You have successfully signed in with ' + provider + '!');
                             console.log('2');
-                            $location.path('/');
+                            $state.go('dashboard');
+                            //$location.path('/');
+                            
                         })
                         .catch(function (error) {
                             if (error.error) {
