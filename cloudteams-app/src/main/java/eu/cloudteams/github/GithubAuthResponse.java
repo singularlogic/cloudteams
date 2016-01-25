@@ -8,22 +8,29 @@ import java.util.Optional;
  */
 public final class GithubAuthResponse {
 
-    private final String accessToken;
+    private final String access_token;
     private final String scope;
-    private final String tokenType;
+    private final String token_type;
 
-    private final Optional<GithubException> exception;
+    private  Optional<GithubException> exception = Optional.empty();
 
-    public GithubAuthResponse(String accessToken, String scope, String tokenType, GithubException exception) {
-        this.accessToken = accessToken;
+    public GithubAuthResponse(String access_token, String scope, String token_type, GithubException exception) {
+        this.access_token = access_token;
         this.scope = scope;
-        this.tokenType = tokenType;
+        this.token_type = token_type;
         this.exception = Optional.ofNullable(exception);
+    }
+    
+    
+        public GithubAuthResponse(String access_token, String scope, String token_type) {
+        this.access_token = access_token;
+        this.scope = scope;
+        this.token_type = token_type;
 
     }
 
     public String getAccessToken() {
-        return accessToken;
+        return access_token;
     }
 
     public String getScope() {
@@ -31,7 +38,7 @@ public final class GithubAuthResponse {
     }
 
     public String getTokenType() {
-        return tokenType;
+        return token_type;
     }
 
     public Optional<GithubException> getException() {
