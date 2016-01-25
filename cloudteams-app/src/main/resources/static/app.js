@@ -36,11 +36,20 @@ angular.module('ct-widgets', ['ngResource', 'ngAnimate', 'toastr', 'ui.router', 
 
             $urlRouterProvider.otherwise('/');
 
-            //Set the endpoint of github authentication service
+            // Production endpoint of github authentication service
+//            $authProvider.github({
+//                url: 'http://cloudteams.euprojects.net/api/v1/auth/github',
+//                clientId: '9aababac7a8ec6c9659e'
+//            });
+// 
+            // Developemnt endpoint of github authentication service
             $authProvider.github({
-                url: 'http://cloudteams.euprojects.net/api/v1/auth/github',
-                clientId: '9aababac7a8ec6c9659e'
+                url: 'http://localhost:8080/api/v1/auth/github',
+                clientId: '413dd46351dc0c48f306'
             });
+            
+            
+            
 
             function skipIfLoggedIn($q, $auth) {
                 var deferred = $q.defer();
