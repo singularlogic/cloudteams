@@ -1,61 +1,13 @@
-<!DOCTYPE html>
-<html  ng-app="widget" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
-    <head>
-        <title>Dashboard &mdash; CONCEPT</title>
-
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />	
-        <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-        <!-- Cascade Style Sheets -->
-        <link href="http://cdn.jsdelivr.net/webjars/bootstrap/3.3.5/css/bootstrap.min.css" th:href="@{/webjars/bootstrap/3.3.5/css/bootstrap.min.css}"  rel="stylesheet" media="screen" />
-        <link rel="stylesheet" href="../static/css/dashboard.css" th:href="@{css/dashboard.css}" />
-    </head>
-    <body>
-
-        <div class="container">
-            <img src="images/cloudteams.png" width="400px" max-width="100vw"  />
-            <div class="alert alert-warning">Welcome!</div>
-        </div>
-        <div class="col-md-4 sidebar">
-            <div class="heading">
-                Available Github repositories
-            </div>
-
-            <ul class="nav navbar-nav">
-                <li><a href="/#/">Home</a></li>
-                <li ng-if="isAuthenticated()"><a href="/#/profile">Profile</a></li>
-            </ul>
-            <ul ng-if="!isAuthenticated()" class="nav navbar-nav pull-right">
-                <li><a href="/#/login">Login</a></li>
-                <li><a href="/#/signup">Sign up</a></li>
-            </ul>
-            <ul ng-if="isAuthenticated()" class="nav navbar-nav pull-right">
-                <li><a href="/#/logout">Logout</a></li>
-            </ul>
-
-
-            <div class="text" ui-view="">
-            </div>
-
-
-
-
-        </div>
-
-        <!-- Third-party Libraries -->
-
-        <script src="http://cdn.jsdelivr.net/webjars/angularjs/1.4.7/angular.min.js" th:src="@{/webjars/angularjs/1.4.7/angular.min.js}"></script>
-        <script type="text/javascript" src="js/auth-provider.js"></script>
-        <script src="http://cdn.jsdelivr.net/webjars/angular-ui-router/0.2.15/angular-ui-router.min.js" th:src="@{/webjars/angular-ui-router/0.2.15/angular-ui-router.min.js}"></script>
-        <script src="https://satellizer.herokuapp.com/vendor/angular-animate.js"></script>
-        <script src="https://satellizer.herokuapp.com/vendor/angular-messages.js"></script>
-        <script src="https://satellizer.herokuapp.com/vendor/angular-resource.js"></script>
-        <script src="https://satellizer.herokuapp.com/vendor/angular-sanitize.js"></script>
-        <script src="https://satellizer.herokuapp.com/vendor/angular-toastr.tpls.js"></script>
-
-        <!-- Application Code -->
-        <script type="text/javascript" src="js/app.js"></script>
-
-    </body>
-
-</html>
+<div class="container">
+  <div class="row">
+    <div class="center-form panel">
+      <div class="panel-body">
+        <h3 class="text-center">Github widget</h3>
+        <button class="btn btn-block btn-github" ng-click="authenticate('github')">
+          <i class="ion-social-github"></i> Synchronize with your GitHub account
+        </button>
+        DASHBOARD (stargazers, forks, issues, etc)
+      </div>
+    </div>
+  </div>
+</div>

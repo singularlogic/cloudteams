@@ -13,7 +13,12 @@ angular.module('ct-widgets', ['ngResource', 'ngAnimate', 'toastr', 'ui.router', 
                         url: '/logout',
                         template: null,
                         controller: 'LogoutCtrl'
+                    })
+                    
+                    .state('dashboard', {
+                        template: 'templates/dashboard.html'
                     });
+                    
 //                    .state('profile', {
 //                        url: '/profile',
 //                        templateUrl: 'partials/profile.html',
@@ -45,10 +50,8 @@ angular.module('ct-widgets', ['ngResource', 'ngAnimate', 'toastr', 'ui.router', 
                 var deferred = $q.defer();
                 if ($auth.isAuthenticated()) {
                     deferred.resolve();
-                    console.log('is authenticated');
                 } else {
                     $location.path('/login');
-                    console.log('is not authenticated');
                 }
                 return deferred.promise;
             }
