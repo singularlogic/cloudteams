@@ -138,6 +138,15 @@
         </dependency>
         
         
+        <!-- JSON library -->
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20151123</version>
+        </dependency>
+
+        
+        
         <!-- JWT Library -->
         <dependency>
             <groupId>com.nimbusds</groupId>
@@ -181,12 +190,6 @@
             <artifactId>angular-toastr</artifactId>
             <version>1.5.0</version>
         </dependency>
-   
-        <!--           <dependency>
-            <groupId>org.webjars</groupId>
-            <artifactId>angular-router</artifactId>
-            <version>0.2.15</version>
-        </dependency>-->
    
     </dependencies>
     <build>

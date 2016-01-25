@@ -3,11 +3,13 @@ package eu.cloudteams.controller;
 import eu.cloudteams.authentication.Token;
 import com.nimbusds.jose.JOSEException;
 import eu.cloudteams.authentication.AuthUtils;
+import eu.cloudteams.github.GithubAuthHandler;
 import eu.cloudteams.repository.domain.User;
 import eu.cloudteams.repository.service.UserService;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -43,6 +45,10 @@ public class RestAPIController {
         } catch (JOSEException ex) {
             Logger.getLogger(RestAPIController.class.getName()).log(Level.SEVERE, null, ex);
         }
+        JSONObject response = new  JSONObject(requestbody);
+        
+        GithubAuthHandler.retrieveAccesToken(response.getString("code"));
+        
         return generatedToken;
     }
 
