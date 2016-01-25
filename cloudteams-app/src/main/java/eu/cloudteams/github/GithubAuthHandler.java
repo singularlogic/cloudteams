@@ -32,8 +32,8 @@ public final class GithubAuthHandler {
                 parameteres.add("code", jsonResponse.get("code"));
                 RestTemplate restTemplate = new RestTemplate();
                 //Make Rest call to fetch AccessToken
-                ResponseEntity<String> accesstokenResponse = restTemplate.postForEntity(GITHUB_API_URL, parameteres, String.class);
-                System.out.println("Body is: " + accesstokenResponse);
+                ResponseEntity<GithubAuthResponse> accesstokenResponse = restTemplate.postForEntity(GITHUB_API_URL, parameteres, GithubAuthResponse.class);
+                System.out.println("Body is: " + accesstokenResponse.getBody().getAccessToken());
                 jsonResponse = new JSONObject(accesstokenResponse.getBody());
             } else {
                 return new GithubAuthResponse(null, null, null, new GithubException("temporary_code_not_received", "Could not get temporart code from GitHub API", null));
