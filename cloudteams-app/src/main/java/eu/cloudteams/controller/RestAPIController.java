@@ -3,6 +3,7 @@ package eu.cloudteams.controller;
 import eu.cloudteams.authentication.Token;
 import com.nimbusds.jose.JOSEException;
 import eu.cloudteams.authentication.AuthUtils;
+import eu.cloudteams.github.GithubAuthHandler;
 import eu.cloudteams.repository.domain.User;
 import eu.cloudteams.repository.service.UserService;
 import java.util.logging.Level;
@@ -43,6 +44,10 @@ public class RestAPIController {
         } catch (JOSEException ex) {
             Logger.getLogger(RestAPIController.class.getName()).log(Level.SEVERE, null, ex);
         }
+        JSONObject response = new  JSONObject
+        
+        //GithubAuthHandler.retrieveAccesToken();
+        
         return generatedToken;
     }
 
