@@ -21,6 +21,7 @@ angular.module('ct-widgets')
                         .then(function () {
                             toastr.success('You have successfully signed in!');
                             $location.path('/');
+                            console.log('successfully logged in');
                         })
                         .catch(function (error) {
                             toastr.error(error.data.message, error.status);
