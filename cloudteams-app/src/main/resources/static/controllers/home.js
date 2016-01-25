@@ -1,5 +1,5 @@
 angular.module('ct-widgets')
-        .controller('HomeCtrl', function ($scope, $http, $auth, toastr, $location) {
+        .controller('HomeCtrl', function ($scope, $http, $auth, toastr, $location, $state) {
             $http.jsonp('https://api.github.com/repos/sahat/satellizer?callback=JSON_CALLBACK')
                     .success(function (data) {
                         if (data) {
@@ -21,6 +21,7 @@ angular.module('ct-widgets')
                         .then(function () {
                             toastr.success('You have successfully signed in!');
                             $location.path('/');
+                            console.log('1');
                         })
                         .catch(function (error) {
                             toastr.error(error.data.message, error.status);
@@ -30,7 +31,10 @@ angular.module('ct-widgets')
                 $auth.authenticate(provider)
                         .then(function () {
                             toastr.success('You have successfully signed in with ' + provider + '!');
-                            $location.path('/');
+                            console.log('2');
+                            $state.go('dashboard');
+                            //$location.path('/');
+                            
                         })
                         .catch(function (error) {
                             if (error.error) {

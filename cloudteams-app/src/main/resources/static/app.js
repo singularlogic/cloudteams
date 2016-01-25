@@ -1,5 +1,5 @@
-angular.module('ct-widgets', ['ngResource', 'ngMessages', 'ngAnimate', 'toastr', 'ui.router', 'satellizer'])
-        .config(function ($stateProvider, $urlRouterProvider, $authProvider) {
+angular.module('ct-widgets', ['ngResource', 'ngAnimate', 'toastr', 'ui.router', 'satellizer'])
+        .config(function ($stateProvider, $urlRouterProvider, $authProvider, $locationProvider) {
             $stateProvider
                     .state('home', {
                         url: '/',
@@ -13,7 +13,18 @@ angular.module('ct-widgets', ['ngResource', 'ngMessages', 'ngAnimate', 'toastr',
                         url: '/logout',
                         template: null,
                         controller: 'LogoutCtrl'
+                    })
+                    
+                    .state('dashboard', {
+                        templateUrl: 'partials/dashboard.html',
+                        controller: 'HomeCtrl'
                     });
+                    
+                    $locationProvider.html5Mode({
+                    enabled: true,
+                    requireBase: false
+                    });
+                    
 //                    .state('profile', {
 //                        url: '/profile',
 //                        templateUrl: 'partials/profile.html',
@@ -35,8 +46,10 @@ angular.module('ct-widgets', ['ngResource', 'ngMessages', 'ngAnimate', 'toastr',
                 var deferred = $q.defer();
                 if ($auth.isAuthenticated()) {
                     deferred.reject();
+                    console.log('3');
                 } else {
                     deferred.resolve();
+                    console.log('4');
                 }
                 return deferred.promise;
             }
@@ -45,8 +58,10 @@ angular.module('ct-widgets', ['ngResource', 'ngMessages', 'ngAnimate', 'toastr',
                 var deferred = $q.defer();
                 if ($auth.isAuthenticated()) {
                     deferred.resolve();
+                    console.log('5');
                 } else {
                     $location.path('/login');
+                    console.log('6');
                 }
                 return deferred.promise;
             }
