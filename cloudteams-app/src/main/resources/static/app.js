@@ -16,7 +16,7 @@ angular.module('ct-widgets', ['ngResource', 'ngAnimate', 'toastr', 'ui.router', 
                     })
                     
                     .state('dashboard', {
-                        templateUrl: 'templates/dashboard.html',
+                        templateUrl: 'partials/dashboard.html',
                         controller: 'HomeCtrl'
                     });
                     
