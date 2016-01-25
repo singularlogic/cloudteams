@@ -20,7 +20,7 @@ Before moving on, make sure you have the required JDK and Maven version.
 
 ## Run the Application
 
-	$ git clone cloudteams.git
+	$ git clone git@github.com:ubitech/cloudteams.git
 	$ cd cloudteams
 	$ mvn clean install
 	$ cd cloudteams-app
