@@ -25,7 +25,19 @@ public final class GithubAuthResponse {
 
     }
 
-    public String getAccessToken() {
+    public void setAccess_token(String access_token) {
+        this.access_token = access_token;
+    }
+
+    public void setScope(String scope) {
+        this.scope = scope;
+    }
+
+    public void setToken_type(String token_type) {
+        this.token_type = token_type;
+    }
+
+    public String getAccess_token() {
         return access_token;
     }
 
@@ -33,9 +45,10 @@ public final class GithubAuthResponse {
         return scope;
     }
 
-    public String getTokenType() {
+    public String getToken_type() {
         return token_type;
     }
+
 
     public Optional<GithubException> getException() {
         return exception;

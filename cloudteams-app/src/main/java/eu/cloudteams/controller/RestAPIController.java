@@ -49,7 +49,7 @@ public class RestAPIController {
         GithubAuthResponse gitAuthResponse = GithubAuthHandler.requestAccesToken(requestbody);
 
         if (gitAuthResponse.isValid()) {
-            restLogger.info("Success get AccessToken: " + gitAuthResponse.getAccessToken());
+            restLogger.info("Success get AccessToken: " + gitAuthResponse.getAccess_token());
         } else {
             restLogger.severe("Fail to get Acess Token reason: " + gitAuthResponse.getException().get().getErrorDesription());
         }
