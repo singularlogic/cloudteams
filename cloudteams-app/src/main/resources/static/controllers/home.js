@@ -21,8 +21,7 @@ angular.module('ct-widgets')
                         .then(function () {
                             toastr.success('You have successfully signed in!');
                             $location.path('/');
-                            console.log('successfully logged in');
-                            $state.go('dashboard');
+                            console.log('1');
                         })
                         .catch(function (error) {
                             toastr.error(error.data.message, error.status);
@@ -32,6 +31,7 @@ angular.module('ct-widgets')
                 $auth.authenticate(provider)
                         .then(function () {
                             toastr.success('You have successfully signed in with ' + provider + '!');
+                            console.log('2');
                             $location.path('/');
                         })
                         .catch(function (error) {

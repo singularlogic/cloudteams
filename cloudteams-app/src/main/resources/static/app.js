@@ -40,8 +40,10 @@ angular.module('ct-widgets', ['ngResource', 'ngAnimate', 'toastr', 'ui.router', 
                 var deferred = $q.defer();
                 if ($auth.isAuthenticated()) {
                     deferred.reject();
+                    console.log('3');
                 } else {
                     deferred.resolve();
+                    console.log('4');
                 }
                 return deferred.promise;
             }
@@ -50,8 +52,10 @@ angular.module('ct-widgets', ['ngResource', 'ngAnimate', 'toastr', 'ui.router', 
                 var deferred = $q.defer();
                 if ($auth.isAuthenticated()) {
                     deferred.resolve();
+                    console.log('5');
                 } else {
                     $location.path('/login');
+                    console.log('6');
                 }
                 return deferred.promise;
             }
