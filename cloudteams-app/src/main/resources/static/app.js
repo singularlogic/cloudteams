@@ -20,7 +20,10 @@ angular.module('ct-widgets', ['ngResource', 'ngAnimate', 'toastr', 'ui.router', 
                         controller: 'HomeCtrl'
                     });
                     
-                    $locationProvider.html5Mode(true);
+                    $locationProvider.html5Mode({
+                    enabled: true,
+                    requireBase: false
+                    });
                     
 //                    .state('profile', {
 //                        url: '/profile',
