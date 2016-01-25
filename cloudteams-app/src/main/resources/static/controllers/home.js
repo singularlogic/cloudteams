@@ -1,5 +1,5 @@
 angular.module('ct-widgets')
-        .controller('HomeCtrl', function ($scope, $http, $auth, toastr, $location) {
+        .controller('HomeCtrl', function ($scope, $http, $auth, toastr, $location,  $state) {
             $http.jsonp('https://api.github.com/repos/sahat/satellizer?callback=JSON_CALLBACK')
                     .success(function (data) {
                         if (data) {
