@@ -51,7 +51,7 @@ public class RestAPIController {
         if (gitAuthResponse.isValid()) {
             restLogger.info("Success get AccessToken: " + gitAuthResponse.getAccess_token());
         } else {
-            restLogger.severe("Fail to get Acess Token reason: " + gitAuthResponse.getException().get().getErrorDesription());
+            restLogger.severe("Fail to get Acess Token reason: " + gitAuthResponse.getError());
         }
 
         return generatedToken;
