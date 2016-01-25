@@ -1,4 +1,4 @@
-angular.module('ct-widgets', ['ngResource', 'ngMessages', 'ngAnimate', 'toastr', 'ui.router', 'satellizer'])
+angular.module('ct-widgets', ['ngResource', 'ngAnimate', 'toastr', 'ui.router', 'satellizer'])
         .config(function ($stateProvider, $urlRouterProvider, $authProvider) {
             $stateProvider
                     .state('home', {
