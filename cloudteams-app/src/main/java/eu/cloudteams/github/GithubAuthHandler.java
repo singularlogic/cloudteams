@@ -20,10 +20,9 @@ public final class GithubAuthHandler {
     public static GithubAuthResponse requestAccesToken(String response) {
 
         GithubAuthResponse authResponse;
-        JSONObject jsonResponse = new JSONObject(response);
 
         try {
-
+            JSONObject jsonResponse = new JSONObject(response);
             //Check if GithHub temporary code is received
             if (jsonResponse.has("code")) {
                 MultiValueMap<String, Object> parameteres = new LinkedMultiValueMap<>();
@@ -34,6 +33,7 @@ public final class GithubAuthHandler {
                 RestTemplate restTemplate = new RestTemplate();
                 //Make Rest call to fetch AccessToken
                 ResponseEntity<String> accesstokenResponse = restTemplate.postForEntity(GITHUB_API_URL, parameteres, String.class);
+                System.out.println("Body is: " + accesstokenResponse);
                 jsonResponse = new JSONObject(accesstokenResponse.getBody());
             } else {
                 return new GithubAuthResponse(null, null, null, new GithubException("temporary_code_not_received", "Could not get temporart code from GitHub API", null));
