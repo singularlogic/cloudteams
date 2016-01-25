@@ -45,6 +45,7 @@ angular.module('ct-widgets', ['ngResource', 'ngMessages', 'ngAnimate', 'toastr',
                 var deferred = $q.defer();
                 if ($auth.isAuthenticated()) {
                     deferred.resolve();
+                    $state.go('home');
                 } else {
                     $location.path('/login');
                 }
