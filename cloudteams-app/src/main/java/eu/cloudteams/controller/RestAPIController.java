@@ -9,6 +9,7 @@ import eu.cloudteams.repository.service.UserService;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -44,9 +45,9 @@ public class RestAPIController {
         } catch (JOSEException ex) {
             Logger.getLogger(RestAPIController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        JSONObject response = new  JSONObject
+        JSONObject response = new  JSONObject(requestbody);
         
-        //GithubAuthHandler.retrieveAccesToken();
+        GithubAuthHandler.retrieveAccesToken(response.getString("code"));
         
         return generatedToken;
     }
