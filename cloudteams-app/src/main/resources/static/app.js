@@ -39,7 +39,7 @@ angular.module('ct-widgets', ['ngResource', 'ngAnimate', 'toastr', 'ui.router', 
             //Set the endpoint of github authentication service
             $authProvider.github({
                 url: 'http://cloudteams.euprojects.net/api/v1/auth/github',
-                clientId: 'fdd1aeb4d0737dc97652'
+                clientId: '9aababac7a8ec6c9659e'
             });
 
             function skipIfLoggedIn($q, $auth) {
