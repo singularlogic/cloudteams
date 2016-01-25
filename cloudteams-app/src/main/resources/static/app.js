@@ -1,5 +1,5 @@
 angular.module('ct-widgets', ['ngResource', 'ngAnimate', 'toastr', 'ui.router', 'satellizer'])
-        .config(function ($stateProvider, $urlRouterProvider, $authProvider) {
+        .config(function ($stateProvider, $urlRouterProvider, $authProvider, $locationProvider) {
             $stateProvider
                     .state('home', {
                         url: '/',
@@ -19,6 +19,8 @@ angular.module('ct-widgets', ['ngResource', 'ngAnimate', 'toastr', 'ui.router', 
                         templateUrl: 'partials/dashboard.html',
                         controller: 'HomeCtrl'
                     });
+                    
+                    $locationProvider.html5Mode(true);
                     
 //                    .state('profile', {
 //                        url: '/profile',
