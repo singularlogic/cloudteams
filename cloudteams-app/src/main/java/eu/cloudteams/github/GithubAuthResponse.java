@@ -1,7 +1,5 @@
 package eu.cloudteams.github;
 
-import java.util.Optional;
-
 /**
  *
  * @author Christos Paraskeva <ch.paraskeva at gmail dot com>
@@ -40,14 +38,6 @@ public final class GithubAuthResponse {
     private String error_description;
     private String error_uri;
 
-//    private Optional<GithubException> exception = Optional.empty();
-//
-//    public GithubAuthResponse(String access_token, String scope, String token_type, GithubException exception) {
-//        this.access_token = access_token;
-//        this.scope = scope;
-//        this.token_type = token_type;
-//        this.exception = Optional.ofNullable(exception);
-//    }
     public GithubAuthResponse() {
 
     }
@@ -76,14 +66,7 @@ public final class GithubAuthResponse {
         return token_type;
     }
 
-//    public Optional<GithubException> getException() {
-//        return exception;
-//    }
     public boolean isValid() {
         return null == error;
     }
-
-//    public void setException(Optional<GithubException> exception) {
-//        this.exception = exception;
-//    }
 }

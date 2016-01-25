@@ -18,9 +18,7 @@ public final class GithubAuthHandler {
     private static final String GITHUB_API_URL = "https://github.com/login/oauth/access_token";
 
     public static GithubAuthResponse requestAccesToken(String response) {
-
         GithubAuthResponse authResponse = new GithubAuthResponse();
-
         try {
             JSONObject jsonResponse = new JSONObject(response);
             //Check if GithHub temporary code is received
@@ -33,23 +31,14 @@ public final class GithubAuthHandler {
                 RestTemplate restTemplate = new RestTemplate();
                 //Make Rest call to fetch AccessToken
                 ResponseEntity<GithubAuthResponse> accesstokenResponse = restTemplate.postForEntity(GITHUB_API_URL, parameteres, GithubAuthResponse.class);
-//                System.out.println("Body is: " + accesstokenResponse.getBody().getAccess_token());
-//                jsonResponse = new JSONObject(accesstokenResponse.getBody());
                 return accesstokenResponse.getBody();
-
-            } else {
-                authResponse.setError("Could not get temporary code from GitHub API");
             }
-            //Check if access_token is fetched
-//            if (jsonResponse.has("access_token")) {
-//                return new GithubAuthResponse(jsonResponse.getString("access_token"), jsonResponse.getString("scope"), jsonResponse.getString("token_type"), null);
-//            }
-//
-//            return new GithubAuthResponse(null, null, null, new GithubException(jsonResponse.getString("error"), jsonResponse.getString("error_description"), jsonResponse.getString("error_uri")));
+            authResponse.setError("GitHubException");
+            authResponse.setError_description("Could not get temporary code from GitHub API");
         } catch (JSONException ex) {
-            authResponse.setError(ex.getMessage());
+            authResponse.setError("JSONException");
+            authResponse.setError_description(ex.getMessage());
         }
         return authResponse;
     }
-
 }
