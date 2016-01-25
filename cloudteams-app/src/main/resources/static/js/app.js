@@ -17,7 +17,7 @@ var widget = angular.module('widget', ['ngResource', 'ngMessages', 'ngAnimate', 
 
 //            $urlRouterProvider.otherwise('/');
             $authProvider.github({
-                clientId: 'fdd1aeb4d0737dc97652'
+                clientId: '9aababac7a8ec6c9659e'
             });
 
 
