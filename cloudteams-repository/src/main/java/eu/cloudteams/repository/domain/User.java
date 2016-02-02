@@ -1,16 +1,12 @@
 package eu.cloudteams.repository.domain;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import java.io.Serializable;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -32,41 +28,23 @@ public class User implements Serializable {
     private Long id;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 250)
+    @Size(min = 0, max = 250)
     @Column(name = "username")
     private String username;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 250)
-    @Column(name = "password")
-    private String password;
-    // @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="Invalid email")//if the field contains email address consider using this annotation to enforce field validation
+    @Size(min = 0, max = 1024)
+    @Column(name = "access_token")
+    private String accessToken;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 250)
-    @Column(name = "email")
-    private String email;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 250)
-    @Column(name = "FirstName")
-    private String firstName;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 250)
-    @Column(name = "LastName")
-    private String lastName;
+    @Size(min = 1, max = 1024)
+    @Column(name = "github_token")
+    private String githubToken;
     @Basic(optional = false)
     @NotNull
     @Column(name = "isActive")
     private boolean isActive;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "isFirstLogin")
-    private boolean isFirstLogin = true;
-    @JsonManagedReference
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "userId")
-    private UserRole userRole;
 
     public User() {
     }
@@ -75,15 +53,12 @@ public class User implements Serializable {
         this.id = id;
     }
 
-    public User(Long id, String username, String password, String email, String firstName, String lastName, boolean isActive, boolean isFirstLogin) {
+    public User(Long id, String username, String accessToken, String githubToken, boolean isActive) {
         this.id = id;
         this.username = username;
-        this.password = password;
-        this.email = email;
-        this.firstName = firstName;
-        this.lastName = lastName;
+        this.accessToken = accessToken;
+        this.githubToken = githubToken;
         this.isActive = isActive;
-        this.isFirstLogin = isFirstLogin;
     }
 
     public Long getId() {
@@ -102,36 +77,20 @@ public class User implements Serializable {
         this.username = username;
     }
 
-    public String getPassword() {
-        return password;
+    public String getAccessToken() {
+        return accessToken;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
     }
 
-    public String getEmail() {
-        return email;
+    public String getGithubToken() {
+        return githubToken;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setGithubToken(String githubToken) {
+        this.githubToken = githubToken;
     }
 
     public boolean getIsActive() {
@@ -142,39 +101,4 @@ public class User implements Serializable {
         this.isActive = isActive;
     }
 
-    public boolean getIsFirstLogin() {
-        return isFirstLogin;
-    }
-
-    public void setIsFirstLogin(boolean isFirstLogin) {
-        this.isFirstLogin = isFirstLogin;
-    }
-
-    public UserRole getUserRole() {
-        return userRole;
-    }
-
-    public void setUserRole(UserRole userRole) {
-        this.userRole = userRole;
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof User)) {
-            return false;
-        }
-        User other = (User) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
-    }
 }

@@ -1,4 +1,4 @@
-package eu.cloudteams.github;
+package eu.cloudteams.util.github;
 
 import org.json.JSONException;
 import org.json.JSONObject;

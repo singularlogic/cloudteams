@@ -1,4 +1,4 @@
-package eu.cloudteams.authentication;
+package eu.cloudteams.authentication.jwt;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

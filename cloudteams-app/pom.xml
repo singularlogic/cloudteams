@@ -77,11 +77,11 @@
         </dependency>     
         
            
-        <!--        <dependency>
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
             <version>${org.springframework.boot}</version>
-        </dependency>   -->
+        </dependency>   
 
         <!-- Mysql Driver -->
         <dependency>
@@ -136,17 +136,8 @@
             <version>${org.springframework.boot}</version>
             <optional>true</optional>
         </dependency>
-        
-        
-        <!-- JSON library -->
-        <dependency>
-            <groupId>org.json</groupId>
-            <artifactId>json</artifactId>
-            <version>20151123</version>
-        </dependency>
 
-        
-        
+       
         <!-- JWT Library -->
         <dependency>
             <groupId>com.nimbusds</groupId>

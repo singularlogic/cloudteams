@@ -14,17 +14,17 @@ angular.module('ct-widgets', ['ngResource', 'ngAnimate', 'toastr', 'ui.router', 
                         template: null,
                         controller: 'LogoutCtrl'
                     })
-                    
+
                     .state('dashboard', {
                         templateUrl: 'partials/dashboard.html',
                         controller: 'HomeCtrl'
                     });
-                    
-                    $locationProvider.html5Mode({
-                    enabled: true,
-                    requireBase: false
-                    });
-                    
+
+            $locationProvider.html5Mode({
+                enabled: true,
+                requireBase: false
+            });
+
 //                    .state('profile', {
 //                        url: '/profile',
 //                        templateUrl: 'partials/profile.html',
@@ -39,17 +39,16 @@ angular.module('ct-widgets', ['ngResource', 'ngAnimate', 'toastr', 'ui.router', 
             // Production endpoint of github authentication service
 //            $authProvider.github({
 //                url: 'http://cloudteams.euprojects.net/api/v1/auth/github',
+//                scope: ['user', 'public_repo', 'repo', 'repo:status'],
 //                clientId: '9aababac7a8ec6c9659e'
 //            });
 // 
             // Developemnt endpoint of github authentication service
             $authProvider.github({
                 url: 'http://localhost:8080/api/v1/auth/github',
+                scope: ['user', 'public_repo', 'repo', 'repo:status'],
                 clientId: '413dd46351dc0c48f306'
             });
-            
-            
-            
 
             function skipIfLoggedIn($q, $auth) {
                 var deferred = $q.defer();
