@@ -37,6 +37,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/fonts/**").permitAll()
                 .antMatchers("/images/**").permitAll()
                 .antMatchers("/webjars/**").permitAll()
+                .antMatchers("/**").permitAll()
                 //Rest service for requesting Access Token
                 .antMatchers("/api/v1/auth/**").permitAll()
                 // All other request need to be authenticated
