@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.springframework.org/security/tags">
+<head>
+    <title>Welcome &mdash; CLOUDTEAMS</title>
+
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
+
+    <link href="http://cdn.jsdelivr.net/webjars/bootstrap/3.3.6/css/bootstrap.min.css"
+          th:href="@{/webjars/bootstrap/3.3.6/css/bootstrap.min.css}"
+          rel="stylesheet" media="screen"/>
+    <link href="http://cdn.jsdelivr.net/webjars/org.webjars.bower/open-iconic/1.1.1/font/css/open-iconic-bootstrap.css"
+          th:href="@{/webjars/open-iconic/1.1.1/font/css/open-iconic-bootstrap.css}"
+          rel="stylesheet" media="screen"/>
+
+    <!--<link rel="stylesheet" href="http://cloudteams.booreiland.nl/css/global-dev.css" />-->
+    <link rel="stylesheet" href="../static/css/dashboard.css" th:href="@{css/dashboard.css}"/>
+</head>
+<body>
+
+<div class="container">
+
+    <div class="page-header">
+        <h1>CLOUDTEAMS Dashboard</h1>
+        <p class="lead">This sample app will demonstrate remote template loading.</p>
+    </div>
+
+    <div class="row">
+        <div class="col-md-3">
+            <h4>SIDEBAR LINKS</h4>
+            <p class="text-muted">CODE STATISTICS</p>
+            <button id="btn-oauth" onclick="authorizeGithub()" class="btn btn-link">Authorize Github</button><br/>
+
+        </div>
+        <div class="col-md-9">
+            <h4>LOADED CONTENT</h4>
+            <div id="ct-content"></div>
+        </div>
+    </div>
+
+</div>
+
+<script src="http://cdn.jsdelivr.net/webjars/org.webjars/jquery/2.2.0/jquery.min.js"
+        th:src="@{/webjars/jquery/2.2.0/jquery.min.js}"></script>
+
+<script type="text/javascript">
+    var ct_user_name="gledakis";
+    var ct_project_id="19055";
+    var ct_project_name="CloudTeams Platform"
+</script>
+
+<script src="../static/js/oauth.js" th:src="@{/js/oauth.js}"></script>
+
+</body>
+</html>
