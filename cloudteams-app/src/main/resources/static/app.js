@@ -25,30 +25,22 @@ angular.module('ct-widgets', ['ngResource', 'ngAnimate', 'toastr', 'ui.router', 
                 requireBase: false
             });
 
-//                    .state('profile', {
-//                        url: '/profile',
-//                        templateUrl: 'partials/profile.html',
-//                        controller: 'ProfileCtrl',
-//                        resolve: {
-//                            loginRequired: loginRequired
-//                        }
-//                    });
-
             $urlRouterProvider.otherwise('/');
 
             // Production endpoint of github authentication service
-//            $authProvider.github({
-//                url: 'http://cloudteams.euprojects.net/api/v1/auth/github',
-//                scope: ['user', 'public_repo', 'repo', 'repo:status'],
-//                clientId: '9aababac7a8ec6c9659e'
-//            });
+            $authProvider.github({
+                url: 'http://cloudteams.euprojects.net/api/v1/auth/github',
+                scope: ['user', 'public_repo', 'repo', 'repo:status'],
+                clientId: '9aababac7a8ec6c9659e',
+                redirectUri: 'http://cloudteams.euprojects.net/api/v1/auth/github'
+            });
 // 
             // Developemnt endpoint of github authentication service
-            $authProvider.github({
-                url: 'http://localhost:8080/api/v1/auth/github',
-                scope: ['user', 'public_repo', 'repo', 'repo:status'],
-                clientId: '413dd46351dc0c48f306'
-            });
+//            $authProvider.github({
+//                url: 'http://localhost:8080/api/v1/auth/github',
+//                scope: ['user', 'public_repo', 'repo', 'repo:status'],
+//                clientId: '413dd46351dc0c48f306',
+//            });
 
             function skipIfLoggedIn($q, $auth) {
                 var deferred = $q.defer();

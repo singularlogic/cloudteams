@@ -193,6 +193,7 @@
                 <!--Necessary for dynamic reloading -->
                 <configuration>
                     <fork>true</fork>
+                    <addResources>true</addResources>
                 </configuration>
                 <executions>
                     <execution>
