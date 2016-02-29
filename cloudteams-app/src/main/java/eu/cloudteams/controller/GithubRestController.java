@@ -25,9 +25,9 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/api/v1")
-public class RestAPIController {
+public class GithubRestController {
 
-    private static final Logger restLogger = Logger.getLogger(RestAPIController.class.getName());
+    private static final Logger restLogger = Logger.getLogger(GithubRestController.class.getName());
 
     @Autowired
     UserService userService;
@@ -64,7 +64,7 @@ public class RestAPIController {
             tmpUser.setUsername(String.valueOf(tmpUser.getId()));
         } catch (JOSEException ex) {
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Could not create Access Token...");
-            Logger.getLogger(RestAPIController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(GithubRestController.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         //Update user data

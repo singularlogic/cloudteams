@@ -29,28 +29,6 @@ public class WebController {
         return "index";
     }
 
-//    @RequestMapping(value = "/login", method = RequestMethod.GET)
-//    public String login(Model model) {
-//        model.addAttribute("user", "addUserObject");
-//        if (isUserLoggedIn()) {
-//            return "redirect:/" + dashboard(model);
-//        }
-//        return "login";
-//    }
-
-//    @RequestMapping(value = "/dashboard", method = RequestMethod.GET)
-//    public String dashboard(Model model) {
-//        logger.log(Level.INFO, "Success login for user: {0} , with userID: {1} and role: {2}", new Object[]{getCurrentUser().getUsername(), getCurrentUser().getId(), getCurrentUser().getRole()});
-////        model.addAttribute("currentUser", getCurrentUser());
-//        return "dashboard";
-//    }
-
-    //views/remote-data
-    @RequestMapping(value = "/views/remote-data", method = RequestMethod.GET)
-    public String remoteData(Model model) {
-//        model.addAttribute("currentUser", getCurrentUser());
-        return "remote-data";
-    }
 
     @RequestMapping(value = "/api/v1/git/add", method = RequestMethod.GET)
 //    @ResponseBody
@@ -62,23 +40,6 @@ public class WebController {
     /*
      *  POST Methods 
      */
-//    @RequestMapping(value = "/register", method = RequestMethod.POST)
-//    public String registerSubmit(@ModelAttribute CurrentUser user, Model model) {
-//        model.addAttribute("user", user);
-//        ApplicationResponse appResponse = null;
-//        String redirectToPage = "";
-//
-//        if (appResponse.getCode() == BasicResponseCode.SUCCESS) {
-//            model.addAttribute("new_registration", appResponse.getMessage());
-//            return login(model);
-//        } else {
-//            redirectToPage = "registration";
-//            model.addAttribute("error", appResponse.getMessage());
-//        }
-//        logger.log(Level.INFO, "StatusCode: {0} StatusMessage: {1}", new Object[]{appResponse.getCode(), appResponse.getMessage()});
-//        return redirectToPage;
-//
-//    }
 
     /*
      *  Help Methods
