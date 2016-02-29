@@ -16,6 +16,7 @@
         <module>cloudteams-app</module>
         <module>cloudteams-repository</module>
         <module>cloudteams-util</module>
+        <module>cloudteams-sample</module>
     </modules>
 
     <properties>
