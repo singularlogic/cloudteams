@@ -1,5 +1,5 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+
+<div th:fragment="success-authentication">
     <head>
         <title>Welcome &mdash; SPRING-BOOT-SKELETON</title>
 
@@ -10,12 +10,12 @@
         <link href="http://cdn.jsdelivr.net/webjars/bootstrap/3.3.5/css/bootstrap.min.css"
               th:href="@{/webjars/bootstrap/3.3.5/css/bootstrap.min.css}"
               rel="stylesheet" media="screen" />
-        <link rel="stylesheet" href="../static/css/dashboard.css" th:href="@{css/dashboard.css}" />        
+        <link rel="stylesheet" href="/css/dashboard.css" th:href="@{/css/dashboard.css}" />        
     </head>
     <body>
 
         <div class="container">
-            <img src="images/cloudteams.png" width="400px" max-width="100vw"  />
+            <img src="/images/cloudteams.png" width="400px" max-width="100vw"  />
             <div class="alert alert-warning">https://github.com/ubitech/cloudteams</div>
 
             Successfuly authorized GitHub ... Window will now close!
@@ -25,8 +25,9 @@
         th:src="@{/webjars/jquery/2.1.4/jquery.min.js}"></script>
 
         <script>setTimeout(function () {
-               self.close;
+                console.log("exit....");
+                self.close;
             }, 5000);</script>
     </body>
-    
-</html>
+
+</div>

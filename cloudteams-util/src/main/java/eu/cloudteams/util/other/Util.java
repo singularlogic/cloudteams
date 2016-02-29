@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Random;
@@ -16,6 +17,11 @@ import java.util.logging.Logger;
  */
 public class Util {
 
+    public enum ALGORITHM {
+
+        SHA, MD5
+    };
+
     /**
      * Encodes a String based on a specific algorithm
      *
@@ -24,19 +30,26 @@ public class Util {
      * @return The encoded String
      */
     public static String createAlgorithm(String content, String algorithm) {
-        String encryptedContent = "";
+
+        StringBuilder hexString = new StringBuilder();
+
         try {
-            //Producing the SHA hash for the input
-            MessageDigest m;
-            m = MessageDigest.getInstance(algorithm);
-            m.update(content.getBytes(), 0, content.length());
-            encryptedContent = new BigInteger(1, m.digest()).toString(16);
+            MessageDigest digest = MessageDigest.getInstance(algorithm);
+            byte[] hash = digest.digest(content.getBytes(StandardCharsets.UTF_8));
+
+            for (int i = 0; i < hash.length; i++) {
+                String hex = Integer.toHexString(0xff & hash[i]);
+                if (hex.length() == 1) {
+                    hexString.append('0');
+                }
+                hexString.append(hex);
+            }
 
         } catch (NoSuchAlgorithmException ex) {
-            Logger.getLogger(Util.class
-                    .getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Util.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return encryptedContent;
+
+        return hexString.toString();
     }
 
     public static String getRandomHexString(int numchars) {

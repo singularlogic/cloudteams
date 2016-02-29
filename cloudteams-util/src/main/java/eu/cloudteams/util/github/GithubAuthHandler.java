@@ -13,23 +13,21 @@ import org.springframework.web.client.RestTemplate;
  */
 public final class GithubAuthHandler {
     // Production client id
-    private static final String CLIENT_ID = "9aababac7a8ec6c9659e";
-    
+//    private static final String CLIENT_ID = "9aababac7a8ec6c9659e";
+
     // Development client id
-//    private static final String CLIENT_ID = "413dd46351dc0c48f306"; 
+    private static final String CLIENT_ID = "413dd46351dc0c48f306";
 
     // Production client secret
-    private static final String CLIENT_SECRET = "77ed672ccb348b6332cc112a55038724713bc839";
-    
+//    private static final String CLIENT_SECRET = "77ed672ccb348b6332cc112a55038724713bc839";
     // Development client secret
-//    private static final String CLIENT_SECRET = "4fefd9a3d5111e6ec993bbf2958f15f2015da9c6";
-    
+    private static final String CLIENT_SECRET = "4fefd9a3d5111e6ec993bbf2958f15f2015da9c6";
+
     private static final String GITHUB_API_URL = "https://github.com/login/oauth/access_token";
 
-    public static GithubAuthResponse requestAccesToken(String response) {
+    public static GithubAuthResponse requestAccesToken(JSONObject jsonResponse) {
         GithubAuthResponse authResponse = new GithubAuthResponse();
         try {
-            JSONObject jsonResponse = new JSONObject(response);
             //Check if GithHub temporary code is received
             if (jsonResponse.has("code")) {
                 MultiValueMap<String, Object> parameteres = new LinkedMultiValueMap<>();
