@@ -17,12 +17,12 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 public class CloudteamsServiceTest {
 
     @Autowired
-//    UserService userService;
+    ProjectService projectService;
 
     @Test
     @Ignore
     public void testFindByID() {
-     //   userService.fetchById(0);
+        projectService.findOne(1);
     }
 
 }

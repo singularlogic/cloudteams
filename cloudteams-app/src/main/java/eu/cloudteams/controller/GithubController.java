@@ -31,7 +31,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 public class GithubController {
 
-    private static final Logger logger = Logger.getLogger(WebController.class.getName());
+    private static final Logger logger = Logger.getLogger(GithubController.class.getName());
 
     @Autowired
     UserService userService;
