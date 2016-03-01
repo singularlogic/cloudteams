@@ -89,7 +89,7 @@ public class GithubController {
         //Print the generated token
         logger.info("Generated Token: " + generatedToken.getToken());
 
-        return "github::success-authentication";
+        return "github::github-authentication";
 
     }
 
