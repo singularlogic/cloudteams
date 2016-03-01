@@ -5,6 +5,7 @@ import java.text.ParseException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
 
@@ -34,6 +35,9 @@ public class TokenAuthenticationService {
                 Logger.getLogger(TokenAuthenticationService.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+        
+        
+        
         return null;
     }
 }

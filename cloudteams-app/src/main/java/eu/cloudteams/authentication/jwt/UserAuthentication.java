@@ -45,7 +45,7 @@ public class UserAuthentication implements Authentication {
 
     @Override
     public boolean isAuthenticated() {
-        return authenticated;
+        return null != user;
     }
 
     @Override

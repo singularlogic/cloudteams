@@ -7,7 +7,7 @@ $(document).ready(function () {
 });
 
 // Static variables
-var GITHUB_AUTHORIZE_URL= "https://github.com/login/oauth/authorize?response_type=code&client_id=413dd46351dc0c48f306&redirect_uri=http://localhosts:8080/github/auth?username=" + ct_user_name + "&scope=user%20public_repo%20repo%20repo:status";
+var GITHUB_AUTHORIZE_URL= "https://github.com/login/oauth/authorize?response_type=code&client_id=413dd46351dc0c48f306&redirect_uri=http://localhost:8080/github/auth?username=" + ct_user_name + "&scope=user%20public_repo%20repo%20repo:status";
 var CLOUDTEAMS_URL = "http://localhost:8080/api/v1/auth/token?username=" + ct_user_name;
 var POPUP;
 

@@ -21,6 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 
 /**
  *
@@ -42,58 +43,6 @@ public class WebController {
         return "index";
     }
 
-    @RequestMapping(value = "/github/auth", method = RequestMethod.GET)
-    public String githubAuth(Model model, @RequestParam(value = "code", defaultValue = "") String code, @RequestParam(value = "username", defaultValue = "") String username, HttpServletRequest request, HttpServletResponse response) throws IOException {
-
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("code", code);
-        jsonObject.put("username", username);
-
-        logger.log(Level.INFO, "Request from ip: {0} Requestbody: {1}", new Object[]{request.getRemoteAddr(), jsonObject});
-
-        //Actual request to GitHub API
-        GithubAuthResponse gitAuthResponse = GithubAuthHandler.requestAccesToken(jsonObject);
-
-        //Check if AccessToken is successfully fetched
-        if (false == gitAuthResponse.isValid()) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, gitAuthResponse.getError());
-            logger.log(Level.SEVERE, "Fail to get Acess Token reason: {0}", gitAuthResponse.getError());
-            return null;
-        }
-        //Create a new user
-        User tmpUser = new User(null, "", "", gitAuthResponse.getAccess_token(), true);
-
-        //If create new user was not success return
-        if (false == userService.storeUser(tmpUser)) {
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Could not create user to Cloudteams Database...");
-            logger.log(Level.SEVERE, "Fail to get Acess Token reason: {0}", gitAuthResponse.getError());
-            return null;
-        }
-
-        //Create Access Token
-        Token generatedToken = new Token();
-        try {
-            generatedToken = TokenHandler.createToken(request.getRemoteAddr(), tmpUser.getId());
-            //Save User
-            tmpUser.setAccessToken(generatedToken.getToken());
-            tmpUser.setUsername(String.valueOf(tmpUser.getId()));
-        } catch (JOSEException ex) {
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Could not create Access Token...");
-            Logger.getLogger(GithubRestController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        //Update user data
-        if (false == userService.storeUser(tmpUser)) {
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Could not update user to Cloudteams Database...");
-            logger.log(Level.SEVERE, "Fail to get Acess Token reason: {0}", "Could not update user to Cloudteams Database...");
-            return null;
-        }
-
-        logger.info("Generated Token: " + generatedToken.getToken());
-
-        return "github::success-authentication";
-
-    }
 
     /*
      *  POST Methods 
@@ -107,30 +56,16 @@ public class WebController {
      *
      * @return An instance of CurrentUser object
      */
-    public static UserAuthentication getCurrentUser() {
-        return (UserAuthentication) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    public static Authentication getCurrentUser() {
+        return (Authentication) SecurityContextHolder.getContext().getAuthentication();
     }
 
     /**
-     * Get current logged-in role
+     * Check if a user has a JWT AccessToken
      *
-     * @return Role name
+     * @return True if user has a JWT in headers, otherwise returns false
      */
-    public static String getCurrentRole() {
-        return getCurrentUser().getName();
-    }
-
-    /**
-     * Check if a user is logged-in
-     *
-     * @return True if user is logged-in, otherwise returns false
-     */
-    private boolean isUserLoggedIn() {
-        try {
-            getCurrentUser().isAuthenticated();
-        } catch (ClassCastException ex) {
-            return false;
-        }
-        return true;
+    public static boolean hasAccessToken() {
+        return SecurityContextHolder.getContext().getAuthentication() instanceof UserAuthentication;
     }
 }
