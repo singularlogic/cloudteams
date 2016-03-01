@@ -29,7 +29,7 @@ public class User implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Size(min = 0, max = 250)
-    @Column(name = "username")
+    @Column(unique = true, name = "username")
     private String username;
     @Basic(optional = false)
     @NotNull
