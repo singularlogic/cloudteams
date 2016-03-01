@@ -4,7 +4,9 @@ import eu.cloudteams.authentication.jwt.Token;
 import com.nimbusds.jose.JOSEException;
 import eu.cloudteams.authentication.jwt.TokenHandler;
 import static eu.cloudteams.controller.WebController.getCurrentUser;
+import eu.cloudteams.repository.domain.Project;
 import eu.cloudteams.repository.domain.User;
+import eu.cloudteams.repository.service.ProjectService;
 import eu.cloudteams.repository.service.UserService;
 import eu.cloudteams.util.github.GithubAuthHandler;
 import eu.cloudteams.util.github.GithubAuthResponse;
@@ -15,6 +17,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import eu.cloudteams.util.github.GithubService;
+import java.util.Optional;
+import org.eclipse.egit.github.core.Repository;
 import org.eclipse.egit.github.core.service.GitHubService;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +42,9 @@ public class GithubController {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    ProjectService projectService;
 
     @RequestMapping(value = "/github/auth", method = RequestMethod.GET)
     public String githubAuth(Model model, @RequestParam(value = "code", defaultValue = "") String code, @RequestParam(value = "username", defaultValue = "") String username, HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -98,7 +105,7 @@ public class GithubController {
 
     @CrossOrigin
     @RequestMapping(value = "/github/repository", method = RequestMethod.POST)
-    public String getGithubRepositoryInfo(Model model, @RequestParam(value = "project_id", defaultValue = "0", required = true) int project_id) throws IOException{
+    public String getGithubRepositoryInfo(Model model, @RequestParam(value = "project_id", defaultValue = "0", required = true) int project_id) throws IOException {
 
         logger.info("Requesting info for repository assigned to project_id: " + project_id);
 
@@ -108,15 +115,28 @@ public class GithubController {
             return "github::github-no-auth";
         }
 
+        User user = userService.findByUsername(getCurrentUser().getPrincipal().toString());
+        Project project = projectService.findByProjectIdAndUser(project_id, user);
+
+        GithubService github = new GithubService(user.getGithubToken());
+        //Unassigned project
+        if (null == project) {
+
+            model.addAttribute("GetRepositories", github.getGithubRepositoryService().getRepositories());
+            return "github::github-no-project";
+        }
+
         logger.info("Returning github-info fragment for user:  " + getCurrentUser().getPrincipal() + " and project_id: " + project_id);
 
-        //return github-repo with info
-        User user = userService.findByUsername(getCurrentUser().getPrincipal().toString());
-        GithubService github = new GithubService(user.getGithubToken());
+        Optional<Repository> repository = github.getGithubRepositoryService().getRepositories().stream().filter(repositoryTofind -> repositoryTofind.getName().equals(project.getGithubRepository())).findFirst();
 
-        model.addAttribute("GetRepositories", github.getGithubRepositoryService().getRepositories());
+        if (repository.isPresent()) {
+            model.addAttribute("repository", repository.get());
+            //repository.get().getGitUrl()
+            return "github::github-auth-project";
+        }
 
-        return "github::github-no-project";
+        return "github::github-error";
     }
 
     //Rest Controller
@@ -128,7 +148,7 @@ public class GithubController {
         JSONObject response = new JSONObject();
         User user;
         long waitingTime = 2000; //two seconds
-        for (int cycle = 0; cycle < 10; cycle++) {
+        for (int cycle = 0; cycle < 100; cycle++) {
             try {
                 logger.info("[GitHub Synchronization T#" + Thread.currentThread().getId() + "] synchronization cycle " + (cycle + 1) + " is in process for username: " + username);
                 //Wait for some time
@@ -153,6 +173,50 @@ public class GithubController {
         response.put("message", "Could not find access token for user: " + username);
 
         return response.toString();
+    }
+
+    @CrossOrigin
+    @ResponseBody
+    @RequestMapping(value = "/api/v1/github/add", method = RequestMethod.POST)
+    public String githubAuth(Model model, @RequestParam(value = "project_id", defaultValue = "") long project_id, @RequestParam(value = "reponame", defaultValue = "") String githubRepository) {
+
+            
+        JSONObject jsonObject = new JSONObject();
+
+        if (!WebController.hasAccessToken()) {
+            jsonObject.put("code", "FAIL");
+            jsonObject.put("message", "User is not authorized");
+            return jsonObject.toString();
+        }
+
+        if (githubRepository.isEmpty()) {
+            jsonObject.put("code", "FAIL");
+            jsonObject.put("message", "Repository name is empty.");
+            return jsonObject.toString();
+        }
+
+        User user = userService.findByUsername(getCurrentUser().getPrincipal().toString());
+
+        if (null == user) {
+            jsonObject.put("code", "FAIL");
+            jsonObject.put("message", "User does not exist");
+            return jsonObject.toString();
+        }
+
+        Project project = projectService.findOne(project_id);
+
+        if (null == project) {
+            project = new Project();
+            project.setUser(user);
+            project.setProjectId(project_id);
+            project.setGithubRepository(githubRepository);
+            projectService.store(project);
+        }
+
+        jsonObject.put("code", "SUCCESS");
+        jsonObject.put("message", "Repository: " + githubRepository + " has been assigned!");
+
+        return jsonObject.toString();
     }
 
 }

@@ -1,25 +1,13 @@
 package eu.cloudteams.controller;
 
-import com.nimbusds.jose.JOSEException;
-import eu.cloudteams.authentication.jwt.Token;
-import eu.cloudteams.authentication.jwt.TokenHandler;
 import eu.cloudteams.authentication.jwt.UserAuthentication;
-import eu.cloudteams.repository.domain.User;
 import eu.cloudteams.repository.service.UserService;
-import eu.cloudteams.util.github.GithubAuthHandler;
-import eu.cloudteams.util.github.GithubAuthResponse;
-import java.io.IOException;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 

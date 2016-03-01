@@ -13,17 +13,17 @@
     </head>
     <body>
 
-    <div class="container">
-        <img class="github" src="/images/cloudteams-logo.png"/>
-        <div class="alert alert-warning">Successfully authorized with GitHub.</div>
+        <div class="container">
+            <img class="github" src="/images/cloudteams-logo.png"/>
+            <div class="alert alert-warning">Successfully authorized with GitHub.</div>
 
-        <button type="button" onclick="window.close();" class="btn btn-danger">
-            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Close window
-        </button>
-    </div>
+            <button type="button" onclick="window.close();" class="btn btn-danger">
+                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Close window
+            </button>
+        </div>
 
-    <script src="http://cdn.jsdelivr.net/webjars/jquery/2.1.4/jquery.min.js"
-            th:src="@{/webjars/jquery/2.1.4/jquery.min.js}"></script>
+        <script src="http://cdn.jsdelivr.net/webjars/jquery/2.1.4/jquery.min.js"
+        th:src="@{/webjars/jquery/2.1.4/jquery.min.js}"></script>
 
     </body>
 
@@ -37,27 +37,27 @@
 
     <script th:inline="javascript">
 
-        var GITHUB_AUTHORIZE_URL= "https://github.com/login/oauth/authorize?response_type=code&amp;client_id=413dd46351dc0c48f306&amp;redirect_uri=http://localhost:8080/github/auth?username=" + ct_user_name + "&amp;scope=user%20public_repo%20repo%20repo:status";
+        var GITHUB_AUTHORIZE_URL = "https://github.com/login/oauth/authorize?response_type=code&amp;client_id=413dd46351dc0c48f306&amp;redirect_uri=http://localhost:8080/github/auth?username=" + ct_user_name + "&amp;scope=user%20public_repo%20repo%20repo:status";
         var CLOUDTEAMS_URL = "http://localhost:8080/api/v1/auth/token?username=" + ct_user_name;
         var POPUP;
 
-        function authorizeGithub(){
+        function authorizeGithub() {
             console.log("Could not locate auth token");
-            POPUP = window.open(GITHUB_AUTHORIZE_URL, "mywindow","status=0,toolbar=0,resizable=0,scrollbars=0,width=800,height=600");
+            POPUP = window.open(GITHUB_AUTHORIZE_URL, "mywindow", "status=0,toolbar=0,resizable=0,scrollbars=0,width=800,height=600");
             authorizeGithubHandler();
 
             $.post({
                 url: CLOUDTEAMS_URL
             }).success(function (data, status, xhr) {
 
-            var res = JSON.parse(data);
-            if ("SUCCESS" === res.code) {
-                console.log(data);
-                localStorage.auth_token = res.token;
-                $("#ct-content-github").html(data);
-            } else {
-                console.log("Could not authorize");
-            }
+                var res = JSON.parse(data);
+                if ("SUCCESS" === res.code) {
+                    console.log(data);
+                    localStorage.auth_token = res.token;
+                    $("#ct-content-github").html(data);
+                } else {
+                    console.log("Could not authorize");
+                }
 
             });
         }
@@ -74,20 +74,25 @@
 
     <script th:inline="javascript">
 
-        function assignRepository(){
+        function assignRepository() {
 
             $.post({
-                url: "http://localhost:8080/api/v1/github/add?project_id=" + ct_project_id + "&amp;reponame=" +
+                url: "http://localhost:8080/api/v1/github/add",
+                data: {project_id: ct_project_id, reponame: $("#repository :selected").text()},
+                beforeSend: function (xhr) {
+                    if (hasAccessToken()) {
+                        xhr.setRequestHeader("Authorization", localStorage.auth_token);
+                    }
+                },
             }).success(function (data, status, xhr) {
 
-            var res = JSON.parse(data);
-            if ("SUCCESS" === res.code) {
-                console.log(data);
-                localStorage.auth_token = res.token;
-                $("#ct-content-github").html(data);
-            } else {
-                console.log("Could not authorize");
-            }
+                var res = JSON.parse(data);
+                if ("SUCCESS" === res.code) {
+                    console.log(data);
+                    $("#ct-content-github").html(data);
+                } else {
+                    console.log("Could not authorize");
+                }
 
             });
         }
@@ -95,7 +100,6 @@
     </script>
 </div>
 
-</div>
 
 <div th:fragment="github-auth-project">
     <h2>Github repository statistics</h2>
