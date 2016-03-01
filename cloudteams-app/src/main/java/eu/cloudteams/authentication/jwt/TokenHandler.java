@@ -38,12 +38,12 @@ public class TokenHandler {
      * @throws JOSEException
      */
 //    @Autowired
-    public static Token createToken(String host, long sub) throws JOSEException {
+    public static Token createToken(String host, String username) throws JOSEException {
         JWTClaimsSet claim = new JWTClaimsSet();
-        claim.setSubject(Long.toString(sub));
+        claim.setSubject(username);
         claim.setIssuer(host);
-        claim.setIssueTime(DateTime.now().toDate());
-        claim.setExpirationTime(DateTime.now().plusDays(14).toDate());
+//        claim.setIssueTime(DateTime.now().toDate());
+//        claim.setExpirationTime(DateTime.now().plusDays(14).toDate());
         JWSSigner signer = new MACSigner(TOKEN_SECRET);
         SignedJWT jwt = new SignedJWT(JWT_HEADER, claim);
         jwt.sign(signer);

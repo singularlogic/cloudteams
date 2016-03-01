@@ -18,7 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -55,11 +54,15 @@ public class GithubController {
             logger.log(Level.SEVERE, "Fail to get Acess Token reason: {0}", gitAuthResponse.getError());
             return null;
         }
-        //Create a new user
-        User tmpUser = new User(null, "", "", gitAuthResponse.getAccess_token(), true);
+
+        //Check if user already exists
+        User user = userService.findByUsername(username);
+
+        //Print the status of user
+        logger.info(null != user ? "User: " + user.getUsername() + " already exists with id: " + user.getId() : "Creating new user for username: " + username);
 
         //If create new user was not success return
-        if (false == userService.storeUser(tmpUser)) {
+        if (null == user && false == userService.storeUser(user = new User(null, username, "", gitAuthResponse.getAccess_token(), true))) {
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Could not create user to Cloudteams Database...");
             logger.log(Level.SEVERE, "Fail to get Acess Token reason: {0}", gitAuthResponse.getError());
             return null;
@@ -68,22 +71,22 @@ public class GithubController {
         //Create Access Token
         Token generatedToken = new Token();
         try {
-            generatedToken = TokenHandler.createToken(request.getRemoteAddr(), tmpUser.getId());
+            generatedToken = TokenHandler.createToken(request.getRemoteAddr(), username);
             //Save User
-            tmpUser.setAccessToken(generatedToken.getToken());
-            tmpUser.setUsername(String.valueOf(tmpUser.getId()));
+            user.setAccessToken(generatedToken.getToken());
         } catch (JOSEException ex) {
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Could not create Access Token...");
             Logger.getLogger(GithubController.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         //Update user data
-        if (false == userService.storeUser(tmpUser)) {
+        if (false == userService.storeUser(user)) {
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Could not update user to Cloudteams Database...");
             logger.log(Level.SEVERE, "Fail to get Acess Token reason: {0}", "Could not update user to Cloudteams Database...");
             return null;
         }
 
+        //Print the generated token
         logger.info("Generated Token: " + generatedToken.getToken());
 
         return "github::success-authentication";
@@ -112,63 +115,35 @@ public class GithubController {
     @ResponseBody
     @RequestMapping(value = "/api/v1/auth/token", method = RequestMethod.POST)
     public String getJWT(@RequestParam(value = "username", required = true) String username) {
-        try {
-            Thread.sleep(25000);
-        } catch (InterruptedException ex) {
-            Logger.getLogger(GithubController.class.getName()).log(Level.SEVERE, null, ex);
+
+        JSONObject response = new JSONObject();
+        User user;
+        long waitingTime = 2000; //two seconds
+        for (int cycle = 0; cycle < 10; cycle++) {
+            try {
+                logger.info("[GitHub Synchronization T#" + Thread.currentThread().getId() + "] synchronization cycle " + (cycle + 1) + " is in process for username: " + username);
+                //Wait for some time
+                Thread.sleep(waitingTime);
+                //Fetch user
+                user = userService.findByUsername(username);
+                //Check if the user is created and a token is found
+                if (null != user && !user.getAccessToken().isEmpty()) {
+                    logger.info("[GitHub Synchronization T#" + Thread.currentThread().getId() + "] found JWT for user: " + username + " , synchronization success");
+                    response.put("token", user.getAccessToken());
+                    response.put("code", "SUCCESS");
+                    return response.toString();
+                }
+            } catch (InterruptedException ex) {
+                Logger.getLogger(GithubController.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
-        logger.info("Username is " + username);
+        logger.info("[GitHub Synchronization T#" + Thread.currentThread().getId() + "] could not found user:  " + username + " in database , synchronization failed");
 
-        JSONObject tokenObj = new JSONObject();
-        tokenObj.put("token", "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI1MyIsImlzcyI6IjE5Mi4xNjguNy4xMzEiLCJleHAiOjE0NTc5Njg5MjUsImlhdCI6MTQ1Njc1OTMyNX0.mZ8tBvoaMWQqVJ2Vt4Q3UZMVVrsILCwNm3D-5liaEtQ");
-        tokenObj.put("code", "SUCCESS");
-        return tokenObj.toString();
-    }
+        //Token not found return error message
+        response.put("code", "FAIL");
+        response.put("message", "Could not find access token for user: " + username);
 
-    @Deprecated
-    @RequestMapping(value = "/auth/github", method = RequestMethod.POST)
-    public Token githubAuth(@RequestBody String requestbody, HttpServletRequest request, HttpServletResponse response) throws IOException {
-        logger.log(Level.INFO, "Request from ip: {0} Requestbody: {1}", new Object[]{request.getRemoteAddr(), requestbody});
-
-        //Actual request to GitHub API
-        GithubAuthResponse gitAuthResponse = GithubAuthHandler.requestAccesToken(new JSONObject(requestbody));
-
-        //Check if AccessToken is successfully fetched
-        if (false == gitAuthResponse.isValid()) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, gitAuthResponse.getError());
-            logger.log(Level.SEVERE, "Fail to get Acess Token reason: {0}", gitAuthResponse.getError());
-            return null;
-        }
-        //Create a new user
-        User tmpUser = new User(null, "", "", gitAuthResponse.getAccess_token(), true);
-
-        //If create new user was not success return
-        if (false == userService.storeUser(tmpUser)) {
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Could not create user to Cloudteams Database...");
-            logger.log(Level.SEVERE, "Fail to get Acess Token reason: {0}", gitAuthResponse.getError());
-            return null;
-        }
-
-        //Create Access Token
-        Token generatedToken = new Token();
-        try {
-            generatedToken = TokenHandler.createToken(request.getRemoteAddr(), tmpUser.getId());
-            //Save User
-            tmpUser.setAccessToken(generatedToken.getToken());
-            tmpUser.setUsername(String.valueOf(tmpUser.getId()));
-        } catch (JOSEException ex) {
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Could not create Access Token...");
-            Logger.getLogger(GithubController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        //Update user data
-        if (false == userService.storeUser(tmpUser)) {
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Could not update user to Cloudteams Database...");
-            logger.log(Level.SEVERE, "Fail to get Acess Token reason: {0}", "Could not update user to Cloudteams Database...");
-            return null;
-        }
-
-        return generatedToken;
+        return response.toString();
     }
 
 }
