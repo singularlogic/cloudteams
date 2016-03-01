@@ -29,7 +29,7 @@ function authorizeGithubHandler() {
         } else {
             console.log("Could not authorize");
         }
-        POPUP.close();
+//        POPUP.close();
     });
 }
 

@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
 
 /**
  * Restful API for integration with CloudTeams Platform
@@ -114,7 +113,7 @@ public class GithubController {
     @RequestMapping(value = "/api/v1/auth/token", method = RequestMethod.POST)
     public String getJWT(@RequestParam(value = "username", required = true) String username) {
         try {
-            Thread.sleep(5000);
+            Thread.sleep(25000);
         } catch (InterruptedException ex) {
             Logger.getLogger(GithubController.class.getName()).log(Level.SEVERE, null, ex);
         }
