@@ -2,26 +2,28 @@
     <head>
         <title>Authorize GitHub &mdash; CLOUDTEAMS</title>
 
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />	
-        <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
 
         <link href="http://cdn.jsdelivr.net/webjars/bootstrap/3.3.5/css/bootstrap.min.css"
               th:href="@{/webjars/bootstrap/3.3.5/css/bootstrap.min.css}"
-              rel="stylesheet" media="screen" />
-        <link rel="stylesheet" href="/css/dashboard.css" th:href="@{/css/dashboard.css}" />        
+              rel="stylesheet" media="screen"/>
+        <link rel="stylesheet" href="/css/dashboard.css" th:href="@{/css/dashboard.css}"/>
     </head>
     <body>
 
-        <div class="container">
-            <img class="github" src="/images/cloudteams-logo.png" />
-            <div class="alert alert-warning">Successfully authorized with GitHub.</div>
+    <div class="container">
+        <img class="github" src="/images/cloudteams-logo.png"/>
+        <div class="alert alert-warning">Successfully authorized with GitHub.</div>
 
-            <button type="button" onclick="window.close();" class="btn btn-danger"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Close window</button>
-        </div>
+        <button type="button" onclick="window.close();" class="btn btn-danger">
+            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Close window
+        </button>
+    </div>
 
-        <script src="http://cdn.jsdelivr.net/webjars/jquery/2.1.4/jquery.min.js"
-        th:src="@{/webjars/jquery/2.1.4/jquery.min.js}"></script>
+    <script src="http://cdn.jsdelivr.net/webjars/jquery/2.1.4/jquery.min.js"
+            th:src="@{/webjars/jquery/2.1.4/jquery.min.js}"></script>
 
     </body>
 
@@ -30,11 +32,11 @@
 <div th:fragment="github-no-auth">
 
     <div class="alert alert-warning">Please authorize your Github account</div>
-    <button id="btn-oauth" onclick="authorizeGithub()" class="btn btn-danger">Authorize Github</button><br/>
+    <button id="btn-oauth" onclick="authorizeGithub()" class="btn btn-danger">Authorize Github</button>
+    <br/>
 
     <script th:inline="javascript">
 
-        // Static variables
         var GITHUB_AUTHORIZE_URL= "https://github.com/login/oauth/authorize?response_type=code&amp;client_id=413dd46351dc0c48f306&amp;redirect_uri=http://localhost:8080/github/auth?username=" + ct_user_name + "&amp;scope=user%20public_repo%20repo%20repo:status";
         var CLOUDTEAMS_URL = "http://localhost:8080/api/v1/auth/token?username=" + ct_user_name;
         var POPUP;
@@ -58,8 +60,7 @@
             }
 
             });
-            }
-
+        }
 
     </script>
 </div>
