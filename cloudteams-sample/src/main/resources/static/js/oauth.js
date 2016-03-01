@@ -19,7 +19,7 @@ function authorizeGithubHandler() {
 
             }
         },
-        url: "http://localhost:8080/github/repository?projectid=" + ct_project_id
+        url: "http://localhost:8080/github/repository?project_id=" + ct_project_id
     }).success(function (data, status, xhr) {
         $("#ct-content-github").html(data);
     });
