@@ -13,6 +13,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import eu.cloudteams.util.github.GithubService;
+import org.eclipse.egit.github.core.service.GitHubService;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -89,28 +92,34 @@ public class GithubController {
         //Print the generated token
         logger.info("Generated Token: " + generatedToken.getToken());
 
-        return "github::success-authentication";
+        return "github::github-authentication";
 
     }
 
-    @RequestMapping(value = "/github/repository", method = RequestMethod.GET)
-    public String getGithubRepositoryInfo(Model model, @RequestParam(value = "project_id", defaultValue = "0", required = true) int project_id) {
+    @CrossOrigin
+    @RequestMapping(value = "/github/repository", method = RequestMethod.POST)
+    public String getGithubRepositoryInfo(Model model, @RequestParam(value = "project_id", defaultValue = "0", required = true) int project_id) throws IOException{
 
         logger.info("Requesting info for repository assigned to project_id: " + project_id);
 
         if (!WebController.hasAccessToken()) {
             logger.warning("Unauthorized access returing github sigin fragment");
             //return github-signin fragment
-            return "index";
+            return "github::github-no-auth";
         }
 
         logger.info("Returning github-info fragment for user:  " + getCurrentUser().getPrincipal() + " and project_id: " + project_id);
 
         //return github-repo with info
-        return "index";
+        User user = userService.findByUsername(getCurrentUser().getPrincipal().toString());
+        GithubService github = new GithubService(user.getGithubToken());
+
+        model.addAttribute("GetRepositories", github.getGithubRepositoryService().getRepositories());
+
+        return "github::github-no-project";
     }
 
-//Rest Controller
+    //Rest Controller
     @CrossOrigin
     @ResponseBody
     @RequestMapping(value = "/api/v1/auth/token", method = RequestMethod.POST)
@@ -129,7 +138,7 @@ public class GithubController {
                 //Check if the user is created and a token is found
                 if (null != user && !user.getAccessToken().isEmpty()) {
                     logger.info("[GitHub Synchronization T#" + Thread.currentThread().getId() + "] found JWT for user: " + username + " , synchronization success");
-                    response.put("token", user.getAccessToken());
+                    response.put("token", "Bearer " + user.getAccessToken());
                     response.put("code", "SUCCESS");
                     return response.toString();
                 }

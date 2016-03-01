@@ -17,14 +17,19 @@ public final class GithubService {
     private final GitHubClient githubClient = new GitHubClient();
     private final static Logger logger = Logger.getLogger(GithubService.class.getName());
     private final UserService userService;
+    private final RepositoryService githubRepositoryService;
     
     public GithubService(String accessToken) {
         githubClient.setOAuth2Token(accessToken);
         userService = new UserService(githubClient);
+        githubRepositoryService = new RepositoryService(githubClient);
     }
     
     public UserService getUserService() {
         return this.userService;
+    }
+    public RepositoryService getGithubRepositoryService() {
+        return this.githubRepositoryService;
     }
     
     public void GitHubInfo() {

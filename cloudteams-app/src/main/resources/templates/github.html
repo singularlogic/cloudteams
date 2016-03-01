@@ -1,33 +1,77 @@
-
-<div th:fragment="success-authentication">
+<div th:fragment="github-authentication">
     <head>
-        <title>Welcome &mdash; SPRING-BOOT-SKELETON</title>
+        <title>Authorize GitHub &mdash; CLOUDTEAMS</title>
 
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />	
-        <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
 
         <link href="http://cdn.jsdelivr.net/webjars/bootstrap/3.3.5/css/bootstrap.min.css"
               th:href="@{/webjars/bootstrap/3.3.5/css/bootstrap.min.css}"
-              rel="stylesheet" media="screen" />
-        <link rel="stylesheet" href="/css/dashboard.css" th:href="@{/css/dashboard.css}" />        
+              rel="stylesheet" media="screen"/>
+        <link rel="stylesheet" href="/css/dashboard.css" th:href="@{/css/dashboard.css}"/>
     </head>
     <body>
 
-        <div class="container">
-            <img src="/images/cloudteams.png" width="400px" max-width="100vw"  />
-            <div class="alert alert-warning">https://github.com/ubitech/cloudteams</div>
+    <div class="container">
+        <img class="github" src="/images/cloudteams-logo.png"/>
+        <div class="alert alert-warning">Successfully authorized with GitHub.</div>
 
-            Successfuly authorized GitHub ... Window will now close!
-        </div>
+        <button type="button" onclick="window.close();" class="btn btn-danger">
+            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Close window
+        </button>
+    </div>
 
-        <script src="http://cdn.jsdelivr.net/webjars/jquery/2.1.4/jquery.min.js"
-        th:src="@{/webjars/jquery/2.1.4/jquery.min.js}"></script>
+    <script src="http://cdn.jsdelivr.net/webjars/jquery/2.1.4/jquery.min.js"
+            th:src="@{/webjars/jquery/2.1.4/jquery.min.js}"></script>
 
-        <script>setTimeout(function () {
-                console.log("exit....");
-                self.close;
-            }, 5000);</script>
     </body>
 
+</div>
+
+<div th:fragment="github-no-auth">
+
+    <div class="alert alert-warning">Please authorize your Github account</div>
+    <button id="btn-oauth" onclick="authorizeGithub()" class="btn btn-danger">Authorize Github</button>
+    <br/>
+
+    <script th:inline="javascript">
+
+        var GITHUB_AUTHORIZE_URL= "https://github.com/login/oauth/authorize?response_type=code&amp;client_id=413dd46351dc0c48f306&amp;redirect_uri=http://localhost:8080/github/auth?username=" + ct_user_name + "&amp;scope=user%20public_repo%20repo%20repo:status";
+        var CLOUDTEAMS_URL = "http://localhost:8080/api/v1/auth/token?username=" + ct_user_name;
+        var POPUP;
+
+        function authorizeGithub(){
+            console.log("Could not locate auth token");
+            POPUP = window.open(GITHUB_AUTHORIZE_URL, "mywindow","status=0,toolbar=0,resizable=0,scrollbars=0,width=800,height=600");
+            authorizeGithubHandler();
+
+            $.post({
+                url: CLOUDTEAMS_URL
+            }).success(function (data, status, xhr) {
+
+            var res = JSON.parse(data);
+            if ("SUCCESS" === res.code) {
+                console.log(data);
+                localStorage.auth_token = res.token;
+                $("#ct-content-github").html(data);
+            } else {
+                console.log("Could not authorize");
+            }
+
+            });
+        }
+
+    </script>
+</div>
+
+<div th:fragment="github-no-project">
+    <h2>Please select a Github repository</h2>
+    <select th:if="${!#lists.isEmpty(GetRepositories)}">
+        <option value="volvo">Volvo</option>
+    </select>
+</div>
+
+<div th:fragment="github-auth-project">
+    <h2>Github repository statistics</h2>
 </div>
