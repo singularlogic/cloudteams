@@ -43,7 +43,6 @@ public class WebController {
         return "index";
     }
 
-
     /*
      *  POST Methods 
      */
