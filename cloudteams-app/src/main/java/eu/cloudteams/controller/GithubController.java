@@ -132,6 +132,7 @@ public class GithubController {
 
         if (repository.isPresent()) {
             model.addAttribute("repository", repository.get());
+            repository.get().getSize()
             //repository.get().getGitUrl()
             return "github::github-auth-project";
         }

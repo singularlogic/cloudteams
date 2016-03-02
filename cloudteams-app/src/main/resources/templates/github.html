@@ -54,7 +54,6 @@
                 if ("SUCCESS" === res.code) {
                     console.log(data);
                     localStorage.auth_token = res.token;
-                    $("#ct-content-github").html(data);
                 } else {
                     console.log("Could not authorize");
                 }
@@ -102,5 +101,11 @@
 
 
 <div th:fragment="github-auth-project">
-    <h2>Github repository statistics</h2>
+    <div class="alert alert-warning">Github repository statistics</div>
+    <div th:inline="text"><strong>Repository:</strong> [[${repository.getName()}]]</div>
+    <div th:inline="text"><strong>Description:</strong> [[${repository.getDescription()}]]</div>
+    <div th:inline="text"><strong>Size:</strong> [[${repository.getSize()}]]</div>
+    <div th:inline="text"><strong>URL:</strong> [[${repository.getHtmlUrl()}]]</div>
+    <div th:inline="text"><strong>Forks:</strong> [[${repository.getForks()}]]</div>
+    <div th:inline="text"><strong>Issues:</strong> [[${repository.getOpenIssues()}]]</div>
 </div>
