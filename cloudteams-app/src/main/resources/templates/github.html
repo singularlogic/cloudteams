@@ -88,12 +88,13 @@
 
                 var res = JSON.parse(data);
                 if ("SUCCESS" === res.code) {
-                    console.log(data);
+                    console.log("Success synchronization, reload Github widget");
+                    //Reload Github widget
+                    loadGithubWidget();
                     $("#ct-content-github").html(data);
                 } else {
                     console.log("Could not authorize");
                 }
-
             });
         }
 
