@@ -5,7 +5,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  *
@@ -24,11 +23,5 @@ public class WebController {
         return "index";
     }
 
-
-    @RequestMapping(value = "/api/v1/git/add", method = RequestMethod.GET)
-    public String addGitToken(@RequestParam long uid) {
-        logger.info("I was hit from Github with uid: " + uid);
-        return "github";
-    }
 
 }
