@@ -37,8 +37,8 @@
 
     <script th:inline="javascript">
 
-        var GITHUB_AUTHORIZE_URL = "https://github.com/login/oauth/authorize?response_type=code&amp;client_id=413dd46351dc0c48f306&amp;redirect_uri=http://localhost:8080/github/auth?username=" + ct_user_name + "&amp;scope=user%20public_repo%20repo%20repo:status";
-        var CLOUDTEAMS_URL = "http://cloudteams.euprojects.net//api/v1/auth/token";
+        var GITHUB_AUTHORIZE_URL = "https://github.com/login/oauth/authorize?response_type=code&amp;client_id=413dd46351dc0c48f306&amp;redirect_uri=http://cloudteams.euprojects.net/github/auth?username=" + ct_user_name + "&amp;scope=user%20public_repo%20repo%20repo:status";
+        var CLOUDTEAMS_URL = "http://cloudteams.euprojects.net/api/v1/auth/token";
         var POPUP;
 
         function authorizeGithub() {
