@@ -1,5 +1,5 @@
 /**
- * OAuth
+ * CloudTeams Integration JS
  */
 
 
@@ -8,9 +8,7 @@ var CLOUDTEAMS_REST_ENDPOINT = "http://cloudteams.euprojects.net/github/reposito
 
 $(document).ready(function () {
     console.log("Loaded oauth.js");
-
     //Check if the project_id has been set
-
     if (typeof (ct_project_id) == 'undefined' || ct_project_id <= 0) {
         console.log("Invalid value for ct_project_id");
         return;
@@ -18,7 +16,6 @@ $(document).ready(function () {
     //Load Github widget
     loadGithubWidget();
 });
-
 
 
 /*

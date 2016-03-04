@@ -38,15 +38,16 @@
     <script th:inline="javascript">
 
         var GITHUB_AUTHORIZE_URL = "https://github.com/login/oauth/authorize?response_type=code&amp;client_id=413dd46351dc0c48f306&amp;redirect_uri=http://localhost:8080/github/auth?username=" + ct_user_name + "&amp;scope=user%20public_repo%20repo%20repo:status";
-        var CLOUDTEAMS_URL = "http://localhost:8080/api/v1/auth/token?username=" + ct_user_name;
+        var CLOUDTEAMS_URL = "http://cloudteams.euprojects.net//api/v1/auth/token";
         var POPUP;
 
         function authorizeGithub() {
             console.log("Could not locate auth token");
             POPUP = window.open(GITHUB_AUTHORIZE_URL, "mywindow", "status=0,toolbar=0,resizable=0,scrollbars=0,width=800,height=600");
-            authorizeGithubHandler();
+            //authorizeGithubHandler();
 
             $.post({
+                data: {username: ct_user_name},
                 url: CLOUDTEAMS_URL
             }).success(function (data, status, xhr) {
 
