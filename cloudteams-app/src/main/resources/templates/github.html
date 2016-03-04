@@ -42,9 +42,7 @@
         var POPUP;
 
         function authorizeGithub() {
-            console.log("Could not locate auth token");
             POPUP = window.open(GITHUB_AUTHORIZE_URL, "mywindow", "status=0,toolbar=0,resizable=0,scrollbars=0,width=800,height=600");
-            //authorizeGithubHandler();
 
             $.post({
                 data: {username: ct_user_name},
@@ -53,8 +51,8 @@
 
                 var res = JSON.parse(data);
                 if ("SUCCESS" === res.code) {
-                    console.log(data);
                     localStorage.auth_token = res.token;
+                    loadGithubWidget();
                 } else {
                     console.log("Could not authorize");
                 }
