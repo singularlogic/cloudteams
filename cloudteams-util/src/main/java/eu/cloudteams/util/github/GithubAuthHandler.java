@@ -14,11 +14,11 @@ import org.springframework.web.client.RestTemplate;
 public final class GithubAuthHandler {
 
     // Production client id
-
     private static final String CLIENT_ID = "9aababac7a8ec6c9659e";
 
     // Development client id
 //    private static final String CLIENT_ID = "413dd46351dc0c48f306";
+    
     // Production client secret
     private static final String CLIENT_SECRET = "77ed672ccb348b6332cc112a55038724713bc839";
 
