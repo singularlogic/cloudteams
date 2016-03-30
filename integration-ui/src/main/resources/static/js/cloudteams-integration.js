@@ -3,8 +3,8 @@
  */
 var AUTHORIZATION_HEADER = "Authorization";
 var CLOUDTEAMS_GITHUB_REST_ENDPOINT = "http://cloudteams-gh.euprojects.net/api/v1";
-//var CLOUDTEAMS_SONARQUBE_REST_ENDPOINT = "http://cloudteams-sq.euprojects.net/sonarqube/project";
-var CLOUDTEAMS_SONARQUBE_REST_ENDPOINT = "http://localhost:8082/api/v1";
+var CLOUDTEAMS_SONARQUBE_REST_ENDPOINT = "http://cloudteams-sq.euprojects.net/sonarqube/project";
+
 
 $(document).ready(function () {
     console.log("Loaded oauth.js");
