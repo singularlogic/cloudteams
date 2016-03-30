@@ -1,0 +1,36 @@
+html, body, div, span, a, nav, ul, li {
+    border: 0;
+    margin: 0;
+    outline: 0;
+    padding: 0;
+    -webkit-font-smoothing: antialiased;
+}
+
+a {
+    text-decoration:none;
+}
+@font-face {
+    font-family: "Roboto";
+    src: url("../fonts/Roboto-Regular.ttf");
+}
+
+select{
+    display: block;
+  width: 300px;  
+}
+
+button{
+    display: block;
+    margin-top: 20px;
+}
+
+.widget-wrapper {
+    border: 4px dotted #eee;
+    padding: 2em;
+    margin: 10px;
+    border-radius: 8px;
+}
+
+ul{
+    list-style: none;
+}

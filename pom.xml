@@ -10,13 +10,9 @@
 
     <!-- Project Modules -->
     <modules>
-        <!-- WEB-APP Module -->
-        <!-- REPOSITORY Module -->
-        <!-- UTIL Module -->
-        <module>cloudteams-app</module>
-        <module>cloudteams-repository</module>
-        <module>cloudteams-util</module>
-        <module>cloudteams-sample</module>
+        <module>github-microservice</module>
+        <module>sonarqube-microservice</module>
+        <module>integration-ui</module>
     </modules>
 
     <properties>
