@@ -78,7 +78,7 @@
         <!-- Cloudteams interdependencies -->
         <dependency>
             <groupId>eu.cloudteams</groupId>
-            <artifactId>cloudteams-util</artifactId>
+            <artifactId>github-util</artifactId>
             <version>v0.0.1</version>
         </dependency>    
     
@@ -130,7 +130,7 @@
             <version>2.1.4</version>
         </dependency>
         
-        <dependency>
+<!--        <dependency>
             <groupId>org.webjars</groupId>
             <artifactId>angularjs</artifactId>
             <version>1.4.7</version>
@@ -146,7 +146,7 @@
             <groupId>org.webjars</groupId>
             <artifactId>angular-toastr</artifactId>
             <version>1.5.0</version>
-        </dependency>
+        </dependency>-->
    
     </dependencies>
     <build>

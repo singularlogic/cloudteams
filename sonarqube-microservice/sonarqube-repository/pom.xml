@@ -26,7 +26,7 @@
         <!-- cloudteams interdependencies -->
         <dependency>
             <groupId>eu.cloudteams</groupId>
-            <artifactId>cloudteams-util</artifactId>
+            <artifactId>github-util</artifactId>
             <version>v0.0.1</version>
         </dependency> 
         

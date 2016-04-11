@@ -1,25 +1,28 @@
 package eu.cloudteams.controller;
 
-import eu.cloudteams.authentication.jwt.Token;
-import com.nimbusds.jose.JOSEException;
-import eu.cloudteams.authentication.jwt.TokenHandler;
 import static eu.cloudteams.controller.WebController.getCurrentUser;
+import com.nimbusds.jose.JOSEException;
+import eu.cloudteams.authentication.jwt.Token;
+import eu.cloudteams.authentication.jwt.TokenHandler;
 import eu.cloudteams.repository.domain.GithubProject;
 import eu.cloudteams.repository.domain.GithubUser;
 import eu.cloudteams.repository.service.ProjectService;
 import eu.cloudteams.repository.service.UserService;
 import eu.cloudteams.util.github.GithubAuthHandler;
 import eu.cloudteams.util.github.GithubAuthResponse;
+import eu.cloudteams.util.github.GithubService;
 import java.io.IOException;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import eu.cloudteams.util.github.GithubService;
-import java.util.Optional;
 import org.eclipse.egit.github.core.Repository;
-
+import org.eclipse.egit.github.core.RepositoryCommit;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -122,7 +125,6 @@ public class GithubController {
         GithubService github = new GithubService(user.getGithubToken());
         //Unassigned project
         if (null == project) {
-
             model.addAttribute("GetRepositories", github.getGithubRepositoryService().getRepositories());
             return "github::github-no-project";
         }
@@ -132,7 +134,11 @@ public class GithubController {
         Optional<Repository> repository = github.getGithubRepositoryService().getRepositories().stream().filter(repositoryTofind -> repositoryTofind.getName().equals(project.getGithubRepository())).findFirst();
 
         if (repository.isPresent()) {
-            model.addAttribute("repository", repository.get());
+
+            GithubStatisticsTO githubStatistics = new GithubStatisticsTO(github, repository.get());
+
+            model.addAttribute("githubStats", githubStatistics);
+
             return "github::github-auth-project";
         }
 
@@ -180,7 +186,6 @@ public class GithubController {
     @RequestMapping(value = "/api/v1/github/add", method = RequestMethod.POST)
     public String githubAuth(Model model, @RequestParam(value = "project_id", defaultValue = "") long project_id, @RequestParam(value = "reponame", defaultValue = "") String githubRepository) {
 
-            
         JSONObject jsonObject = new JSONObject();
 
         if (!WebController.hasAccessToken()) {

@@ -99,13 +99,57 @@
 
 
 <div th:fragment="github-auth-project">
+    <!-- Owner/Company properties -->
     <div class="alert alert-warning">Github repository statistics</div>
-    <div th:inline="text"><strong>Repository:</strong> [[${repository.getName()}]]</div>
-    <div th:inline="text"><strong>Description:</strong> [[${repository.getDescription()}]]</div>
-    <div th:inline="text"><strong>Size:</strong> [[${repository.getSize()}]]</div>
-    <div th:inline="text"><strong>URL:</strong> [[${repository.getHtmlUrl()}]]</div>
-    <div th:inline="text"><strong>Forks:</strong> [[${repository.getForks()}]]</div>
-    <div th:inline="text"><strong>Issues:</strong> [[${repository.getOpenIssues()}]]</div>
+    <div style="text-align: center" th:inline="text"><img width="200px" th:src="${githubStats.getRepository().getOwner().getAvatarUrl()}" /></div>
+    <div th:inline="text"><strong>Owner: </strong> [[${githubStats.getRepository().getOwner().getLogin()}]]</div>
+    <!-- Repository properties -->
+    <div th:inline="text"><strong>Repository:</strong> [[${githubStats.getRepository().getName()}]]</div>
+    <div th:inline="text"><strong>Description:</strong> [[${githubStats.getRepository().getDescription()}]]</div>
+    <div th:inline="text"><strong>Size:</strong> [[${githubStats.getRepository().getSize()}]]</div>
+    <div th:inline="text"><strong>URL:</strong> <a th:href="${githubStats.getRepository().getHtmlUrl()}" th:text="${githubStats.getRepository().getHtmlUrl()}" target="_blank"></a></div>
+    <div th:inline="text"><strong>Forks:</strong> [[${githubStats.getRepository().getForks()}]]</div>
+
+    <div th:inline="text"><strong>Watchers:</strong> [[${githubStats.getRepository().getWatchers()}]]</div>
+    <div th:inline="text"><strong>Home page: </strong> [[${githubStats.getRepository().getHomepage()}]]</div>
+    <div th:inline="text"><strong>Created at: </strong> [[${githubStats.getRepository().getCreatedAt()}]]</div>
+    <div th:inline="text"><strong>Updated at: </strong> [[${githubStats.getRepository().getUpdatedAt()}]]</div>
+    <div th:inline="text"><strong>Clone url: </strong>  <a th:href="${githubStats.getRepository().getCloneUrl()}" th:text="${githubStats.getRepository().getCloneUrl()}" target="_blank"></a></div>
+    <div th:inline="text"><strong>Master branch: </strong> [[${githubStats.getRepository().getMasterBranch()}]]</div>
+
+
+
+    <!-- Code Section (commitsTotal,branchesNames,releasesNames,contibutorsTotal,repositoryName(withUrl) )-->
+
+    <div><strong>Total Commits</strong> <span th:text="${githubStats.getCommits().size()}" ></span><br/></div>
+    <div><strong>Total Branches</strong> <span th:text="${githubStats.getBranches().size()}" ></span><br/></div>    
+    <div><strong>Total Collaborators</strong> <span th:text="${githubStats.getCollaborators().size()}" ></span><br/></div>   
+
+
+
+    <div th:inline="text"><strong>Repository url: </strong>  <a th:href="${githubStats.getRepository().getHtmlUrl() + '/tree/' + githubStats.getRepository().getMasterBranch()}" th:text="${githubStats.getRepository().getHtmlUrl() + '/tree/' + githubStats.getRepository().getMasterBranch()}" target="_blank"></a></div>
+
+    <div><strong>Branches:</strong> <a target="_blank"  th:each="branch : ${githubStats.getBranches()}" th:href="${githubStats.getRepository().getHtmlUrl() + '/tree/' + branch.getName()}"  th:text="${branch.getName()}" > </a><br/></div>
+    <div th:inline="text"><strong>Open Issues:</strong> [[${githubStats.getRepository().getOpenIssues()}]]</div>
+
+
+
+    <!-- Issues Section (openissuesTotal,closedisseusTotal,labelNames,milestonesNames) -->
+    <div><strong>Labels:</strong> <span th:each="label : ${githubStats.getLabels()}"  th:text="${label.getName()}" ></span><br/></div>
+
+    <!-- Pull requests (open & closed Num) -->
+
+
+    <!-- Pulse (monthly authors/commits(master)/commitsToAll, file changes master, additions /deletions )  -->
+
+    <div><strong>Last Month Commits total</strong> <span th:text="${githubStats.getCommitsStats().getTotalCommits()}" ></span><br/></div>
+    <div><strong>Last Month Commits total modifications</strong> <span th:text="${githubStats.getCommitsStats().getTotalChanges()}" ></span><br/></div>
+    <div><strong>Last Month Commits total additions</strong> <span th:text="${githubStats.getCommitsStats().getTotalAdditions()}" ></span><br/></div>
+    <div><strong>Last Month Commits total deletions</strong> <span th:text="${githubStats.getCommitsStats().getTotalDeletions()}" ></span><br/></div>
+
+
+
+    <button id="btn-oauth" onclick="" class="btn btn-danger">Unsynchronize</button>
 </div>
 
 <div th:fragment="github-error">

@@ -3,6 +3,7 @@
  */
 var AUTHORIZATION_HEADER = "Authorization";
 var CLOUDTEAMS_GITHUB_REST_ENDPOINT = "https://cloudteams.euprojects.net/github/api/v1";
+//var CLOUDTEAMS_GITHUB_REST_ENDPOINT = "http://localhost:8081/api/v1";
 var CLOUDTEAMS_SONARQUBE_REST_ENDPOINT = "https://cloudteams.euprojects.net/sonar/api/v1";
 
 $(document).ready(function () {
