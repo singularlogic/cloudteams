@@ -12,17 +12,14 @@ import eu.cloudteams.util.github.GithubAuthHandler;
 import eu.cloudteams.util.github.GithubAuthResponse;
 import eu.cloudteams.util.github.GithubService;
 import java.io.IOException;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import net.minidev.json.JSONUtil;
 import org.eclipse.egit.github.core.Repository;
-import org.eclipse.egit.github.core.RepositoryCommit;
+import org.json.JSONArray;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -131,14 +128,14 @@ public class GithubController {
 
         logger.info("Returning github-info fragment for user:  " + getCurrentUser().getPrincipal() + " and project_id: " + project_id);
 
+        long start = System.currentTimeMillis();
         Optional<Repository> repository = github.getGithubRepositoryService().getRepositories().stream().filter(repositoryTofind -> repositoryTofind.getName().equals(project.getGithubRepository())).findFirst();
 
         if (repository.isPresent()) {
-
+            //Generate github statistics
             GithubStatisticsTO githubStatistics = new GithubStatisticsTO(github, repository.get());
-
             model.addAttribute("githubStats", githubStatistics);
-
+            System.out.println("Total time: " + (System.currentTimeMillis() - start) / 1000);
             return "github::github-auth-project";
         }
 
@@ -175,7 +172,7 @@ public class GithubController {
         logger.info("[GitHub Synchronization T#" + Thread.currentThread().getId() + "] could not found user:  " + username + " in database , synchronization failed");
 
         //Token not found return error message
-        response.put("code", "FAIL");
+        response.put("code", MESSAGES.FAIL);
         response.put("message", "Could not find access token for user: " + username);
 
         return response.toString();
@@ -189,13 +186,13 @@ public class GithubController {
         JSONObject jsonObject = new JSONObject();
 
         if (!WebController.hasAccessToken()) {
-            jsonObject.put("code", "FAIL");
+            jsonObject.put("code", MESSAGES.FAIL);
             jsonObject.put("message", "User is not authorized");
             return jsonObject.toString();
         }
 
         if (githubRepository.isEmpty()) {
-            jsonObject.put("code", "FAIL");
+            jsonObject.put("code", MESSAGES.FAIL);
             jsonObject.put("message", "Repository name is empty.");
             return jsonObject.toString();
         }
@@ -203,7 +200,7 @@ public class GithubController {
         GithubUser user = userService.findByUsername(getCurrentUser().getPrincipal().toString());
 
         if (null == user) {
-            jsonObject.put("code", "FAIL");
+            jsonObject.put("code", MESSAGES.FAIL);
             jsonObject.put("message", "User does not exist");
             return jsonObject.toString();
         }
@@ -218,10 +215,47 @@ public class GithubController {
             projectService.store(project);
         }
 
-        jsonObject.put("code", "SUCCESS");
+        jsonObject.put("code",  MESSAGES.SUCCESS);
         jsonObject.put("message", "Repository: " + githubRepository + " has been assigned!");
 
         return jsonObject.toString();
+    }
+
+    @CrossOrigin
+    @ResponseBody
+    @RequestMapping(value = "/api/v1/github/delete", method = RequestMethod.POST)
+    public String unassignGithubRepository(Model model, @RequestParam(value = "project_id", defaultValue = "0", required = true) int project_id) throws IOException {
+
+        logger.info("Requesting unassign github repository for project_id: " + project_id);
+
+        //Check if user is authenticated
+        if (!WebController.hasAccessToken()) {
+            logger.warning("Unauthorized access returing github sigin fragment");
+            //return github-signin fragment
+            return new JSONObject().put("code", MESSAGES.FAIL).put("message", "User is not authenticated.").toString();
+        }
+
+        //Fetch the actual user based on JWT
+        GithubUser user = userService.findByUsername(getCurrentUser().getPrincipal().toString());
+
+        //Check if user exists
+        if (null == user) {
+            return new JSONObject().put("code", MESSAGES.FAIL).put("message", "Could not find user: " + getCurrentUser().getPrincipal().toString() + " to database.").toString();
+        }
+
+        //Check if deletion is success
+        if (0 == projectService.deleteByProjectIdAndUser(project_id, user)) {
+            return new JSONObject().put("code", MESSAGES.FAIL).put("message", "Could not unassign project.").toString();
+        }
+
+        return new JSONObject().put("code", MESSAGES.SUCCESS).put("message", "Project has been unassigned").toString();
+    }
+
+    private final class MESSAGES {
+        
+        final static String SUCCESS = "SUCCESS";
+        final static String FAIL = "FAIL";
+
     }
 
 }

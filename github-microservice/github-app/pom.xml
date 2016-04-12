@@ -6,8 +6,7 @@
         <artifactId>github-microservice</artifactId>
         <version>v0.0.1</version>
     </parent>
-    
-    
+       
     <!-- Artifact Details -->
     <name>github-app</name>
     <artifactId>github-app</artifactId>

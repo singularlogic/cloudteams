@@ -7,9 +7,7 @@ import eu.cloudteams.util.sonarqube.models.Project;
 import eu.cloudteams.util.sonarqube.models.ProjectInfo;
 import eu.cloudteams.util.sonarqube.models.SonarMetricsResponse;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -25,6 +23,8 @@ public class SonarqubeService {
     //To be deleted
     private static final String SONAR_URL = "https://nemo.sonarqube.org";
     private static final String PROJECT_KEY = "org.apache.tika:tika";
+    
+    private static final String SONAR_SERVER_INFO="server?format=json";
 
     private final String sonarUrl;
     private final String projectKey;

@@ -44,7 +44,11 @@ public class ProjectService {
     }
 
     public SonarqubeProject findByProjectIdAndUser(long project_id, SonarqubeUser user) {
-        return projectRepository.findByProjectIdAndUser(project_id , user);
+        return projectRepository.findByProjectIdAndUser(project_id, user);
+    }
+
+    public long deleteByProjectIdAndUser(long project_id, SonarqubeUser user) {
+        return projectRepository.deleteByProjectIdAndUser(project_id, user);
     }
 
 }

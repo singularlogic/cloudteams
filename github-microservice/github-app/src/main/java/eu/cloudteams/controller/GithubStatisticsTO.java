@@ -3,9 +3,12 @@ package eu.cloudteams.controller;
 import eu.cloudteams.util.github.GithubService;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -59,54 +62,50 @@ public final class GithubStatisticsTO {
     }
 
     public void gatherInfo() throws IOException {
-
+        
         branchesList = githubService.getGithubRepositoryService().getBranches(repository);
         labelsList = githubService.getLabelService().getLabels(repository);
         commits = githubService.getCommitService().getCommits(repository);
 
         //Code section (info for master branch)
-        RepositoryBranch masterBranch = branchesList.stream().filter(GithubStatisticsTO::isMasterBranch).findFirst().get();
+        //RepositoryBranch masterBranch = branchesList.stream().filter(GithubStatisticsTO::isMasterBranch).findFirst().get();
 
         labelsList = githubService.getLabelService().getLabels(repository);
         collaboratorsList = githubService.getCollaboratorService().getCollaborators(repository);
 
         //Pulse section
         setLatMonthCommitsStats();
+
     }
 
     private void setLatMonthCommitsStats() {
 
-//        if (null == commitsStats) {
-//
-//            Calendar cal = Calendar.getInstance();
-//            cal.add(Calendar.MONTH, -1);
-//            //final List<RepositoryCommit> lastMonthcommits = commits.stream().filter(commit -> commit.getCommit().getCommitter().getDate().getTime() > cal.getTime().getTime())  .collect(Collectors.toList());
-//
-//            List<String> commitsSHA = commits.stream().filter(commit -> commit.getCommit().getCommitter().getDate().getTime() > cal.getTime().getTime()).map(commit -> commit.getSha()).collect(Collectors.toList());
-//
-//            final List<RepositoryCommit> lastMonthcommits = new ArrayList<>();
-//
-//            //Get latest commits
-//            for (String commitSHA : commitsSHA) {
-//                try {
-//                    lastMonthcommits.add(githubService.getCommitService().getCommit(repository, commitSHA));
-//                } catch (IOException ex) {
-//                    Logger.getLogger(GithubStatisticsTO.class.getName()).log(Level.SEVERE, null, ex);
-//                }
-//
-//            }
-//
-//            lastMonthcommits.parallelStream().map(repoCommit -> new Object() {
-//                int additions = repoCommit.getStats().getAdditions();
-//                int deletions = repoCommit.getStats().getDeletions();
-//                int total = repoCommit.getStats().getTotal();
-//
-//            }).collect(Collectors.collectingAndThen(Collectors.groupingBy(obj -> obj.additions, Collectors.groupingBy(obj -> obj.deletions, Collectors.groupingBy(obj -> obj.total))), null));
-//
-//        }
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DAY_OF_WEEK, -7);
+        //final List<RepositoryCommit> lastMonthcommits = commits.stream().filter(commit -> commit.getCommit().getCommitter().getDate().getTime() > cal.getTime().getTime())  .collect(Collectors.toList());
+
+        List<String> commitsSHA = commits.stream().filter(commit -> commit.getCommit().getCommitter().getDate().getTime() > cal.getTime().getTime()).map(commit -> commit.getSha()).collect(Collectors.toList());
+
+        Set<String> contributors = new HashSet<>();
+
+        int totalAdditions = 0;
+        int totalDeletions = 0;
+
+        //Get latest commits
+        for (String commitSHA : commitsSHA) {
+            try {
+
+                RepositoryCommit tmpRepositoryCommit = githubService.getCommitService().getCommit(repository, commitSHA);
+                contributors.add(tmpRepositoryCommit.getCommitter().getLogin());
+                totalAdditions += tmpRepositoryCommit.getStats().getAdditions();
+                totalDeletions += tmpRepositoryCommit.getStats().getDeletions();
+            } catch (IOException ex) {
+                Logger.getLogger(GithubStatisticsTO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
 
 //Set commitsStats
-        this.commitsStats = new CommitsStats(0, 0, 0);
+        this.commitsStats = new CommitsStats(totalAdditions, totalDeletions, commitsSHA.size(), contributors);
     }
 
     private static boolean isMasterBranch(RepositoryBranch repository) {
@@ -124,11 +123,14 @@ class CommitsStats {
     private final int totalAdditions;
     private final int totalDeletions;
     private final int totalCommits;
+    private final Set<String> contributors;
 
-    public CommitsStats(int totalAdditions, int totalDeletions, int totalCommits) {
+    public CommitsStats(int totalAdditions, int totalDeletions, int totalCommits, Set<String> contributors) {
         this.totalAdditions = totalAdditions;
         this.totalDeletions = totalDeletions;
         this.totalCommits = totalCommits;
+        this.contributors = contributors;
+
     }
 
     public int getTotalAdditions() {
@@ -145,5 +147,13 @@ class CommitsStats {
 
     public int getTotalChanges() {
         return this.totalAdditions + this.totalDeletions;
+    }
+
+    public int getContributors() {
+        return this.contributors.size();
+    }
+
+    public String getContributorsNames() {
+        return this.contributors.stream().collect(Collectors.joining(" "));
     }
 }

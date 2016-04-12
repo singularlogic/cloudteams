@@ -8,16 +8,13 @@ import eu.cloudteams.repository.domain.SonarqubeProject;
 import eu.cloudteams.repository.domain.SonarqubeUser;
 import eu.cloudteams.repository.service.ProjectService;
 import eu.cloudteams.repository.service.UserService;
-import eu.cloudteams.util.sonarqube.models.SonarIssues;
 import eu.cloudteams.util.sonarqube.SonarqubeService;
 import eu.cloudteams.util.sonarqube.models.ProjectInfo;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
-import org.eclipse.egit.github.core.Repository;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -36,9 +33,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class SonarqubeController {
 
     private static final Logger logger = Logger.getLogger(SonarqubeController.class.getName());
-
-    private static final String SONAR_URL = "https://nemo.sonarqube.org/api/";
-    private static final String PROJECT_KEY = "org.apache.tika:tika";
 
     @Autowired
     UserService userService;
@@ -137,30 +131,25 @@ public class SonarqubeController {
     @RequestMapping(value = "/api/v1/sonarqube/add", method = RequestMethod.POST)
     public String githubAuth(Model model, @RequestParam(value = "project_id", defaultValue = "") long project_id, @RequestParam(value = "projectName", defaultValue = "") String projectName) {
 
-        JSONObject jsonObject = new JSONObject();
-
+        //Check if user is authenticated
         if (!WebController.hasAccessToken()) {
-            jsonObject.put("code", "FAIL");
-            jsonObject.put("message", "User is not authorized");
-            return jsonObject.toString();
+            return new JSONObject().put("code", MESSAGES.FAIL).put("message", "User not authenticated.").toString();
         }
 
+        //Check if project is empty
         if (projectName.isEmpty()) {
-            jsonObject.put("code", "FAIL");
-            jsonObject.put("message", "Project name is empty.");
-            return jsonObject.toString();
+            return new JSONObject().put("code", MESSAGES.FAIL).put("message", "Project name is empty.").toString();
         }
 
         //Check if user exists
         SonarqubeUser user = userService.findByUsername(getCurrentUser().getPrincipal().toString());
 
+        //Check if user exists
         if (null == user) {
-            jsonObject.put("code", "FAIL");
-            jsonObject.put("message", "User does not exist");
-            return jsonObject.toString();
+            return new JSONObject().put("code", MESSAGES.FAIL).put("message", "Could not find user: " + getCurrentUser().getPrincipal().toString() + " to database.").toString();
         }
 
-        //Check if prohect exists
+        //Check if project exists
         SonarqubeProject project = projectService.findOne(project_id);
 
         //Create project
@@ -172,9 +161,43 @@ public class SonarqubeController {
             projectService.store(project);
         }
 
-        jsonObject.put("code", "SUCCESS");
-        jsonObject.put("message", "Project: " + projectName + " has been assigned!");
+        return new JSONObject().put("code", MESSAGES.SUCCESS).put("message", "Project: " + projectName + " has been assigned!").toString();
+    }
 
-        return jsonObject.toString();
+    @CrossOrigin
+    @ResponseBody
+    @RequestMapping(value = "/api/v1/sonarqube/delete", method = RequestMethod.POST)
+    public String unassignSonarqubeProject(Model model, @RequestParam(value = "project_id", defaultValue = "0", required = true) int project_id) throws IOException {
+
+        logger.info("Requesting unassign sonarqube project for project_id: " + project_id);
+
+        //Check if user is authenticated
+        if (!WebController.hasAccessToken()) {
+            logger.warning("Unauthorized access returing github sigin fragment");
+            //return github-signin fragment
+            return new JSONObject().put("code", MESSAGES.FAIL).put("message", "User is not authenticated.").toString();
+        }
+
+        //Fetch the actual user based on JWT
+        SonarqubeUser user = userService.findByUsername(getCurrentUser().getPrincipal().toString());
+
+        //Check if user exists
+        if (null == user) {
+            return new JSONObject().put("code", MESSAGES.FAIL).put("message", "Could not find user: " + getCurrentUser().getPrincipal().toString() + " to database.").toString();
+        }
+
+        //Check if deletion is success
+        if (0 == projectService.deleteByProjectIdAndUser(project_id, user)) {
+            return new JSONObject().put("code", MESSAGES.FAIL).put("message", "Could not unassign project.").toString();
+        }
+
+        return new JSONObject().put("code", MESSAGES.SUCCESS).put("message", "Project has been unassigned").toString();
+    }
+
+    private final class MESSAGES {
+
+        final static String SUCCESS = "SUCCESS";
+        final static String FAIL = "FAIL";
+
     }
 }
