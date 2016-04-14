@@ -7,7 +7,6 @@ import eu.cloudteams.util.sonarqube.models.Project;
 import eu.cloudteams.util.sonarqube.models.ProjectInfo;
 import eu.cloudteams.util.sonarqube.models.ServerInfo;
 import eu.cloudteams.util.sonarqube.models.SonarMetricsResponse;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
