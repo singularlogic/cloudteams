@@ -47,7 +47,7 @@ public class SonarqubeController {
         logger.info("Requesting info for repository assigned to project_id: " + project_id);
 
         if (!WebController.hasAccessToken()) {
-            logger.warning("Unauthorized access returing github sigin fragment");
+            logger.warning("Unauthorized access returing github sign-in fragment");
             //return github-signin fragment
             return "sonarqube::sonarqube-no-auth";
         }
@@ -64,7 +64,7 @@ public class SonarqubeController {
             return "sonarqube::sonarqube-no-project";
         }
 
-        logger.info("Returning github-info fragment for user:  " + getCurrentUser().getPrincipal() + " and project_id: " + project_id);
+        logger.info("Returning sonarqube-info fragment for user:  " + getCurrentUser().getPrincipal() + " and project_id: " + project_id);
 
         sonarService = new SonarqubeService(user.getSonarqubeUrl(), project.getSonarqubeProject());
 
@@ -83,8 +83,12 @@ public class SonarqubeController {
     @ResponseBody
     @RequestMapping(value = "/api/v1/auth/token", method = RequestMethod.POST)
     public String getJWT(@RequestParam(value = "username", required = true) String username, @RequestParam(value = "sonarUrl", required = true) String sonarUrl, HttpServletRequest request) throws IOException {
-        JSONObject response = new JSONObject();
-        //TODO: Validate the sonar url
+
+        //Check if sonar service is running on the given url
+        if (!new SonarqubeService(sonarUrl).getServerInfo().isPresent()) {
+            return new JSONObject().put("code", MESSAGES.FAIL).put("message", "Sonarqube service is not available in url: " + sonarUrl).toString();
+        }
+
         //Check if user already exists
         SonarqubeUser user = userService.findByUsername(username);
 
@@ -99,37 +103,32 @@ public class SonarqubeController {
 
         //If create new user was not success return
         if (false == userService.storeUser(user)) {
-            response.put("code", "FAIL");
-            response.put("message", "Could not create user " + username + "  to Cloudteams Database ");
             logger.log(Level.SEVERE, "Could not store user: " + username + " to database.");
-            return response.toString();
+            return new JSONObject().put("code", MESSAGES.FAIL).put("message", "Could not create user " + username + "  to Cloudteams Database ").toString();
         }
 
+        //Create Access Token
         try {
-            //Create Access Token
+
             Token generatedToken = TokenHandler.createToken(request.getRemoteAddr(), username);
             //Save User
             user.setAccessToken(generatedToken.getToken());
         } catch (JOSEException ex) {
             Logger.getLogger(SonarqubeController.class.getName()).log(Level.SEVERE, null, ex);
-            response.put("code", "FAIL");
-            response.put("message", "Could not create access token for user: " + username);
-            return response.toString();
+            return new JSONObject().put("code", MESSAGES.FAIL).put("message", "Could not create access token for user: " + username).toString();
         }
 
         //Print the generated token
         logger.log(Level.INFO, "Generated Token: {0}", user.getAccessToken());
-
         //Success created user and accesstoken
-        response.put("token", "Bearer " + user.getAccessToken());
-        response.put("code", "SUCCESS");
-        return response.toString();
+        return new JSONObject().put("code", MESSAGES.SUCCESS).put("message", "Token has been created successfully!").put("token", "Bearer " + user.getAccessToken()).toString();
+
     }
 
     @CrossOrigin
     @ResponseBody
     @RequestMapping(value = "/api/v1/sonarqube/add", method = RequestMethod.POST)
-    public String githubAuth(Model model, @RequestParam(value = "project_id", defaultValue = "") long project_id, @RequestParam(value = "projectName", defaultValue = "") String projectName) {
+    public String sonarqubeAuth(Model model, @RequestParam(value = "project_id", defaultValue = "") long project_id, @RequestParam(value = "projectName", defaultValue = "") String projectName) {
 
         //Check if user is authenticated
         if (!WebController.hasAccessToken()) {
