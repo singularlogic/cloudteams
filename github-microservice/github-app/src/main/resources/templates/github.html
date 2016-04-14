@@ -114,19 +114,19 @@
         <!--Commits-->
         <p class="bold" th:inline="text">
             <span class="highlight">Commits (<span th:text="${githubStats.getCommits().size()}"></span>) </span>
-            <a th:href="${githubStats.getRepository().getHtmlUrl()} + '/commits/master'"><i class="icon icon-message"></i>LINK</a>
+            <a th:href="${githubStats.getRepository().getHtmlUrl()} + '/commits/master'"><i class="icon icon-object"></i></a>
         </p>
 
         <!--Contributors-->
         <p class="bold" th:inline="text">
             <span class="highlight">Contributors (<span th:text="${githubStats.getCollaborators().size()}"></span>)</span>
-            <a th:href="${githubStats.getRepository().getHtmlUrl()} + '/graphs/contributors'"><i class="icon icon-message"></i>LINK</a>
+            <a th:href="${githubStats.getRepository().getHtmlUrl()} + '/graphs/contributors'"><i class="icon icon-object"></i></a>
         </p>
 
         <!--Watchers-->
         <p class="bold" th:inline="text">
             <span class="highlight">Watchers (<span th:text="${githubStats.getRepository().getWatchers()}"></span>)</span>
-            <a th:href="${githubStats.getRepository().getHtmlUrl()} + '/watchers'"><i class="icon icon-message"></i>LINK</a>
+            <a th:href="${githubStats.getRepository().getHtmlUrl()} + '/watchers'"><i class="icon icon-object"></i></a>
         </p>
 
         <!--Forks-->
@@ -149,13 +149,13 @@
     <!--Open Issues-->
     <p class="bold" th:inline="text">
         <span class="highlight">Open Issues (<span th:text="${githubStats.getRepository().getOpenIssues()}"></span>)</span>
-        <a th:href="${githubStats.getRepository().getHtmlUrl()} + '/issues'"><i class="icon icon-message"></i>LINK</a>
+        <a th:href="${githubStats.getRepository().getHtmlUrl()} + '/issues'"><i class="icon icon-object"></i></a>
     </p>
 
     <!--Closed Issues-->
     <p class="bold" th:inline="text">
         <span class="highlight">Closed Issues </span>
-        <a th:href="${githubStats.getRepository().getHtmlUrl()} + '/issues?q=is%3Aissue+is%3Aclosed'"><i class="icon icon-message"></i>LINK</a>
+        <a th:href="${githubStats.getRepository().getHtmlUrl()} + '/issues?q=is%3Aissue+is%3Aclosed'"><i class="icon icon-object"></i></a>
     </p>
 
     <!--Labels-->
