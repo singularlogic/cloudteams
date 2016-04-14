@@ -1,9 +1,9 @@
 <div th:fragment="sonarqube-no-auth">
 
-    <div class="alert alert-warning">Please synchronize your Sonarqube account</div>
+    <div class="alert alert-warning">Please synchronize your SonarQube account</div>
 
     <div class="form-group">
-        <label for="sonar-url">Sonarqube Url</label>
+        <label for="sonar-url">SonarQube Url</label>
         <input id="sonar-url" type="text" name="lastname" class="form-control" placeholder="http://" value="" />
     </div>
 
@@ -47,7 +47,7 @@
 </div>
 
 <div th:fragment="sonarqube-no-project">
-    <div class="alert alert-warning">Please select a Sonarqube project</div>
+    <div class="alert alert-warning">Please select a SonarQube project</div>
     <select id="projects" th:if="${!sonarqubeProjects.isEmpty()}">
         <option th:each="project : ${sonarqubeProjects}" th:value="${project.getK()}" th:text="${project.getNm()}"></option>
     </select>
@@ -84,17 +84,31 @@
 
 
 <div th:fragment="sonarqube-auth-project">
-    <div class="alert alert-warning">Sonarqube project statistics</div>
-    <div th:inline="text"><strong>Project name:</strong> [[${projectInfo.getProjectName()}]]</div>
-    <div th:inline="text"><strong>Version:</strong> [[${projectInfo.getVersion()}]]</div>
-    <div th:inline="text"><strong>Description:</strong> [[${projectInfo.getDescription()}]]</div>
-    <div th:inline="text"><strong>Total Issues:</strong> [[${projectInfo.getTotalIssues()}]]</div>
-    <strong>Project metrics</strong>
-    <!-- Iterate all metrics -->
-    <ul id="metrics" th:each="metric : ${projectInfo.getMetrics()}">
-        <li> <span th:text="${metric.key}"></span> : <span th:text="${metric.value}"></span> </li>
-    </ul>
+    <div class="alert alert-warning">SonarQube Statistics</div>
 
+    <p th:inline="text"><strong>[[${projectInfo.getProjectName()}]]</strong> ([[${projectInfo.getVersion()}]])</p>
+    <p th:inline="text">[[${projectInfo.getDescription()}]]</p>
+
+    <hr/>
+
+    <!-- 1. Issues-->
+    <h3 class="header-medium secondary">Issues</h3>
+
+    <!--Total Issues-->
+    <p class="bold" th:inline="text">
+        <span class="highlight">Total Issues (<span th:text="${projectInfo.getTotalIssues()}"></span>)</span>
+    </p>
+
+    <hr/>
+
+    <!-- 2. Metrics-->
+    <h3 class="header-medium secondary">Metrics</h3>
+
+    <p class="bold" th:inline="text" th:each="metric : ${projectInfo.getMetrics()}">
+        <span class="highlight" th:text="${metric.key}"></span> (<span th:text="${metric.value}"></span>)
+        <!--<span class="highlight">Total Issues (<span th:text="${projectInfo.getTotalIssues()}"></span>)</span>-->
+    </p>
+    
     <button id="btn-unassign" onclick="unassignProject()" class="btn btn-danger">Unassign</button>
 
     <script th:inline="javascript">

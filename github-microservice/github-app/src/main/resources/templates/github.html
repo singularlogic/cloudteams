@@ -173,7 +173,7 @@
     <p class="bold" th:inline="text">
         Excluding merges, <span class="highlight" th:text="${githubStats.getCommitsStats().getContributors()}"></span> authors have pushed <span class="highlight" th:text="${githubStats.getCommitsStats().getTotalCommits()}"></span> commits to all branches. On master, 75 files have changed and there have been <span class="highlight" th:text="${githubStats.getCommitsStats().getTotalAdditions()}"></span> additions and <span class="highlight" th:text="${githubStats.getCommitsStats().getTotalDeletions()}"></span> deletions.
     </p>
-    
+
     <button id="btn-unassign" onclick="unassignRepository()" class="btn btn-danger">Unassign</button>
 
     <script th:inline="javascript">
