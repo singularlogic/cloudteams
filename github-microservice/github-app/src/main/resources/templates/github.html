@@ -9,7 +9,7 @@
         <link href="http://cdn.jsdelivr.net/webjars/bootstrap/3.3.5/css/bootstrap.min.css"
               th:href="@{/webjars/bootstrap/3.3.5/css/bootstrap.min.css}"
               rel="stylesheet" media="screen"/>
-        <link rel="stylesheet" href="/css/dashboard.css" th:href="@{/css/dashboard.css}"/>
+        <link rel="stylesheet" href="/github/css/dashboard.css" th:href="@{/github/css/dashboard.css}"/>
     </head>
     <body>
 
@@ -94,55 +94,86 @@
 
 
 <div th:fragment="github-auth-project">
-    <!-- Owner/Company properties -->
-    <div class="alert alert-warning">Github repository statistics</div>
-    <div style="text-align: center" th:inline="text"><img width="200px" th:src="${githubStats.getRepository().getOwner().getAvatarUrl()}" /></div>
-    <div th:inline="text"><strong>Owner: </strong> [[${githubStats.getRepository().getOwner().getLogin()}]]</div>
-    <!-- Repository properties -->
-    <div th:inline="text"><strong>Repository:</strong> [[${githubStats.getRepository().getName()}]]</div>
-    <div th:inline="text"><strong>Description:</strong> [[${githubStats.getRepository().getDescription()}]]</div>
-    <div th:inline="text"><strong>Size:</strong> [[${githubStats.getRepository().getSize()}]]</div>
-    <div th:inline="text"><strong>URL:</strong> <a th:href="${githubStats.getRepository().getHtmlUrl()}" th:text="${githubStats.getRepository().getHtmlUrl()}" target="_blank"></a></div>
-    <div th:inline="text"><strong>Forks:</strong> [[${githubStats.getRepository().getForks()}]]</div>
 
-    <div th:inline="text"><strong>Watchers:</strong> [[${githubStats.getRepository().getWatchers()}]]</div>
-    <div th:inline="text"><strong>Home page: </strong> [[${githubStats.getRepository().getHomepage()}]]</div>
-    <div th:inline="text"><strong>Created at: </strong> [[${githubStats.getRepository().getCreatedAt()}]]</div>
-    <div th:inline="text"><strong>Updated at: </strong> [[${githubStats.getRepository().getUpdatedAt()}]]</div>
-    <div th:inline="text"><strong>Clone url: </strong>  <a th:href="${githubStats.getRepository().getCloneUrl()}" th:text="${githubStats.getRepository().getCloneUrl()}" target="_blank"></a></div>
-    <div th:inline="text"><strong>Master branch: </strong> [[${githubStats.getRepository().getMasterBranch()}]]</div>
+    <div class="alert alert-warning">GitHub Statistics</div>
 
+    <p th:inline="text"><a th:href="'https://github.com/' + ${githubStats.getRepository().getOwner().getLogin()}">[[${githubStats.getRepository().getOwner().getLogin()}]]</a>/<a th:href="${githubStats.getRepository().getHtmlUrl()}">[[${githubStats.getRepository().getName()}]]</a></p>
+    <p th:inline="text">[[${githubStats.getRepository().getDescription()}]]</p>
 
+    <!--Last Update-->
+    <p class="bold" th:inline="text">
+        <span class="highlight">Last Update (<span th:text="${githubStats.getRepository().getUpdatedAt()}"></span>)</span>
+    </p>
 
-    <!-- Code Section (commitsTotal,branchesNames,releasesNames,contibutorsTotal,repositoryName(withUrl) )-->
+    <hr/>
 
-    <div><strong>Total Commits</strong> <span th:text="${githubStats.getCommits().size()}" ></span><br/></div>
-    <div><strong>Total Branches</strong> <span th:text="${githubStats.getBranches().size()}" ></span><br/></div>    
-    <div><strong>Total Collaborators</strong> <span th:text="${githubStats.getCollaborators().size()}" ></span><br/></div>   
+    <!-- 1. Code Section (commitsTotal,branchesNames,releasesNames,contibutorsTotal,repositoryName(withUrl) )-->
+    <h3 class="header-medium secondary">Code</h3>
 
+    <div class="data">
+        <!--Commits-->
+        <p class="bold" th:inline="text">
+            <span class="highlight">Commits (<span th:text="${githubStats.getCommits().size()}"></span>) </span>
+            <a th:href="${githubStats.getRepository().getHtmlUrl()} + '/commits/master'"><i class="icon icon-message"></i>LINK</a>
+        </p>
 
+        <!--Contributors-->
+        <p class="bold" th:inline="text">
+            <span class="highlight">Contributors (<span th:text="${githubStats.getCollaborators().size()}"></span>)</span>
+            <a th:href="${githubStats.getRepository().getHtmlUrl()} + '/graphs/contributors'"><i class="icon icon-message"></i>LINK</a>
+        </p>
 
-    <div th:inline="text"><strong>Repository url: </strong>  <a th:href="${githubStats.getRepository().getHtmlUrl() + '/tree/' + githubStats.getRepository().getMasterBranch()}" th:text="${githubStats.getRepository().getHtmlUrl() + '/tree/' + githubStats.getRepository().getMasterBranch()}" target="_blank"></a></div>
+        <!--Watchers-->
+        <p class="bold" th:inline="text">
+            <span class="highlight">Watchers (<span th:text="${githubStats.getRepository().getWatchers()}"></span>)</span>
+            <a th:href="${githubStats.getRepository().getHtmlUrl()} + '/watchers'"><i class="icon icon-message"></i>LINK</a>
+        </p>
 
-    <div><strong>Branches:</strong> <a target="_blank"  th:each="branch : ${githubStats.getBranches()}" th:href="${githubStats.getRepository().getHtmlUrl() + '/tree/' + branch.getName()}"  th:text="${branch.getName()}" > </a><br/></div>
-    <div th:inline="text"><strong>Open Issues:</strong> [[${githubStats.getRepository().getOpenIssues()}]]</div>
+        <!--Forks-->
+        <p class="bold" th:inline="text">
+            <span class="highlight">Forks (<span th:text="${githubStats.getRepository().getForks()}"></span>)</span>
+        </p>
 
+        <!--Branches-->
+        <p class="bold" th:inline="text">
+            <span class="highlight">Branches (<span th:text="${githubStats.getBranches().size()}"></span>)</span>
+            <a target="_blank" th:each="branch : ${githubStats.getBranches()}" th:href="${githubStats.getRepository().getHtmlUrl() + '/tree/' + branch.getName()}" th:text="${branch.getName()}"></a>
+        </p>
+    </div>
 
+    <hr/>
 
-    <!-- Issues Section (openissuesTotal,closedisseusTotal,labelNames,milestonesNames) -->
-    <div><strong>Labels:</strong> <span th:each="label : ${githubStats.getLabels()}"  th:text="${label.getName()}" ></span><br/></div>
+    <!-- 2. Issues Section (openissuesTotal,closedisseusTotal,labelNames,milestonesNames) -->
+    <h3 class="header-medium secondary">Issues</h3>
 
-    <!-- Pull requests (open & closed Num) -->
+    <!--Open Issues-->
+    <p class="bold" th:inline="text">
+        <span class="highlight">Open Issues (<span th:text="${githubStats.getRepository().getOpenIssues()}"></span>)</span>
+        <a th:href="${githubStats.getRepository().getHtmlUrl()} + '/issues'"><i class="icon icon-message"></i>LINK</a>
+    </p>
 
-    <!-- Pulse (weekly authors/commits(master), file changes master, additions /deletions master)  -->
+    <!--Closed Issues-->
+    <p class="bold" th:inline="text">
+        <span class="highlight">Closed Issues </span>
+        <a th:href="${githubStats.getRepository().getHtmlUrl()} + '/issues?q=is%3Aissue+is%3Aclosed'"><i class="icon icon-message"></i>LINK</a>
+    </p>
 
-    <div><strong>Last Week Commits total</strong> <span th:text="${githubStats.getCommitsStats().getTotalCommits()}" ></span><br/></div>
-    <div><strong>Last Week Commits total modifications</strong> <span th:text="${githubStats.getCommitsStats().getTotalChanges()}" ></span><br/></div>
-    <div><strong>Last Week Commits total additions</strong> <span th:text="${githubStats.getCommitsStats().getTotalAdditions()}" ></span><br/></div>
-    <div><strong>Last Week Commits total deletions</strong> <span th:text="${githubStats.getCommitsStats().getTotalDeletions()}" ></span><br/></div>
-    <div><strong>Last Week total contributors</strong> <span th:text="${githubStats.getCommitsStats().getContributors()}" ></span><br/></div>
-    <div><strong>Last Week total contributors names</strong> <span th:text="${githubStats.getCommitsStats().getContributorsNames()}" ></span><br/></div>
+    <!--Labels-->
+    <p class="bold" th:inline="text">
+        <span class="highlight">Labels </span>
+        <a target="_blank" th:each="label : ${githubStats.getLabels()}" th:href="${githubStats.getRepository().getHtmlUrl() + '/labels/' + label.getName()}" th:text="${label.getName()}"></a>
+    </p>
 
+    <hr/>
+
+    <!-- 3. Pulse (weekly authors/commits(master), file changes master, additions /deletions master)  -->
+    <h3 class="header-medium secondary">Pulse</h3>
+
+    <!--Last Weeks Stats-->
+    <p class="bold" th:inline="text">
+        Excluding merges, <span class="highlight" th:text="${githubStats.getCommitsStats().getContributors()}"></span> authors have pushed <span class="highlight" th:text="${githubStats.getCommitsStats().getTotalCommits()}"></span> commits to all branches. On master, 75 files have changed and there have been <span class="highlight" th:text="${githubStats.getCommitsStats().getTotalAdditions()}"></span> additions and <span class="highlight" th:text="${githubStats.getCommitsStats().getTotalDeletions()}"></span> deletions.
+    </p>
+    
     <button id="btn-unassign" onclick="unassignRepository()" class="btn btn-danger">Unassign</button>
 
     <script th:inline="javascript">
