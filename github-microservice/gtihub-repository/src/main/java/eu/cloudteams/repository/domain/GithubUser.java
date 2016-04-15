@@ -43,8 +43,8 @@ public class GithubUser implements Serializable {
     private String githubToken;
     @Basic(optional = false)
     @NotNull
-    @Column(name = "isActive")
-    private boolean isActive;
+    @Column(name = "isSynch")
+    private boolean isSynch;
 
     public GithubUser() {
     }
@@ -53,12 +53,12 @@ public class GithubUser implements Serializable {
         this.id = id;
     }
 
-    public GithubUser(Long id, String username, String accessToken, String githubToken, boolean isActive) {
+    public GithubUser(Long id, String username, String accessToken, String githubToken, boolean isSynch) {
         this.id = id;
         this.username = username;
         this.accessToken = accessToken;
         this.githubToken = githubToken;
-        this.isActive = isActive;
+        this.isSynch = isSynch;
     }
 
     public Long getId() {
@@ -93,12 +93,12 @@ public class GithubUser implements Serializable {
         this.githubToken = githubToken;
     }
 
-    public boolean getIsActive() {
-        return isActive;
+    public boolean getIsSynch() {
+        return isSynch;
     }
 
-    public void setIsActive(boolean isActive) {
-        this.isActive = isActive;
+    public void setIsSynch(boolean isSynch) {
+        this.isSynch = isSynch;
     }
 
 }

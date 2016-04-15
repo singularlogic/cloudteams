@@ -19,6 +19,7 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -95,11 +96,18 @@ public class SonarqubeController {
         //Print the status of user
         logger.info(null != user ? "User: " + user.getUsername() + " already exists with id: " + user.getId() : "Creating new user for username: " + username);
 
+        
+        sonarUrl =  StringUtils.trimTrailingCharacter(sonarUrl, "/".charAt(0));
         if (null == user) {
-            user = new SonarqubeUser(null, username, "", sonarUrl, true);
+            user = new SonarqubeUser(null, username, "",sonarUrl, true);
+        } else {
+            if (user.getSonarqubeUrl().equalsIgnoreCase(sonarUrl) == false) {
+                logger.log(Level.SEVERE, "You do not have access to this project");
+                return new JSONObject().put("code", MESSAGES.FAIL).put("message", "You do not have access to this project").toString();
+            }
         }
         //Update/Set sonar url
-        user.setSonarqubeUrl(sonarUrl);
+        //user.setSonarqubeUrl(sonarUrl);
 
         //If create new user was not success return
         if (false == userService.storeUser(user)) {

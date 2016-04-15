@@ -2,19 +2,13 @@ package eu.cloudteams.controller;
 
 import eu.cloudteams.util.github.GithubService;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-import javassist.compiler.ast.Pair;
-import org.eclipse.egit.github.core.CommitStats;
 import org.eclipse.egit.github.core.Label;
 import org.eclipse.egit.github.core.Repository;
 import org.eclipse.egit.github.core.RepositoryBranch;
@@ -68,7 +62,6 @@ public final class GithubStatisticsTO {
         commits = githubService.getCommitService().getCommits(repository);
 
         //Code section (info for master branch)
-        //RepositoryBranch masterBranch = branchesList.stream().filter(GithubStatisticsTO::isMasterBranch).findFirst().get();
 
         labelsList = githubService.getLabelService().getLabels(repository);
         collaboratorsList = githubService.getCollaboratorService().getCollaborators(repository);
@@ -106,10 +99,6 @@ public final class GithubStatisticsTO {
 
 //Set commitsStats
         this.commitsStats = new CommitsStats(totalAdditions, totalDeletions, commitsSHA.size(), contributors);
-    }
-
-    private static boolean isMasterBranch(RepositoryBranch repository) {
-        return repository.getName().equalsIgnoreCase("master");
     }
 
     public CommitsStats getCommitsStats() {

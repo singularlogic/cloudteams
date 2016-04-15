@@ -17,9 +17,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import net.minidev.json.JSONUtil;
 import org.eclipse.egit.github.core.Repository;
-import org.json.JSONArray;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,6 +77,19 @@ public class GithubController {
             return null;
         }
 
+        //Is first time ignore this
+        if (!user.getAccessToken().isEmpty()) {            
+            String userLogin = new GithubService(user.getGithubToken()).getUserService().getUser().getLogin();
+            String userLoginToValidate = new GithubService(gitAuthResponse.getAccess_token()).getUserService().getUser().getLogin();
+            if (userLogin.equalsIgnoreCase(userLoginToValidate)) {
+                userService.setSynchStatus(true, user.getId());
+            } else {
+                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "");
+                logger.log(Level.SEVERE, "Fail to get Acess Token reason: {0}", "User does not have access to this project");
+                return null;
+            }
+        }
+
         //Create Access Token
         Token generatedToken = new Token();
         try {
@@ -128,14 +139,12 @@ public class GithubController {
 
         logger.info("Returning github-info fragment for user:  " + getCurrentUser().getPrincipal() + " and project_id: " + project_id);
 
-        long start = System.currentTimeMillis();
         Optional<Repository> repository = github.getGithubRepositoryService().getRepositories().stream().filter(repositoryTofind -> repositoryTofind.getName().equals(project.getGithubRepository())).findFirst();
 
         if (repository.isPresent()) {
             //Generate github statistics
             GithubStatisticsTO githubStatistics = new GithubStatisticsTO(github, repository.get());
             model.addAttribute("githubStats", githubStatistics);
-            System.out.println("Total time: " + (System.currentTimeMillis() - start) / 1000);
             return "github::github-auth-project";
         }
 
@@ -151,7 +160,7 @@ public class GithubController {
         JSONObject response = new JSONObject();
         GithubUser user;
         long waitingTime = 2000; //two seconds
-        for (int cycle = 0; cycle < 100; cycle++) {
+        for (int cycle = 0; cycle < 60; cycle++) {
             try {
                 logger.info("[GitHub Synchronization T#" + Thread.currentThread().getId() + "] synchronization cycle " + (cycle + 1) + " is in process for username: " + username);
                 //Wait for some time
@@ -159,8 +168,9 @@ public class GithubController {
                 //Fetch user
                 user = userService.findByUsername(username);
                 //Check if the user is created and a token is found
-                if (null != user && !user.getAccessToken().isEmpty()) {
+                if (null != user && !user.getAccessToken().isEmpty() && user.getIsSynch()) {
                     logger.info("[GitHub Synchronization T#" + Thread.currentThread().getId() + "] found JWT for user: " + username + " , synchronization success");
+                    userService.setSynchStatus(false, user.getId());
                     response.put("token", "Bearer " + user.getAccessToken());
                     response.put("code", "SUCCESS");
                     return response.toString();
@@ -215,7 +225,7 @@ public class GithubController {
             projectService.store(project);
         }
 
-        jsonObject.put("code",  MESSAGES.SUCCESS);
+        jsonObject.put("code", MESSAGES.SUCCESS);
         jsonObject.put("message", "Repository: " + githubRepository + " has been assigned!");
 
         return jsonObject.toString();
@@ -252,7 +262,7 @@ public class GithubController {
     }
 
     private final class MESSAGES {
-        
+
         final static String SUCCESS = "SUCCESS";
         final static String FAIL = "FAIL";
 

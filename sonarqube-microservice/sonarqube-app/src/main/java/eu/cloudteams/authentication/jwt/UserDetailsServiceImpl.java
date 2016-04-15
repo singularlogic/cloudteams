@@ -45,7 +45,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         //Check if user exists
         if (null == user) {
             logger.log(Level.WARNING, "User with username={0} has not been found to the database...", username);
-            throw new UsernameNotFoundException("User with username=" + username + "has not been found to the database...");
+            return null;
         }
 
         Set<GrantedAuthority> auth = new HashSet<>();

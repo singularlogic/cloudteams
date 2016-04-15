@@ -1,6 +1,5 @@
 package eu.cloudteams.repository.service;
 
-
 import eu.cloudteams.repository.dao.UserRepository;
 import eu.cloudteams.repository.domain.GithubUser;
 import java.util.logging.Logger;
@@ -53,6 +52,8 @@ public class UserService {
         return userRepository.findByUsername(username);
     }
 
-
+    public void setSynchStatus(boolean isSynch, long id) {
+        this.userRepository.setSynchStatus(isSynch, id);
+    }
 
 }
