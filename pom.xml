@@ -12,6 +12,7 @@
     <modules>
         <module>github-microservice</module>
         <module>sonarqube-microservice</module>
+        <module>bitbucket-microservice</module>
         <module>integration-ui</module>
     </modules>
 

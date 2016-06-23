@@ -4,6 +4,7 @@
 var AUTHORIZATION_HEADER = "Authorization";
 var CLOUDTEAMS_GITHUB_REST_ENDPOINT = "https://cloudteams.euprojects.net/github/api/v1";
 var CLOUDTEAMS_SONARQUBE_REST_ENDPOINT = "https://cloudteams.euprojects.net/sonar/api/v1";
+var CLOUDTEAMS_BITBUCKET_REST_ENDPOINT = "https://cloudteams.euprojects.net/bitbucket/api/v1";
 
 $(document).ready(function () {
     console.log("Loaded oauth.js");
@@ -17,12 +18,15 @@ $(document).ready(function () {
     $(document).ajaxStart(function () {
         $("#ct-content-github").html(LOADIND_DIV);
         $("#ct-content-sonarqube").html(LOADIND_DIV);
+        $("#ct-content-bitbucket").html(LOADIND_DIV);
         $("#widget-loading").show();
     });
     //Load Github widget
     loadGithubWidget();
     //Load Sonarqube widget
     loadSonarqubeWidget();
+    //Load Bitbucket widget
+    //loadBitbucketWidget();
 });
 
 /*
@@ -74,4 +78,30 @@ function loadSonarqubeWidget() {
 
 function hasSonarqubeAccessToken() {
     return null !== localStorage.getItem("sonarqube_auth_token");
+}
+
+
+/*
+ *  Handlers for Bitbucket widget
+ */
+
+function loadBitbucketWidget() {
+    //Make the call to fect h github data
+    $.post({
+        beforeSend: function (xhr) {
+            if (hasBitbucketAccessToken()) {
+                xhr.setRequestHeader(AUTHORIZATION_HEADER, localStorage.bitbucket_auth_token);
+            }
+        },
+        data: {project_id: ct_project_id},
+        url: CLOUDTEAMS_BITBUCKET_REST_ENDPOINT + "/bitbucket/repository"
+    }).success(function (data, status, xhr) {
+        $("#ct-content-bitbucket").html(data);
+    }).fail(function (error) {
+        console.error("[Cloudteams] Code: " + error.status + " Message: " + error.statusText);
+    });
+}
+
+function hasBitbucketAccessToken() {
+    return null !== localStorage.getItem("bitbucket_auth_token");
 }
