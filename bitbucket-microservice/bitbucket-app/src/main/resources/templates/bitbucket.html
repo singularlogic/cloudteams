@@ -15,7 +15,7 @@
 
         <div class="container">
             <img class="github" src="/github/images/cloudteams-logo.png"/>
-            <div class="alert alert-warning">Successfully authorized with GitHub.</div>
+            <div class="alert alert-warning">Successfully authorized with Bitbucket.</div>
 
             <button type="button" onclick="window.close();" class="btn btn-danger">
                 <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Close window
@@ -42,11 +42,14 @@
             localStorage.removeItem("bitbucket_auth_token");
         }
 
-        var GITHUB_AUTHORIZE_URL = "https://github.com/login/oauth/authorize?response_type=code&amp;client_id=9aababac7a8ec6c9659e&amp;redirect_uri=https://cloudteams.euprojects.net/github/api/v1/github/auth?username=" + ct_user_name + "&amp;scope=user%20public_repo%20repo%20repo:status";
-        var POPUP;
 
-        function authorizeGithub() {
-            POPUP = window.open(GITHUB_AUTHORIZE_URL, "mywindow", "status=0,toolbar=0,resizable=0,scrollbars=0,width=1020,height=618");
+        var BITBUCKET_AUTHORIZE_URL = "https://bitbucket.org/site/oauth2/authorize?response_type=code&amp;client_id=6xQqvPuY6ZgFcsGmDj&amp;redirect_uri=http://localhost:8083/api/v1/bitbucket?username=" + ct_user_name;
+            //var BITBUCKET_AUTHORIZE_URL = "https://github.com/login/oauth/authorize?response_type=code&amp;client_id=9aababac7a8ec6c9659e&amp;redirect_uri=https://cloudteams.euprojects.net/github/api/v1/github/auth?username=" + ct_user_name + "&amp;scope=user%20public_repo%20repo%20repo:status";
+
+    var POPUP;
+
+        function authorizeBitbucket() {
+            POPUP = window.open(BITBUCKET_AUTHORIZE_URL, "mywindow", "status=0,toolbar=0,resizable=0,scrollbars=0,width=1020,height=618");
 
             $.post({
                 data: {username: ct_user_name},
@@ -55,7 +58,7 @@
                 var res = JSON.parse(data);
                 if ("SUCCESS" === res.code) {
                     localStorage.bitbucket_auth_token = res.token;
-                    loadGithubWidget();
+                    loadBitbucketWidget()();
                 }
                 console.log(res.message);
             });
@@ -65,7 +68,7 @@
 </div>
 
 <div th:fragment="github-no-project">
-    <div class="alert alert-warning">Please select a Github repository</div>
+    <div class="alert alert-warning">Please select a Bitbucket repository</div>
     <select id="repository" th:if="${!GetRepositories.isEmpty()}">
         <option th:each="repo : ${GetRepositories}" th:value="${repo.getName()}" th:text="${repo.getName()}"></option>
     </select>
@@ -80,7 +83,7 @@
                 url: CLOUDTEAMS_GITHUB_REST_ENDPOINT + "/github/add",
                 data: {project_id: ct_project_id, reponame: $("#repository :selected").text()},
                 beforeSend: function (xhr) {
-                    if (hasGithubAccessToken()) {
+                    if (hasBitbucketAccessToken()) {
                         xhr.setRequestHeader("Authorization", localStorage.bitbucket_auth_token);
                     }
                 },
@@ -89,7 +92,7 @@
                 var res = JSON.parse(data);
                 if ("SUCCESS" === res.code) {
                     //Reload Github widget
-                    loadGithubWidget();
+                    loadBitbucketWidget();
                 }
                 console.log(res.message);
             });
@@ -187,7 +190,7 @@
         function unassignRepository() {
 
             $.post({
-                url: CLOUDTEAMS_GITHUB_REST_ENDPOINT + "/github/delete",
+                url: CLOUDTEAMS_BITBUCKET_REST_ENDPOINT + "/github/delete",
                 data: {project_id: ct_project_id},
                 beforeSend: function (xhr) {
                     if (hasGithubAccessToken()) {

@@ -111,7 +111,7 @@ public class BitbucketController {
         //Print the generated token
         logger.info("Generated Token: " + generatedToken.getToken());
 
-        return "github::github-authentication";
+        return "bitbucket::github-authentication";
 
     }
 
@@ -124,7 +124,7 @@ public class BitbucketController {
         if (!WebController.hasAccessToken()) {
             logger.warning("Unauthorized access returing github sigin fragment");
             //return github-signin fragment
-            return "github::github-no-auth";
+            return "bitbucket::github-no-auth";
         }
 
         BitbucketUser user = userService.findByUsername(getCurrentUser().getPrincipal().toString());
@@ -134,7 +134,7 @@ public class BitbucketController {
         //Unassigned project
         if (null == project) {
             model.addAttribute("GetRepositories", github.getBitbucketRepositoryService().getRepositories());
-            return "github::github-no-project";
+            return "bitbucket::github-no-project";
         }
 
         logger.info("Returning github-info fragment for user:  " + getCurrentUser().getPrincipal() + " and project_id: " + project_id);
@@ -145,10 +145,10 @@ public class BitbucketController {
             //Generate github statistics
             BitbucketStatisticsTO githubStatistics = new BitbucketStatisticsTO(github, repository.get());
             model.addAttribute("githubStats", githubStatistics);
-            return "github::github-auth-project";
+            return "bitbucket::github-auth-project";
         }
 
-        return "github::github-error";
+        return "bitbucket::github-error";
     }
 
     //Rest Controller
