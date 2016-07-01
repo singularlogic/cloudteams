@@ -16,7 +16,7 @@ import javax.validation.constraints.Size;
  * @author Christos Paraskeva <ch.paraskeva at gmail dot com>
  */
 @Entity
-@Table(name = "GithubUser")
+@Table(name = "BitbucketUser")
 
 public class BitbucketUser implements Serializable {
 
@@ -39,8 +39,8 @@ public class BitbucketUser implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 1024)
-    @Column(name = "github_token")
-    private String githubToken;
+    @Column(name = "bitbucket_token")
+    private String bitbucketToken;
     @Basic(optional = false)
     @NotNull
     @Column(name = "isSynch")
@@ -57,7 +57,7 @@ public class BitbucketUser implements Serializable {
         this.id = id;
         this.username = username;
         this.accessToken = accessToken;
-        this.githubToken = githubToken;
+        this.bitbucketToken = bitbucketToken;
         this.isSynch = isSynch;
     }
 
@@ -85,13 +85,7 @@ public class BitbucketUser implements Serializable {
         this.accessToken = accessToken;
     }
 
-    public String getGithubToken() {
-        return githubToken;
-    }
 
-    public void setGithubToken(String githubToken) {
-        this.githubToken = githubToken;
-    }
 
     public boolean getIsSynch() {
         return isSynch;
@@ -99,6 +93,20 @@ public class BitbucketUser implements Serializable {
 
     public void setIsSynch(boolean isSynch) {
         this.isSynch = isSynch;
+    }
+
+    /**
+     * @return the bitbucketToken
+     */
+    public String getBitbucketToken() {
+        return bitbucketToken;
+    }
+
+    /**
+     * @param bitbucketToken the bitbucketToken to set
+     */
+    public void setBitbucketToken(String bitbucketToken) {
+        this.bitbucketToken = bitbucketToken;
     }
 
 }

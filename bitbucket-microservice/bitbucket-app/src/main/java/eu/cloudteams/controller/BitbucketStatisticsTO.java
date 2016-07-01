@@ -57,7 +57,7 @@ public final class BitbucketStatisticsTO {
 
     public void gatherInfo() throws IOException {
         
-        branchesList = bitbucketService.getGithubRepositoryService().getBranches(repository);
+        branchesList = bitbucketService.getBitbucketRepositoryService().getBranches(repository);
         labelsList = bitbucketService.getLabelService().getLabels(repository);
         commits = bitbucketService.getCommitService().getCommits(repository);
 

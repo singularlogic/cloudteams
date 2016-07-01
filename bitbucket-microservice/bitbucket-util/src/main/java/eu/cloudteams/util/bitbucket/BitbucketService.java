@@ -14,7 +14,7 @@ import org.eclipse.egit.github.core.service.LabelService;
 public final class BitbucketService {
 
     //GitHubClient
-    private final GitHubClient githubClient = new GitHubClient();
+    private final GitHubClient bitbucketClient = new GitHubClient();
     private final UserService userService;
     private final RepositoryService repositoryService;
     private final LabelService labelService;
@@ -22,12 +22,12 @@ public final class BitbucketService {
     private final CollaboratorService collaboratorService;
 
     public BitbucketService(String accessToken) {
-        githubClient.setOAuth2Token(accessToken);
-        userService = new UserService(githubClient);
-        repositoryService = new RepositoryService(githubClient);
-        labelService = new LabelService(githubClient);
-        commitService = new CommitService(githubClient);
-        collaboratorService = new CollaboratorService(githubClient);
+        bitbucketClient.setOAuth2Token(accessToken);
+        userService = new UserService(bitbucketClient);
+        repositoryService = new RepositoryService(bitbucketClient);
+        labelService = new LabelService(bitbucketClient);
+        commitService = new CommitService(bitbucketClient);
+        collaboratorService = new CollaboratorService(bitbucketClient);
 
     }
 
@@ -47,7 +47,7 @@ public final class BitbucketService {
         return this.userService;
     }
 
-    public RepositoryService getGithubRepositoryService() {
+    public RepositoryService getBitbucketRepositoryService() {
         return this.repositoryService;
     }
 

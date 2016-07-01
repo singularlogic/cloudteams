@@ -45,7 +45,7 @@ public class BitbucketController {
     @Autowired
     ProjectService projectService;
 
-    @RequestMapping(value = "/api/v1/github/auth", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/v1/bitbucket/auth", method = RequestMethod.GET)
     public String githubAuth(Model model, @RequestParam(value = "code", defaultValue = "") String code, @RequestParam(value = "username", defaultValue = "") String username, HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         JSONObject jsonObject = new JSONObject();
@@ -79,7 +79,7 @@ public class BitbucketController {
 
         //Is first time ignore this
         if (!user.getAccessToken().isEmpty()) {            
-            String userLogin = new BitbucketService(user.getGithubToken()).getUserService().getUser().getLogin();
+            String userLogin = new BitbucketService(user.getBitbucketToken()).getUserService().getUser().getLogin();
             String userLoginToValidate = new BitbucketService(gitAuthResponse.getAccess_token()).getUserService().getUser().getLogin();
             if (userLogin.equalsIgnoreCase(userLoginToValidate)) {
                 userService.setSynchStatus(true, user.getId());
@@ -116,7 +116,7 @@ public class BitbucketController {
     }
 
     @CrossOrigin
-    @RequestMapping(value = "/api/v1/github/repository", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/v1/bitbucket/repository", method = RequestMethod.POST)
     public String getGithubRepositoryInfo(Model model, @RequestParam(value = "project_id", defaultValue = "0", required = true) int project_id) throws IOException {
 
         logger.info("Requesting info for repository assigned to project_id: " + project_id);
@@ -130,16 +130,16 @@ public class BitbucketController {
         BitbucketUser user = userService.findByUsername(getCurrentUser().getPrincipal().toString());
         BitbucketProject project = projectService.findByProjectIdAndUser(project_id, user);
 
-        BitbucketService github = new BitbucketService(user.getGithubToken());
+        BitbucketService github = new BitbucketService(user.getBitbucketToken());
         //Unassigned project
         if (null == project) {
-            model.addAttribute("GetRepositories", github.getGithubRepositoryService().getRepositories());
+            model.addAttribute("GetRepositories", github.getBitbucketRepositoryService().getRepositories());
             return "github::github-no-project";
         }
 
         logger.info("Returning github-info fragment for user:  " + getCurrentUser().getPrincipal() + " and project_id: " + project_id);
 
-        Optional<Repository> repository = github.getGithubRepositoryService().getRepositories().stream().filter(repositoryTofind -> repositoryTofind.getName().equals(project.getGithubRepository())).findFirst();
+        Optional<Repository> repository = github.getBitbucketRepositoryService().getRepositories().stream().filter(repositoryTofind -> repositoryTofind.getName().equals(project.getBitbucketRepository())).findFirst();
 
         if (repository.isPresent()) {
             //Generate github statistics
@@ -190,8 +190,8 @@ public class BitbucketController {
 
     @CrossOrigin
     @ResponseBody
-    @RequestMapping(value = "/api/v1/github/add", method = RequestMethod.POST)
-    public String githubAuth(Model model, @RequestParam(value = "project_id", defaultValue = "") long project_id, @RequestParam(value = "reponame", defaultValue = "") String githubRepository) {
+    @RequestMapping(value = "/api/v1/bitbucket/add", method = RequestMethod.POST)
+    public String githubAuth(Model model, @RequestParam(value = "project_id", defaultValue = "") long project_id, @RequestParam(value = "reponame", defaultValue = "") String bitbucketRepository) {
 
         JSONObject jsonObject = new JSONObject();
 
@@ -201,7 +201,7 @@ public class BitbucketController {
             return jsonObject.toString();
         }
 
-        if (githubRepository.isEmpty()) {
+        if (bitbucketRepository.isEmpty()) {
             jsonObject.put("code", MESSAGES.FAIL);
             jsonObject.put("message", "Repository name is empty.");
             return jsonObject.toString();
@@ -221,19 +221,19 @@ public class BitbucketController {
             project = new BitbucketProject();
             project.setUser(user);
             project.setProjectId(project_id);
-            project.setGithubRepository(githubRepository);
+            project.setBitbucketRepository(bitbucketRepository);
             projectService.store(project);
         }
 
         jsonObject.put("code", MESSAGES.SUCCESS);
-        jsonObject.put("message", "Repository: " + githubRepository + " has been assigned!");
+        jsonObject.put("message", "Repository: " + bitbucketRepository + " has been assigned!");
 
         return jsonObject.toString();
     }
 
     @CrossOrigin
     @ResponseBody
-    @RequestMapping(value = "/api/v1/github/delete", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/v1/bitbucket/delete", method = RequestMethod.POST)
     public String unassignGithubRepository(Model model, @RequestParam(value = "project_id", defaultValue = "0", required = true) int project_id) throws IOException {
 
         logger.info("Requesting unassign github repository for project_id: " + project_id);

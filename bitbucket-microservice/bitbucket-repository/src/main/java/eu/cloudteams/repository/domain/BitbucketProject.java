@@ -19,7 +19,7 @@ import org.hibernate.annotations.Cascade;
  * @author Christos Paraskeva <ch.paraskeva at gmail dot com>
  */
 @Entity
-@Table(name = "GithubProject")
+@Table(name = "BitbucketProject")
 
 public class BitbucketProject implements Serializable {
 
@@ -36,8 +36,8 @@ public class BitbucketProject implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Size(min = 0, max = 250)
-    @Column(name = "githubRepository")
-    private String githubRepository;
+    @Column(name = "bitbucketRepository")
+    private String bitbucketRepository;
     @OneToOne
     @JoinColumn(name = "uid", referencedColumnName = "id")
     @Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
@@ -66,13 +66,6 @@ public class BitbucketProject implements Serializable {
         this.projectId = projectId;
     }
 
-    public String getGithubRepository() {
-        return githubRepository;
-    }
-
-    public void setGithubRepository(String githubRepository) {
-        this.githubRepository = githubRepository;
-    }
 
     public BitbucketUser getUser() {
         return user;
@@ -80,6 +73,20 @@ public class BitbucketProject implements Serializable {
 
     public void setUser(BitbucketUser user) {
         this.user = user;
+    }
+
+    /**
+     * @return the bitbucketRepository
+     */
+    public String getBitbucketRepository() {
+        return bitbucketRepository;
+    }
+
+    /**
+     * @param bitbucketRepository the bitbucketRepository to set
+     */
+    public void setBitbucketRepository(String bitbucketRepository) {
+        this.bitbucketRepository = bitbucketRepository;
     }
 
 }

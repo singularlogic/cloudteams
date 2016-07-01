@@ -4,7 +4,7 @@
 
 
 var AUTHORIZATION_HEADER = "Authorization";
-var CLOUDTEAMS_REST_ENDPOINT = "http://cloudteams.euprojects.net/github/repository";
+var CLOUDTEAMS_REST_ENDPOINT = "http://localhost:8083/bitbucket/repository";
 
 $(document).ready(function () {
     console.log("Loaded oauth.js");
@@ -24,13 +24,13 @@ $(document).ready(function () {
         $("#bitbucket-loading").hide();
     });
     //Load Github widget
-    loadGithubWidget();
+    loadBitbucketWidget();
 });
 /*
  *  Handlers
  */
 
-function loadGithubWidget() {
+function loadBitbucketWidget() {
     //Make the call to fect h github data
     $.post({
         beforeSend: function (xhr) {
