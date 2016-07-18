@@ -4,7 +4,7 @@
 
 
 var AUTHORIZATION_HEADER = "Authorization";
-var CLOUDTEAMS_REST_ENDPOINT = "http://localhost:8083/bitbucket/repository";
+var CLOUDTEAMS_REST_ENDPOINT = "https://cloudteams.euprojects.net/bitbucket/repository";
 
 $(document).ready(function () {
     console.log("Loaded oauth.js");
