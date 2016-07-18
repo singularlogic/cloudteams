@@ -7,10 +7,8 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 /**
@@ -57,9 +55,11 @@ public final class BitbucketAuthHandler {
                 String code =jsonResponse.get("code").toString();
                 //String code ="RE7PTkYmJKK6wfeSZc";
                 System.out.println("--code-->"+code );
-                parameteres.add("access_token", code);
+                parameteres.add("code", code);
                 parameteres.add("grant_type", "authorization_code");
-                HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<MultiValueMap<String, String>>(parameteres, headers);
+                
+                          
+                HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(parameteres, headers);
                 
                 RestTemplate restTemplate = new RestTemplate();
                 System.out.println("headers:"+request.getHeaders().toString());
@@ -71,6 +71,10 @@ public final class BitbucketAuthHandler {
 
                 //String result = restTemplate.postForObject(BITBUCKET_API_URL, request, String.class);
                 ResponseEntity<BitbucketAuthResponse> accesstokenResponse = restTemplate.postForEntity(BITBUCKET_API_URL, request, BitbucketAuthResponse.class);
+                
+                
+                System.out.println( restTemplate.postForEntity(BITBUCKET_API_URL, request, BitbucketAuthResponse.class).toString());
+                
                 System.out.println("accesstokenResponse"+accesstokenResponse.toString()+"");
                 System.out.println("accesstokenResponse code"+accesstokenResponse.getStatusCode()+"");
             return accesstokenResponse.getBody();
@@ -78,10 +82,16 @@ public final class BitbucketAuthHandler {
             }
             authResponse.setError("BitbucketException");
             authResponse.setError_description("Could not get temporary code from Bitbucket API");
-        } catch (JSONException ex) {
+        } catch (Exception ex) {
+            System.out.println("EX: "+ex.getMessage());
             authResponse.setError("JSONException");
             authResponse.setError_description(ex.getMessage());
         }
         return authResponse;
+    }
+    
+    
+    public static void main(String... args){
+        BitbucketAuthHandler.requestAccesToken(new JSONObject().put("code", "RE7PTkYmJKK6wfeSZc"));
     }
 }
