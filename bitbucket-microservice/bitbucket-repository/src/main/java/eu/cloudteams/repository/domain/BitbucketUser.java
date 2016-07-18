@@ -53,7 +53,7 @@ public class BitbucketUser implements Serializable {
         this.id = id;
     }
 
-    public BitbucketUser(Long id, String username, String accessToken, String githubToken, boolean isSynch) {
+    public BitbucketUser(Long id, String username, String accessToken, String bitbucketToken, boolean isSynch) {
         this.id = id;
         this.username = username;
         this.accessToken = accessToken;

@@ -55,15 +55,20 @@ public class BitbucketController {
         logger.log(Level.INFO, "Request from ip: {0} Requestbody: {1}", new Object[]{request.getRemoteAddr(), jsonObject});
 
         //Actual request to GitHub API
-        BitbucketAuthResponse gitAuthResponse = BitbucketAuthHandler.requestAccesToken(jsonObject);
+        BitbucketAuthResponse bitbucketAuthResponse = BitbucketAuthHandler.requestAccesToken(jsonObject);
+        
+        logger.log(Level.INFO, "response error:{0}", bitbucketAuthResponse.getError() + " description "+bitbucketAuthResponse.getError_description() +"uri+"+bitbucketAuthResponse.getError_uri());
 
         //Check if AccessToken is successfully fetched
-        if (false == gitAuthResponse.isValid()) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, gitAuthResponse.getError());
-            logger.log(Level.SEVERE, "Fail to get Acess Token reason: {0}", gitAuthResponse.getError());
+        if (false == bitbucketAuthResponse.isValid()) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, bitbucketAuthResponse.getError());
+            logger.log(Level.SEVERE, "Fail to get Acess Token reason: {0}", bitbucketAuthResponse.getError());
             return null;
         }
 
+        logger.log(Level.INFO, "response error:{0}", bitbucketAuthResponse.getError() + " description "+bitbucketAuthResponse.getError_description() +"uri+"+bitbucketAuthResponse.getError_uri());
+        logger.log(Level.INFO, "response token:{0}", bitbucketAuthResponse.getAccess_token());
+        
         //Check if user already exists
         BitbucketUser user = userService.findByUsername(username);
 
@@ -71,16 +76,16 @@ public class BitbucketController {
         logger.info(null != user ? "User: " + user.getUsername() + " already exists with id: " + user.getId() : "Creating new user for username: " + username);
 
         //If create new user was not success return
-        if (null == user && false == userService.storeUser(user = new BitbucketUser(null, username, "", gitAuthResponse.getAccess_token(), true))) {
+        if (null == user && false == userService.storeUser(user = new BitbucketUser(null, username, "", bitbucketAuthResponse.getAccess_token(), true))) {
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Could not create user to Cloudteams Database...");
-            logger.log(Level.SEVERE, "Fail to get Acess Token reason: {0}", gitAuthResponse.getError());
+            logger.log(Level.SEVERE, "Fail to get Acess Token reason: {0}", bitbucketAuthResponse.getError());
             return null;
         }
 
         //Is first time ignore this
         if (!user.getAccessToken().isEmpty()) {            
             String userLogin = new BitbucketService(user.getBitbucketToken()).getUserService().getUser().getLogin();
-            String userLoginToValidate = new BitbucketService(gitAuthResponse.getAccess_token()).getUserService().getUser().getLogin();
+            String userLoginToValidate = new BitbucketService(bitbucketAuthResponse.getAccess_token()).getUserService().getUser().getLogin();
             if (userLogin.equalsIgnoreCase(userLoginToValidate)) {
                 userService.setSynchStatus(true, user.getId());
             } else {
@@ -122,7 +127,7 @@ public class BitbucketController {
         logger.info("Requesting info for repository assigned to project_id: " + project_id);
 
         if (!WebController.hasAccessToken()) {
-            logger.warning("Unauthorized access returing github sigin fragment");
+            logger.warning("Unauthorized access returing Bitbucket sigin fragment");
             //return github-signin fragment
             return "bitbucket::github-no-auth";
         }
@@ -162,14 +167,14 @@ public class BitbucketController {
         long waitingTime = 2000; //two seconds
         for (int cycle = 0; cycle < 60; cycle++) {
             try {
-                logger.info("[GitHub Synchronization T#" + Thread.currentThread().getId() + "] synchronization cycle " + (cycle + 1) + " is in process for username: " + username);
+                logger.info("[Bitbucket Synchronization T#" + Thread.currentThread().getId() + "] synchronization cycle " + (cycle + 1) + " is in process for username: " + username);
                 //Wait for some time
                 Thread.sleep(waitingTime);
                 //Fetch user
                 user = userService.findByUsername(username);
                 //Check if the user is created and a token is found
                 if (null != user && !user.getAccessToken().isEmpty() && user.getIsSynch()) {
-                    logger.info("[GitHub Synchronization T#" + Thread.currentThread().getId() + "] found JWT for user: " + username + " , synchronization success");
+                    logger.info("[Bitbucket Synchronization T#" + Thread.currentThread().getId() + "] found JWT for user: " + username + " , synchronization success");
                     userService.setSynchStatus(false, user.getId());
                     response.put("token", "Bearer " + user.getAccessToken());
                     response.put("code", "SUCCESS");
@@ -179,7 +184,7 @@ public class BitbucketController {
                 Logger.getLogger(BitbucketController.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        logger.info("[GitHub Synchronization T#" + Thread.currentThread().getId() + "] could not found user:  " + username + " in database , synchronization failed");
+        logger.info("[Bitbucket Synchronization T#" + Thread.currentThread().getId() + "] could not found user:  " + username + " in database , synchronization failed");
 
         //Token not found return error message
         response.put("code", MESSAGES.FAIL);
@@ -236,11 +241,11 @@ public class BitbucketController {
     @RequestMapping(value = "/api/v1/bitbucket/delete", method = RequestMethod.POST)
     public String unassignGithubRepository(Model model, @RequestParam(value = "project_id", defaultValue = "0", required = true) int project_id) throws IOException {
 
-        logger.info("Requesting unassign github repository for project_id: " + project_id);
+        logger.info("Requesting unassign Bitbucket repository for project_id: " + project_id);
 
         //Check if user is authenticated
         if (!WebController.hasAccessToken()) {
-            logger.warning("Unauthorized access returing github sigin fragment");
+            logger.warning("Unauthorized access returing Bitbucket sigin fragment");
             //return github-signin fragment
             return new JSONObject().put("code", MESSAGES.FAIL).put("message", "User is not authenticated.").toString();
         }

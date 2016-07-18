@@ -1,10 +1,16 @@
 package eu.cloudteams.util.bitbucket;
 
+import org.apache.commons.codec.binary.Base64;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 /**
@@ -28,19 +34,47 @@ public final class BitbucketAuthHandler {
 
     public static BitbucketAuthResponse requestAccesToken(JSONObject jsonResponse) {
         BitbucketAuthResponse authResponse = new BitbucketAuthResponse();
+        
         try {
             //Check if GithHub temporary code is received
             if (jsonResponse.has("code")) {
-                MultiValueMap<String, Object> parameteres = new LinkedMultiValueMap<>();
-                //Set parameters of request
-                parameteres.add("client_id", CLIENT_ID);
-                parameteres.add("secret", CLIENT_SECRET);
+                //parameteres.add("client_id", CLIENT_ID);
+                //parameteres.add("secret", CLIENT_SECRET);
+                String plainCreds = CLIENT_ID+":"+CLIENT_SECRET;
+                byte[] plainCredsBytes = plainCreds.getBytes();
+                byte[] base64CredsBytes = Base64.encodeBase64(plainCredsBytes);
+                String base64Creds = new String(base64CredsBytes);
 
-                parameteres.add("code", jsonResponse.get("code"));
+                HttpHeaders headers = new HttpHeaders();
+                headers.add("Authorization", "Basic " + base64Creds);
+                headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED); 
+                
+                //example for GET
+                //HttpEntity<String> request = new HttpEntity<String>(headers);
+
+                //Set parameters of request
+                MultiValueMap<String, String> parameteres = new LinkedMultiValueMap<>();
+                String code =jsonResponse.get("code").toString();
+                //String code ="RE7PTkYmJKK6wfeSZc";
+                System.out.println("--code-->"+code );
+                parameteres.add("access_token", code);
+                parameteres.add("grant_type", "authorization_code");
+                HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<MultiValueMap<String, String>>(parameteres, headers);
+                
                 RestTemplate restTemplate = new RestTemplate();
+                System.out.println("headers:"+request.getHeaders().toString());
+                System.out.println("body(str):"+request.getBody().toString());
+                System.out.println("-----Request created");
                 //Make Rest call to fetch AccessToken
-                ResponseEntity<BitbucketAuthResponse> accesstokenResponse = restTemplate.postForEntity(BITBUCKET_API_URL, parameteres, BitbucketAuthResponse.class);
-                return accesstokenResponse.getBody();
+                //ResponseEntity<Object> accesstokenResponse = restTemplate.postForEntity(BITBUCKET_API_URL, parameteres, Object.class);
+                //ResponseEntity<String>  accesstokenResponse = restTemplate.postForEntity(BITBUCKET_API_URL, request, String.class);
+
+                //String result = restTemplate.postForObject(BITBUCKET_API_URL, request, String.class);
+                ResponseEntity<BitbucketAuthResponse> accesstokenResponse = restTemplate.postForEntity(BITBUCKET_API_URL, request, BitbucketAuthResponse.class);
+                System.out.println("accesstokenResponse"+accesstokenResponse.toString()+"");
+                System.out.println("accesstokenResponse code"+accesstokenResponse.getStatusCode()+"");
+            return accesstokenResponse.getBody();
+
             }
             authResponse.setError("BitbucketException");
             authResponse.setError_description("Could not get temporary code from Bitbucket API");
