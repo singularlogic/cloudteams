@@ -7,8 +7,10 @@ package eu.cloudteams.util.bitbucket;
 public final class BitbucketAuthResponse {
 
     private String access_token;
-    private String scope;
+    private String scopes;
     private String token_type;
+    private String refresh_token;
+    //private Integer expires_in;
 
     public String getError() {
         return error;
@@ -25,7 +27,7 @@ public final class BitbucketAuthResponse {
     public void setError_description(String error_description) {
         this.error_description = error_description;
     }
-
+/*
     public String getError_uri() {
         return error_uri;
     }
@@ -33,10 +35,10 @@ public final class BitbucketAuthResponse {
     public void setError_uri(String error_uri) {
         this.error_uri = error_uri;
     }
-
+*/
     private String error;
     private String error_description;
-    private String error_uri;
+   // private String error_uri;
 
     public BitbucketAuthResponse() {
 
@@ -47,7 +49,7 @@ public final class BitbucketAuthResponse {
     }
 
     public void setScope(String scope) {
-        this.scope = scope;
+        this.scopes = scope;
     }
 
     public void setToken_type(String token_type) {
@@ -59,7 +61,7 @@ public final class BitbucketAuthResponse {
     }
 
     public String getScope() {
-        return scope;
+        return scopes;
     }
 
     public String getToken_type() {
@@ -68,5 +70,19 @@ public final class BitbucketAuthResponse {
 
     public boolean isValid() {
         return null == error;
+    }
+
+    /**
+     * @return the refresh_token
+     */
+    public String getRefresh_token() {
+        return refresh_token;
+    }
+
+    /**
+     * @param refresh_token the refresh_token to set
+     */
+    public void setRefresh_token(String refresh_token) {
+        this.refresh_token = refresh_token;
     }
 }

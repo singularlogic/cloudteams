@@ -58,7 +58,7 @@ public class BitbucketController {
         //Actual request to GitHub API
         BitbucketAuthResponse bitbucketAuthResponse = BitbucketAuthHandler.requestAccesToken(jsonObject);
         
-        logger.log(Level.INFO, "response error:{0}", bitbucketAuthResponse.getError() + " description "+bitbucketAuthResponse.getError_description() +"uri+"+bitbucketAuthResponse.getError_uri());
+        logger.log(Level.INFO, "response error:{0}", bitbucketAuthResponse.getError() + " description "+bitbucketAuthResponse.getError_description() );
 
         //Check if AccessToken is successfully fetched
         if (false == bitbucketAuthResponse.isValid()) {
@@ -67,7 +67,7 @@ public class BitbucketController {
             return null;
         }
 
-        logger.log(Level.INFO, "response error:{0}", bitbucketAuthResponse.getError() + " description "+bitbucketAuthResponse.getError_description() +"uri+"+bitbucketAuthResponse.getError_uri());
+        logger.log(Level.INFO, "response error:{0}", bitbucketAuthResponse.getError() + " description "+bitbucketAuthResponse.getError_description() );
         logger.log(Level.INFO, "response token:{0}", bitbucketAuthResponse.getAccess_token());
         
         //Check if user already exists
