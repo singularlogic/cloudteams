@@ -53,13 +53,13 @@ public final class BitbucketAuthHandler {
                 //Set parameters of request
                 MultiValueMap<String, String> parameteres = new LinkedMultiValueMap<>();
                 String code =jsonResponse.get("code").toString();
-                String cteamsusername =jsonResponse.get("username").toString();
+                //String cteamsusername =jsonResponse.get("username").toString();
                 //String code ="RE7PTkYmJKK6wfeSZc";
                 System.out.println("--code-->"+code );
                 parameteres.add("code", code);
                 parameteres.add("grant_type", "authorization_code");
-                parameteres.add("redirect_uri", "https://cloudteams.euprojects.net/bitbucket/api/v1/bitbucket/auth?username="+cteamsusername);
-                //parameteres.add("redirect_uri", "https://cloudteams.euprojects.net/bitbucket/api/v1/bitbucket/auth");
+                //parameteres.add("redirect_uri", "https://cloudteams.euprojects.net/bitbucket/api/v1/bitbucket/auth?username="+cteamsusername);
+                parameteres.add("redirect_uri", "https://cloudteams.euprojects.net/bitbucket/api/v1/bitbucket/auth");
                 
                           
                 HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(parameteres, headers);
