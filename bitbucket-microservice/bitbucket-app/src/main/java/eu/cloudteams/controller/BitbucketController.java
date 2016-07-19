@@ -48,6 +48,7 @@ public class BitbucketController {
     @RequestMapping(value = "/api/v1/bitbucket/auth", method = RequestMethod.GET)
     public String githubAuth(Model model, @RequestParam(value = "code", defaultValue = "") String code, @RequestParam(value = "username", defaultValue = "") String username, HttpServletRequest request, HttpServletResponse response) throws IOException {
 
+        username ="cloudteams-test";
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("code", code);
         jsonObject.put("username", username);
