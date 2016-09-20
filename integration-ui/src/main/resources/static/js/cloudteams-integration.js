@@ -5,6 +5,8 @@ var AUTHORIZATION_HEADER = "Authorization";
 var CLOUDTEAMS_GITHUB_REST_ENDPOINT = "https://cloudteams.euprojects.net/github/api/v1";
 var CLOUDTEAMS_SONARQUBE_REST_ENDPOINT = "https://cloudteams.euprojects.net/sonar/api/v1";
 var CLOUDTEAMS_BITBUCKET_REST_ENDPOINT = "https://cloudteams.euprojects.net/bitbucket/api/v1";
+var CLOUDTEAMS_JIRA_REST_ENDPOINT = "https://cloudteams.euprojects.net/jira/api/v1";
+//var CLOUDTEAMS_JIRA_REST_ENDPOINT = "http://localhost:8084/api/v1";
 //var CLOUDTEAMS_BITBUCKET_REST_ENDPOINT = "http://localhost:8083/api/v1";
 
 $(document).ready(function () {
@@ -20,6 +22,7 @@ $(document).ready(function () {
         $("#ct-content-github").html(LOADIND_DIV);
         $("#ct-content-sonarqube").html(LOADIND_DIV);
         $("#ct-content-bitbucket").html(LOADIND_DIV);
+        $("#ct-content-jira").html(LOADIND_DIV);
         $("#widget-loading").show();
     });
     //Load Github widget
@@ -28,6 +31,8 @@ $(document).ready(function () {
     loadSonarqubeWidget();
     //Load Bitbucket widget
     loadBitbucketWidget();
+    //Load Bitbucket widget
+    loadJiraWidget();
 });
 
 /*
@@ -105,4 +110,29 @@ function loadBitbucketWidget() {
 
 function hasBitbucketAccessToken() {
     return null !== localStorage.getItem("bitbucket_auth_token");
+}
+
+/*
+ *  Handlers for Jira widget
+ */
+
+function loadJiraWidget() {
+    //Make the call to fect h github data
+    $.post({
+        beforeSend: function (xhr) {
+            if (hasJiraAccessToken()) {
+                xhr.setRequestHeader(AUTHORIZATION_HEADER, localStorage.jira_auth_token);
+            }
+        },
+        data: {project_id: ct_project_id},
+        url: CLOUDTEAMS_JIRA_REST_ENDPOINT+ "/bitbucket/repository"
+    }).success(function (data, status, xhr) {
+        $("#ct-content-jira").html(data);
+    }).fail(function (error) {
+        console.error("[Cloudteams] Code: " + error.status + " Message: " + error.statusText);
+    });
+}
+
+function hasJiraAccessToken() {
+    return null !== localStorage.getItem("jira_auth_token");
 }
