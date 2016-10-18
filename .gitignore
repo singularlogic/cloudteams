@@ -1,11 +1,29 @@
-target
-dist
-nbproject
-.idea
-*.directory
-*.iml
-.DS_Store
-*.epoch
-.lck
+# Java
+*.class
 *.log
+
+# Package Files
+*.jar
+
+# Maven
+target/
+
+# NetBeans
+build/
 nb-configuration.xml
+nbactions.xml
+
+# IntelliJ
+*.iml
+*.ipr
+*.iws
+.idea/
+*.bak
+
+# JRebel
+nb_jr_remoting.cfg
+rebel-remote.xml
+rebel.xml
+
+# OS X
+.DS_Store
