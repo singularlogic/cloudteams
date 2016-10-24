@@ -1,12 +1,30 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <title>CLOUDTEAMS</title>
+
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-    <title>Integration Server &mdash; CLOUDTEAMS</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
+
+    <link href="http://cdn.jsdelivr.net/webjars/bootstrap/3.3.5/css/bootstrap.min.css"
+          th:href="@{/webjars/bootstrap/3.3.5/css/bootstrap.min.css}"
+          rel="stylesheet" media="screen"/>
+    <link rel="stylesheet" href="/github/css/dashboard.css" th:href="@{/github/css/dashboard.css}"/>
 </head>
 <body>
-<pre>CloudTeams- JIRA Microservice</pre>
+
+<div class="container">
+    <img class="github" src="/github/images/cloudteams-logo.png"/>
+    <div class="alert alert-warning">Error. Could not authorize with Jira.</div>
+
+    <button type="button" onclick="window.close();" class="btn btn-danger">
+        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Close window
+    </button>
+</div>
+
+<script src="http://cdn.jsdelivr.net/webjars/jquery/2.1.4/jquery.min.js"
+        th:src="@{/webjars/jquery/2.1.4/jquery.min.js}"></script>
+
 </body>
 </html>
