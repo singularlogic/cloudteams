@@ -96,15 +96,12 @@ public class SonarqubeController {
         //Print the status of user
         logger.info(null != user ? "User: " + user.getUsername() + " already exists with id: " + user.getId() : "Creating new user for username: " + username);
 
-        
-        sonarUrl =  StringUtils.trimTrailingCharacter(sonarUrl, "/".charAt(0));
+        sonarUrl = StringUtils.trimTrailingCharacter(sonarUrl, "/".charAt(0));
         if (null == user) {
-            user = new SonarqubeUser(null, username, "",sonarUrl, true);
-        } else {
-            if (user.getSonarqubeUrl().equalsIgnoreCase(sonarUrl) == false) {
-                logger.log(Level.SEVERE, "You do not have access to this project");
-                return new JSONObject().put("code", MESSAGES.FAIL).put("message", "You do not have access to this project").toString();
-            }
+            user = new SonarqubeUser(null, username, "", sonarUrl, true);
+        } else if (user.getSonarqubeUrl().equalsIgnoreCase(sonarUrl) == false) {
+            logger.log(Level.SEVERE, "You do not have access to this project");
+            return new JSONObject().put("code", MESSAGES.FAIL).put("message", "You do not have access to this project").toString();
         }
         //Update/Set sonar url
         //user.setSonarqubeUrl(sonarUrl);
@@ -199,6 +196,32 @@ public class SonarqubeController {
         }
 
         return new JSONObject().put("code", MESSAGES.SUCCESS).put("message", "Project has been unassigned").toString();
+    }
+
+    @CrossOrigin
+    @ResponseBody
+    @RequestMapping(value = "/api/v1/sonarqube/disconnect", method = RequestMethod.POST)
+    public String disconnectSonarqubeProject(Model model, @RequestParam(value = "project_id", defaultValue = "0", required = true) int project_id) throws IOException {
+
+        logger.info("Requesting disconnect sonarqube project for project_id: " + project_id);
+
+        //Check if user is authenticated
+        if (!WebController.hasAccessToken()) {
+            logger.warning("Unauthorized access returing github sigin fragment");
+            //return github-signin fragment
+            return new JSONObject().put("code", MESSAGES.FAIL).put("message", "User is not authenticated.").toString();
+        }
+
+        //Fetch the actual user based on JWT
+        SonarqubeUser user = userService.findByUsername(getCurrentUser().getPrincipal().toString());
+
+        try {
+            userService.deleteUser(user.getId());
+        } catch (Exception ex) {
+            return new JSONObject().put("code", MESSAGES.FAIL).put("message", "Could not disconnect account.").toString();
+        }
+
+        return new JSONObject().put("code", MESSAGES.SUCCESS).put("message", "Account has been disconnected").toString();
     }
 
     private final class MESSAGES {
