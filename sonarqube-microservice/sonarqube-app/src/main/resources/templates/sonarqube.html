@@ -139,9 +139,9 @@
     <hr/>
 
     <!-- 2. Metrics-->
-    <h3 class="header-medium secondary">Metrics</h3>
+    <h3 class="header-medium secondary">Metrics</h3><br/>
 
-    <p class="bold" th:inline="text" th:each="metric : ${projectInfo.getMetrics()}">
+    <p th:inline="text" th:each="metric : ${projectInfo.getMetrics()}">
         <span class="highlight" th:text="${metric.key}"></span> (<span th:text="${metric.value}"></span>)
     </p>
 

@@ -111,32 +111,32 @@
 
     <!--Last Update-->
     <span class="highlight">Last update</span>
-    <p class="bold" th:inline="text">
+    <p th:inline="text">
         <span>(<span th:text="${githubStats.getRepository().getUpdatedAt()}"></span>)</span>
     </p>
 
     <hr/>
 
     <!-- 1. Code Section (commitsTotal,branchesNames,releasesNames,contibutorsTotal,repositoryName(withUrl) )-->
-    <h3 class="header-medium secondary">Code</h3>
+    <h3 class="header-medium secondary">Code</h3><br/>
 
     <div class="data">
         <!--Commits-->
         <p th:inline="text">
-            <span class="highlight">Commits (<span th:text="${githubStats.getCommits().size()}"></span>) </span>
-            <a th:href="${githubStats.getRepository().getHtmlUrl()} + '/commits/master'"><i class="icon icon-more-options"></i></a>
+            <span class="highlight">Commits (<span th:text="${githubStats.getCommits().size()}"></span>)</span><br/>
+            <a th:href="${githubStats.getRepository().getHtmlUrl()} + '/commits/master'">View All <i class="icon icon-more-options"></i></a>
         </p>
 
         <!--Contributors-->
         <p th:inline="text">
-            <span class="highlight">Contributors (<span th:text="${githubStats.getCollaborators().size()}"></span>)</span>
-            <a th:href="${githubStats.getRepository().getHtmlUrl()} + '/graphs/contributors'"><i class="icon icon-more-options"></i></a>
+            <span class="highlight">Contributors (<span th:text="${githubStats.getCollaborators().size()}"></span>)</span><br/>
+            <a th:href="${githubStats.getRepository().getHtmlUrl()} + '/graphs/contributors'">View All <i class="icon icon-more-options"></i></a>
         </p>
 
         <!--Watchers-->
         <p th:inline="text">
-            <span class="highlight">Watchers (<span th:text="${githubStats.getRepository().getWatchers()}"></span>)</span>
-            <a th:href="${githubStats.getRepository().getHtmlUrl()} + '/watchers'"><i class="icon icon-more-options"></i></a>
+            <span class="highlight">Watchers (<span th:text="${githubStats.getRepository().getWatchers()}"></span>)</span><br/>
+            <a th:href="${githubStats.getRepository().getHtmlUrl()} + '/watchers'">View All <i class="icon icon-more-options"></i></a>
         </p>
 
         <!--Forks-->
@@ -154,17 +154,17 @@
     <hr/>
 
     <!-- 2. Issues Section (openissuesTotal,closedisseusTotal,labelNames,milestonesNames) -->
-    <h3 class="header-medium secondary">Issues</h3>
+    <h3 class="header-medium secondary">Issues</h3><br/>
 
     <!--Open Issues-->
     <p th:inline="text">
-        <span class="highlight">Open Issues (<span th:text="${githubStats.getRepository().getOpenIssues()}"></span>)</span>
-        <a th:href="${githubStats.getRepository().getHtmlUrl()} + '/issues'"><i class="icon icon-more-options"></i></a>
+        <span class="highlight">Open Issues (<span th:text="${githubStats.getRepository().getOpenIssues()}"></span>)</span><br/>
+        <a th:href="${githubStats.getRepository().getHtmlUrl()} + '/issues'">View All <i class="icon icon-more-options"></i></a>
     </p>
 
     <!--Closed Issues-->
     <p th:inline="text">
-        <span class="highlight">Closed Issues</span>
+        <span class="highlight">Closed Issues</span><br/>
         <a th:href="${githubStats.getRepository().getHtmlUrl()} + '/issues?q=is%3Aissue+is%3Aclosed'">View All <i class="icon icon-more-options"></i></a>
     </p>
 
