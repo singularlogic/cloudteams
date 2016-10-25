@@ -1,5 +1,6 @@
 package eu.cloudteams.controller;
 
+import static eu.cloudteams.controller.GithubStatisticsTO.getValue;
 import eu.cloudteams.util.github.GithubService;
 import java.io.IOException;
 import java.util.Calendar;
@@ -52,17 +53,19 @@ public final class GithubStatisticsTO {
     public GithubStatisticsTO(GithubService githubService, Repository repository) throws IOException {
         this.githubService = githubService;
         this.repository = repository;
+
+        repository.setDescription(getValue(repository.getDescription()));
+
         gatherInfo();
     }
 
     public void gatherInfo() throws IOException {
-        
+
         branchesList = githubService.getGithubRepositoryService().getBranches(repository);
         labelsList = githubService.getLabelService().getLabels(repository);
         commits = githubService.getCommitService().getCommits(repository);
 
         //Code section (info for master branch)
-
         labelsList = githubService.getLabelService().getLabels(repository);
         collaboratorsList = githubService.getCollaboratorService().getCollaborators(repository);
 
@@ -105,6 +108,10 @@ public final class GithubStatisticsTO {
         return this.commitsStats;
     }
 
+    public static String getValue(String value) {
+        return (null == value || value.isEmpty()) ? "N/A" : value;
+    }
+
 }
 
 class CommitsStats {
@@ -143,6 +150,7 @@ class CommitsStats {
     }
 
     public String getContributorsNames() {
-        return this.contributors.stream().collect(Collectors.joining(" "));
+        return getValue(this.contributors.stream().collect(Collectors.joining(" ")));
     }
+
 }
