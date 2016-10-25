@@ -103,15 +103,19 @@
 
     <div class="alert alert-warning">GitHub Statistics</div>
 
+    <span class="highlight">Name</span>
     <p th:inline="text"><a th:href="'https://github.com/' + ${githubStats.getRepository().getOwner().getLogin()}">[[${githubStats.getRepository().getOwner().getLogin()}]]</a>/<a th:href="${githubStats.getRepository().getHtmlUrl()}">[[${githubStats.getRepository().getName()}]]</a></p>
+
+    <span class="highlight">Description</span>
     <p th:inline="text">[[${githubStats.getRepository().getDescription()}]]</p>
 
     <!--Last Update-->
+    <span class="highlight">Last update</span>
     <p class="bold" th:inline="text">
-        <span class="highlight">Last Update (<span th:text="${githubStats.getRepository().getUpdatedAt()}"></span>)</span>
+        <span>(<span th:text="${githubStats.getRepository().getUpdatedAt()}"></span>)</span>
     </p>
 
-    <div class="col-md-6">
+    <hr/>
 
     <!-- 1. Code Section (commitsTotal,branchesNames,releasesNames,contibutorsTotal,repositoryName(withUrl) )-->
     <h3 class="header-medium secondary">Code</h3>
@@ -147,10 +151,6 @@
         </p>
     </div>
 
-    </div>
-
-    <div class="col-md-6">
-
     <!-- 2. Issues Section (openissuesTotal,closedisseusTotal,labelNames,milestonesNames) -->
     <h3 class="header-medium secondary">Issues</h3>
 
@@ -162,7 +162,7 @@
 
     <!--Closed Issues-->
     <p class="bold" th:inline="text">
-        <span class="highlight">Closed Issues </span>
+        <span class="highlight">Closed Issues (<span th:text="${githubStats.getRepository().getClosedIssues()}"></span>)</span>
         <a th:href="${githubStats.getRepository().getHtmlUrl()} + '/issues?q=is%3Aissue+is%3Aclosed'"><i class="icon icon-object"></i></a>
     </p>
 
@@ -172,20 +172,21 @@
         <a target="_blank" th:each="label : ${githubStats.getLabels()}" th:href="${githubStats.getRepository().getHtmlUrl() + '/labels/' + label.getName()}" th:text="${label.getName()}"></a>
     </p>
 
-    </div>
-
     <hr/>
 
     <!-- 3. Pulse (weekly authors/commits(master), file changes master, additions /deletions master)  -->
     <h3 class="header-medium secondary">Pulse</h3>
 
     <!--Last Weeks Stats-->
+    <span class="highlight">
+        Pulse is an overview of a repository's activity. It includes a list of open and merged pull requests, open and closed issues, and the commit activity for the top 15 users who committed to the default branch of the project during the last month.
+    </span>
     <p class="bold" th:inline="text">
         Excluding merges, <span class="highlight" th:text="${githubStats.getCommitsStats().getContributors()}"></span> authors have pushed <span class="highlight" th:text="${githubStats.getCommitsStats().getTotalCommits()}"></span> commits to all branches. On master, <span class="highlight" th:text="${githubStats.getCommitsStats().getTotalChanges()}"></span>      files have changed and there have been <span class="highlight" th:text="${githubStats.getCommitsStats().getTotalAdditions()}"></span> additions and <span class="highlight" th:text="${githubStats.getCommitsStats().getTotalDeletions()}"></span> deletions.
     </p>
 
     <hr/>
-    
+
     <button id="btn-unassign" onclick="unassignRepository()" class="btn btn-danger">Unassign</button>
 
     <script th:inline="javascript">
