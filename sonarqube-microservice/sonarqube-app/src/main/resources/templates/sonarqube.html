@@ -120,33 +120,30 @@
 <div th:fragment="sonarqube-auth-project">
     <div class="alert alert-warning">SonarQube Statistics</div>
 
+    <span class="highlight">Name</span>
     <p th:inline="text"><strong>[[${projectInfo.getProjectName()}]]</strong> ([[${projectInfo.getVersion()}]])</p>
+
+    <span class="highlight">Description</span>
     <p th:inline="text">[[${projectInfo.getDescription()}]]</p>
 
     <hr/>
 
-    <div class="col-md-6">
-
     <!-- 1. Issues-->
-    <h3 class="header-medium secondary">Issues</h3>
+    <h3 class="header-medium secondary">Issues<br/><small>While running an analysis, SonarQube raises an issue every time a piece of code breaks a coding rule. The set of coding rules is defined through the quality profile associated with the project.</small></h3>
 
     <!--Total Issues-->
     <p class="bold" th:inline="text">
         <span class="highlight">Total Issues (<span th:text="${projectInfo.getTotalIssues()}"></span>)</span>
     </p>
 
-    </div>
+    <hr/>
 
-    <div class="col-md-6">
-
-        <!-- 2. Metrics-->
+    <!-- 2. Metrics-->
     <h3 class="header-medium secondary">Metrics</h3>
 
     <p class="bold" th:inline="text" th:each="metric : ${projectInfo.getMetrics()}">
         <span class="highlight" th:text="${metric.key}"></span> (<span th:text="${metric.value}"></span>)
     </p>
-
-    </div>
 
     <hr/>
 
