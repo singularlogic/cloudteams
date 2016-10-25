@@ -7,15 +7,15 @@ import java.util.Map;
  * @author Christos Paraskeva <ch.paraskeva at gmail dot com>
  */
 public class ProjectInfo {
-    
+
     private String projectName;
     private String version;
     private String description;
-    private String  totalIssues;
-    private Map<String,String> metrics;
+    private String totalIssues;
+    private Map<String, String> metrics;
 
     public String getProjectName() {
-        return projectName;
+        return getValue(projectName);
     }
 
     public void setProjectName(String projectName) {
@@ -23,7 +23,7 @@ public class ProjectInfo {
     }
 
     public String getVersion() {
-        return version;
+        return getValue(version);
     }
 
     public void setVersion(String version) {
@@ -31,7 +31,7 @@ public class ProjectInfo {
     }
 
     public String getDescription() {
-        return description;
+        return getValue(description);
     }
 
     public void setDescription(String description) {
@@ -39,7 +39,7 @@ public class ProjectInfo {
     }
 
     public String getTotalIssues() {
-        return totalIssues;
+        return getValue(totalIssues);
     }
 
     public void setTotalIssues(String totalIssues) {
@@ -53,8 +53,9 @@ public class ProjectInfo {
     public void setMetrics(Map<String, String> metrics) {
         this.metrics = metrics;
     }
-    
-    
-    
-    
+
+    private String getValue(String value) {
+        return (null == value || value.isEmpty()) ? "N/A" : value;
+    }
+
 }

@@ -87,6 +87,32 @@
             });
         }
 
+        function disconnect() {
+            
+            $.post({
+                url: CLOUDTEAMS_SONARQUBE_REST_ENDPOINT + "/sonarqube/disconnect",
+                data: {project_id: ct_project_id, projectName: $("#projects :selected").val()},
+                beforeSend: function (xhr) {
+                    if (hasSonarqubeAccessToken()) {
+                        xhr.setRequestHeader("Authorization", localStorage.sonarqube_auth_token);
+                    }
+                },
+            }).success(function (data, status, xhr) {
+
+                var res = JSON.parse(data);
+                if ("SUCCESS" === res.code) {
+                    console.log("Success disconnected account, reload Sonarqube widget");
+                    //Remove current accessToken
+                    removeAccessToken("sonarqube_auth_token");
+                    //Reload Github widget
+                    loadSonarqubeWidget();
+                } else {
+                    alert(res.message);
+                    console.log("Could not disconnect account");
+                }
+            });
+        }
+
     </script>
 </div>
 

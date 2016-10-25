@@ -31,7 +31,7 @@ $(document).ready(function () {
     loadSonarqubeWidget();
     //Load Bitbucket widget
     loadBitbucketWidget();
-    //Load Bitbucket widget
+    //Load Jira widget
     loadJiraWidget();
 });
 
@@ -74,7 +74,7 @@ function loadSonarqubeWidget() {
             }
         },
         data: {project_id: ct_project_id},
-        url: CLOUDTEAMS_SONARQUBE_REST_ENDPOINT+ "/sonarqube/project"
+        url: CLOUDTEAMS_SONARQUBE_REST_ENDPOINT + "/sonarqube/project"
     }).success(function (data, status, xhr) {
         $("#ct-content-sonarqube").html(data);
     }).fail(function (error) {
@@ -117,6 +117,7 @@ function hasBitbucketAccessToken() {
  */
 
 function loadJiraWidget() {
+    return;
     //Make the call to fect h github data
     $.post({
         beforeSend: function (xhr) {
@@ -125,7 +126,7 @@ function loadJiraWidget() {
             }
         },
         data: {project_id: ct_project_id},
-        url: CLOUDTEAMS_JIRA_REST_ENDPOINT+ "/bitbucket/repository"
+        url: CLOUDTEAMS_JIRA_REST_ENDPOINT + "/jira/repository"
     }).success(function (data, status, xhr) {
         $("#ct-content-jira").html(data);
     }).fail(function (error) {
@@ -135,4 +136,14 @@ function loadJiraWidget() {
 
 function hasJiraAccessToken() {
     return null !== localStorage.getItem("jira_auth_token");
+}
+
+
+/**
+ * 
+ * @param {type} TOKEN_KEY_NAME
+ * @returns {undefined}
+ */
+function removeAccessToken(TOKEN_KEY_NAME) {
+    localStorage.removeItem(TOKEN_KEY_NAME);
 }
