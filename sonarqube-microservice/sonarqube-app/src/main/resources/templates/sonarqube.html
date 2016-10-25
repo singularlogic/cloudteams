@@ -129,10 +129,10 @@
     <hr/>
 
     <!-- 1. Issues-->
-    <h3 class="header-medium secondary">Issues<br/><small>While running an analysis, SonarQube raises an issue every time a piece of code breaks a coding rule. The set of coding rules is defined through the quality profile associated with the project.</small></h3>
+    <h3 class="header-medium secondary">Issues<br/><small>While running an analysis, SonarQube raises an issue every time a piece of code breaks a coding rule. The set of coding rules is defined through the quality profile associated with the project.</small></h3><br/>
 
     <!--Total Issues-->
-    <p class="bold" th:inline="text">
+    <p th:inline="text">
         <span class="highlight">Total Issues (<span th:text="${projectInfo.getTotalIssues()}"></span>)</span>
     </p>
 
