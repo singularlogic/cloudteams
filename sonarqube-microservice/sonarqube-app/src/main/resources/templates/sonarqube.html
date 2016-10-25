@@ -125,6 +125,8 @@
 
     <hr/>
 
+    <div class="col-md-6">
+
     <!-- 1. Issues-->
     <h3 class="header-medium secondary">Issues</h3>
 
@@ -133,14 +135,20 @@
         <span class="highlight">Total Issues (<span th:text="${projectInfo.getTotalIssues()}"></span>)</span>
     </p>
 
-    <hr/>
+    </div>
 
-    <!-- 2. Metrics-->
+    <div class="col-md-6">
+
+        <!-- 2. Metrics-->
     <h3 class="header-medium secondary">Metrics</h3>
 
     <p class="bold" th:inline="text" th:each="metric : ${projectInfo.getMetrics()}">
         <span class="highlight" th:text="${metric.key}"></span> (<span th:text="${metric.value}"></span>)
     </p>
+
+    </div>
+
+    <hr/>
 
     <button id="btn-unassign" onclick="unassignProject()" class="btn btn-danger">Unassign</button>
 

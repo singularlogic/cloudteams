@@ -111,7 +111,7 @@
         <span class="highlight">Last Update (<span th:text="${githubStats.getRepository().getUpdatedAt()}"></span>)</span>
     </p>
 
-    <hr/>
+    <div class="col-md-6">
 
     <!-- 1. Code Section (commitsTotal,branchesNames,releasesNames,contibutorsTotal,repositoryName(withUrl) )-->
     <h3 class="header-medium secondary">Code</h3>
@@ -147,7 +147,9 @@
         </p>
     </div>
 
-    <hr/>
+    </div>
+
+    <div class="col-md-6">
 
     <!-- 2. Issues Section (openissuesTotal,closedisseusTotal,labelNames,milestonesNames) -->
     <h3 class="header-medium secondary">Issues</h3>
@@ -170,6 +172,8 @@
         <a target="_blank" th:each="label : ${githubStats.getLabels()}" th:href="${githubStats.getRepository().getHtmlUrl() + '/labels/' + label.getName()}" th:text="${label.getName()}"></a>
     </p>
 
+    </div>
+
     <hr/>
 
     <!-- 3. Pulse (weekly authors/commits(master), file changes master, additions /deletions master)  -->
@@ -180,6 +184,8 @@
         Excluding merges, <span class="highlight" th:text="${githubStats.getCommitsStats().getContributors()}"></span> authors have pushed <span class="highlight" th:text="${githubStats.getCommitsStats().getTotalCommits()}"></span> commits to all branches. On master, <span class="highlight" th:text="${githubStats.getCommitsStats().getTotalChanges()}"></span>      files have changed and there have been <span class="highlight" th:text="${githubStats.getCommitsStats().getTotalAdditions()}"></span> additions and <span class="highlight" th:text="${githubStats.getCommitsStats().getTotalDeletions()}"></span> deletions.
     </p>
 
+    <hr/>
+    
     <button id="btn-unassign" onclick="unassignRepository()" class="btn btn-danger">Unassign</button>
 
     <script th:inline="javascript">
