@@ -124,19 +124,19 @@
         <!--Commits-->
         <p th:inline="text">
             <span class="highlight">Commits (<span th:text="${githubStats.getCommits().size()}"></span>)</span><br/>
-            <a th:href="${githubStats.getRepository().getHtmlUrl()} + '/commits/master'">View All <i class="icon icon-more-options"></i></a>
+            <a th:href="${githubStats.getRepository().getHtmlUrl()} + '/commits/master'" target="_blank">View All <i class="icon icon-more-options"></i></a>
         </p>
 
         <!--Contributors-->
         <p th:inline="text">
             <span class="highlight">Contributors (<span th:text="${githubStats.getCollaborators().size()}"></span>)</span><br/>
-            <a th:href="${githubStats.getRepository().getHtmlUrl()} + '/graphs/contributors'">View All <i class="icon icon-more-options"></i></a>
+            <a th:href="${githubStats.getRepository().getHtmlUrl()} + '/graphs/contributors'" target="_blank">View All <i class="icon icon-more-options"></i></a>
         </p>
 
         <!--Watchers-->
         <p th:inline="text">
             <span class="highlight">Watchers (<span th:text="${githubStats.getRepository().getWatchers()}"></span>)</span><br/>
-            <a th:href="${githubStats.getRepository().getHtmlUrl()} + '/watchers'">View All <i class="icon icon-more-options"></i></a>
+            <a th:href="${githubStats.getRepository().getHtmlUrl()} + '/watchers'" target="_blank">View All <i class="icon icon-more-options"></i></a>
         </p>
 
         <!--Forks-->
@@ -147,7 +147,7 @@
         <!--Branches-->
         <p th:inline="text">
             <span class="highlight">Branches (<span th:text="${githubStats.getBranches().size()}"></span>)</span>
-            <a target="_blank" th:each="branch : ${githubStats.getBranches()}" th:href="${githubStats.getRepository().getHtmlUrl() + '/tree/' + branch.getName()}" th:text="${branch.getName()}"></a>
+            <a target="_blank" th:each="branch : ${githubStats.getBranches()}" th:href="${githubStats.getRepository().getHtmlUrl() + '/tree/' + branch.getName()}" th:text="${branch.getName()}" target="_blank"></a>
         </p>
     </div>
 
@@ -159,19 +159,19 @@
     <!--Open Issues-->
     <p th:inline="text">
         <span class="highlight">Open Issues (<span th:text="${githubStats.getRepository().getOpenIssues()}"></span>)</span><br/>
-        <a th:href="${githubStats.getRepository().getHtmlUrl()} + '/issues'">View All <i class="icon icon-more-options"></i></a>
+        <a th:href="${githubStats.getRepository().getHtmlUrl()} + '/issues'" target="_blank">View All <i class="icon icon-more-options"></i></a>
     </p>
 
     <!--Closed Issues-->
     <p th:inline="text">
         <span class="highlight">Closed Issues</span><br/>
-        <a th:href="${githubStats.getRepository().getHtmlUrl()} + '/issues?q=is%3Aissue+is%3Aclosed'">View All <i class="icon icon-more-options"></i></a>
+        <a th:href="${githubStats.getRepository().getHtmlUrl()} + '/issues?q=is%3Aissue+is%3Aclosed'" target="_blank">View All <i class="icon icon-more-options"></i></a>
     </p>
 
     <!--Labels-->
     <p th:inline="text">
         <span class="highlight">Labels </span>
-        <a target="_blank" th:each="label : ${githubStats.getLabels()}" th:href="${githubStats.getRepository().getHtmlUrl() + '/labels/' + label.getName()}" th:text="${label.getName()}"></a>
+        <a target="_blank" th:each="label : ${githubStats.getLabels()}" th:href="${githubStats.getRepository().getHtmlUrl() + '/labels/' + label.getName()}" th:text="${label.getName()}" target="_blank"></a>
     </p>
 
     <hr/>
