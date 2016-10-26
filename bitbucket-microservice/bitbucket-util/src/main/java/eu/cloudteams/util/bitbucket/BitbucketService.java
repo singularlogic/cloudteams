@@ -1,11 +1,16 @@
 package eu.cloudteams.util.bitbucket;
 
-import org.eclipse.egit.github.core.client.GitHubClient;
-import org.eclipse.egit.github.core.service.CommitService;
-import org.eclipse.egit.github.core.service.RepositoryService;
-import org.eclipse.egit.github.core.service.UserService;
-import org.eclipse.egit.github.core.service.CollaboratorService;
-import org.eclipse.egit.github.core.service.LabelService;
+import eu.cloudteams.util.bitbucket.models.RepositoryResponse;
+import eu.cloudteams.util.bitbucket.models.UserResponse;
+import java.util.Arrays;
+import java.util.Optional;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+
+import org.springframework.web.client.RestTemplate;
 
 /**
  *
@@ -13,42 +18,49 @@ import org.eclipse.egit.github.core.service.LabelService;
  */
 public final class BitbucketService {
 
-    //GitHubClient
-    private final GitHubClient bitbucketClient = new GitHubClient();
-    private final UserService userService;
-    private final RepositoryService repositoryService;
-    private final LabelService labelService;
-    private final CommitService commitService;
-    private final CollaboratorService collaboratorService;
+    private static final String REST_USER_URL = "https://api.bitbucket.org/2.0/user";
+
+    private static final String REPOSITORIES_USER_URL = "https://api.bitbucket.org/2.0/repositories/%s";
+
+    private final String ACCESS_TOKEN;
 
     public BitbucketService(String accessToken) {
-        bitbucketClient.setOAuth2Token(accessToken);
-        userService = new UserService(bitbucketClient);
-        repositoryService = new RepositoryService(bitbucketClient);
-        labelService = new LabelService(bitbucketClient);
-        commitService = new CommitService(bitbucketClient);
-        collaboratorService = new CollaboratorService(bitbucketClient);
+        this.ACCESS_TOKEN = accessToken;
 
     }
 
-    public CollaboratorService getCollaboratorService() {
-        return collaboratorService;
+    public Optional<RepositoryResponse> getRepositories(String username) {
+        try {
+            ResponseEntity<RepositoryResponse> response = new RestTemplate().exchange(String.format(REPOSITORIES_USER_URL, username), HttpMethod.GET, getHttpEntity(), RepositoryResponse.class);
+            return Optional.ofNullable(response.getBody());
+        } catch (Exception ex) {
+        }
+        return Optional.empty();
     }
 
-    public LabelService getLabelService() {
-        return this.labelService;
+    public Optional<UserResponse> getUser() {
+        try {
+            ResponseEntity<UserResponse> response = new RestTemplate().exchange(REST_USER_URL, HttpMethod.GET, getHttpEntity(), UserResponse.class);
+            return Optional.ofNullable(response.getBody());
+        } catch (Exception ex) {
+        }
+        return Optional.empty();
     }
 
-    public CommitService getCommitService() {
-        return this.commitService;
+    private String getAccessToken() {
+        return "Bearer " + this.ACCESS_TOKEN;
     }
 
-    public UserService getUserService() {
-        return this.userService;
+    private HttpEntity getHttpEntity() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+        headers.set("Authorization", getAccessToken());
+        HttpEntity<String> entity = new HttpEntity<>("parameters", headers);
+        return entity;
     }
 
-    public RepositoryService getBitbucketRepositoryService() {
-        return this.repositoryService;
+    public static void main(String... args) {
+
     }
 
 }

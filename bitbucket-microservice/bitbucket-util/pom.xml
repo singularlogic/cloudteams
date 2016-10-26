@@ -34,25 +34,7 @@
             <artifactId>spring-boot-starter-web</artifactId>
             <version>${org.springframework.boot}</version>
         </dependency>     
-        
-        <!-- GitHub Integration library-->
-        <dependency>
-            <groupId>org.eclipse.mylyn.github</groupId>
-            <artifactId>org.eclipse.egit.github.core</artifactId>
-            <version>2.1.5</version>
-        </dependency>
-        
-       <!-- BitBucket Integration library-->
-       <!-- https://mvnrepository.com/artifact/org.vx68k.bitbucket/bitbucket-api-client -->
-        <dependency>
-            <groupId>org.vx68k.bitbucket</groupId>
-            <artifactId>bitbucket-api-client</artifactId>
-            <version>4.0</version>
-        </dependency> 
-
-        
-        
+                
     </dependencies>
     
-
 </project>
