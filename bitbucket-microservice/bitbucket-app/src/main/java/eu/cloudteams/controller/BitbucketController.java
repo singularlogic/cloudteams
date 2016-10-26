@@ -11,6 +11,7 @@ import eu.cloudteams.repository.service.UserService;
 import eu.cloudteams.util.bitbucket.BitbucketAuthHandler;
 import eu.cloudteams.util.bitbucket.BitbucketAuthResponse;
 import eu.cloudteams.util.bitbucket.BitbucketService;
+import eu.cloudteams.util.bitbucket.models.Repository;
 import eu.cloudteams.util.bitbucket.models.RepositoryResponse;
 import eu.cloudteams.util.bitbucket.models.UserResponse;
 import java.io.IOException;
@@ -150,15 +151,15 @@ public class BitbucketController {
         BitbucketProject project = projectService.findByProjectIdAndUser(project_id, user);
 
         BitbucketService bitbucketService = new BitbucketService(user.getBitbucketToken());
+        Optional<UserResponse> userResponse = bitbucketService.getUser();
+
+        if (!userResponse.isPresent()) {
+            logger.warning("Could not get bitbucket user");
+            return "bitbucket::bitbucket-error";
+        }
+
         //Unassigned project
         if (null == project) {
-
-            Optional<UserResponse> userResponse = bitbucketService.getUser();
-
-            if (!userResponse.isPresent()) {
-                logger.warning("Could not get bitbucket user");
-                return "bitbucket::bitbucket-error";
-            }
 
             Optional<RepositoryResponse> repositoryResponse = bitbucketService.getRepositories(userResponse.get().getUsername());
 
@@ -174,14 +175,15 @@ public class BitbucketController {
 
         logger.info("Returning bitbucket-info fragment for user:  " + getCurrentUser().getPrincipal() + " and project_id: " + project_id);
 
-        //  Optional<Repository> repository = bitbucket.getBitbucketRepositoryService().getRepositories().stream().filter(repositoryTofind -> repositoryTofind.getName().equals(project.getBitbucketRepository())).findFirst();
-//        if (repository.isPresent()) {
-//
-//            //Generate bitbucket statistics
-//            BitbucketStatisticsTO bitbucketStatistics = new BitbucketStatisticsTO(bitbucket, repository.get());
-//            model.addAttribute("bitbucketStats", bitbucketStatistics);
-//            return "bitbucket::bitbucket-auth-project";
-//        }
+        Optional<Repository> repository = bitbucketService.getRepository(userResponse.get().getUsername(), project.getBitbucketRepository());
+        
+        if (repository.isPresent()) {
+
+            //Generate bitbucket statistics
+            BitbucketStatisticsTO bitbucketStatistics = new BitbucketStatisticsTO(bitbucketService, repository.get());
+            model.addAttribute("bitbucketStats", bitbucketStatistics);
+            return "bitbucket::bitbucket-auth-project";
+        }
 
         return "bitbucket::bitbucket-error";
     }

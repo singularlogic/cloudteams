@@ -68,7 +68,7 @@
 <div th:fragment="bitbucket-no-project">
     <div class="alert alert-warning">Please select a Bitbucket repository</div>
     <select id="repository" th:if="${!GetRepositories.getValues().isEmpty()}">
-        <option th:each="repo : ${GetRepositories.getValues()}" th:value="${repo.getName()}" th:text="${repo.getName()}"></option>
+        <option th:each="repo : ${GetRepositories.getValues()}" th:value="${repo.getSlug()}" th:text="${repo.getName()}"></option>
     </select>
     <br/><br/>
     <button id="btn-oauth" onclick="assignRepository()" class="btn btn-danger">Assign Repository</button>
@@ -79,7 +79,7 @@
 
             $.post({
                 url: CLOUDTEAMS_BITBUCKET_REST_ENDPOINT + "/bitbucket/add",
-                data: {project_id: ct_project_id, reponame: $("#repository :selected").text()},
+                data: {project_id: ct_project_id, reponame: $("#repository").val()},
                 beforeSend: function (xhr) {
                     if (hasBitbucketAccessToken()) {
                         xhr.setRequestHeader("Authorization", localStorage.bitbucket_auth_token);
@@ -104,44 +104,44 @@
 
     <div class="alert alert-warning">Bitbucket Statistics</div>
 
-    <p th:inline="text"><a th:href="'https://bitbucket.com/' + ${bitbucketStats.getRepository().getOwner().getLogin()}">[[${bitbucketStats.getRepository().getOwner().getLogin()}]]</a>/<a th:href="${bitbucketStats.getRepository().getHtmlUrl()}">[[${bitbucketStats.getRepository().getName()}]]</a></p>
+    <p th:inline="text"><a th:href="'https://bitbucket.com/' + ${bitbucketStats.getRepository().getOwner().getUsername()}">[[${bitbucketStats.getRepository().getOwner().getUsername()}]]</a>/<a th:href="${bitbucketStats.getRepository().getHtml()}">[[${bitbucketStats.getRepository().getName()}]]</a></p>
     <p th:inline="text">[[${bitbucketStats.getRepository().getDescription()}]]</p>
 
     <!--Last Update-->
     <p class="bold" th:inline="text">
-        <span class="highlight">Last Update (<span th:text="${bitbucketStats.getRepository().getUpdatedAt()}"></span>)</span>
+        <span class="highlight">Last Update (<span th:text="${bitbucketStats.getRepository().getUpdatedOn()}"></span>)</span>
     </p>
 
     <hr/>
-
-    <!-- 1. Code Section (commitsTotal,branchesNames,releasesNames,contibutorsTotal,repositoryName(withUrl) )-->
+<!--
+     1. Code Section (commitsTotal,branchesNames,releasesNames,contibutorsTotal,repositoryName(withUrl) )
     <h3 class="header-medium secondary">Code</h3>
 
     <div class="data">
-        <!--Commits-->
+        Commits
         <p class="bold" th:inline="text">
             <span class="highlight">Commits (<span th:text="${bitbucketStats.getCommits().size()}"></span>) </span>
             <a th:href="${bitbucketStats.getRepository().getHtmlUrl()} + '/commits/master'"><i class="icon icon-object"></i></a>
         </p>
 
-        <!--Contributors-->
+        Contributors
         <p class="bold" th:inline="text">
             <span class="highlight">Contributors (<span th:text="${bitbucketStats.getCollaborators().size()}"></span>)</span>
             <a th:href="${bitbucketStats.getRepository().getHtmlUrl()} + '/graphs/contributors'"><i class="icon icon-object"></i></a>
         </p>
 
-        <!--Watchers-->
+        Watchers
         <p class="bold" th:inline="text">
             <span class="highlight">Watchers (<span th:text="${bitbucketStats.getRepository().getWatchers()}"></span>)</span>
             <a th:href="${bitbucketStats.getRepository().getHtmlUrl()} + '/watchers'"><i class="icon icon-object"></i></a>
         </p>
 
-        <!--Forks-->
+        Forks
         <p class="bold" th:inline="text">
             <span class="highlight">Forks (<span th:text="${bitbucketStats.getRepository().getForks()}"></span>)</span>
         </p>
 
-        <!--Branches-->
+        Branches
         <p class="bold" th:inline="text">
             <span class="highlight">Branches (<span th:text="${bitbucketStats.getBranches().size()}"></span>)</span>
             <a target="_blank" th:each="branch : ${bitbucketStats.getBranches()}" th:href="${bitbucketStats.getRepository().getHtmlUrl() + '/tree/' + branch.getName()}" th:text="${branch.getName()}"></a>
@@ -150,22 +150,22 @@
 
     <hr/>
 
-    <!-- 2. Issues Section (openissuesTotal,closedisseusTotal,labelNames,milestonesNames) -->
+     2. Issues Section (openissuesTotal,closedisseusTotal,labelNames,milestonesNames) 
     <h3 class="header-medium secondary">Issues</h3>
 
-    <!--Open Issues-->
+    Open Issues
     <p class="bold" th:inline="text">
         <span class="highlight">Open Issues (<span th:text="${bitbucketStats.getRepository().getOpenIssues()}"></span>)</span>
         <a th:href="${bitbucketStats.getRepository().getHtmlUrl()} + '/issues'"><i class="icon icon-object"></i></a>
     </p>
 
-    <!--Closed Issues-->
+    Closed Issues
     <p class="bold" th:inline="text">
         <span class="highlight">Closed Issues </span>
         <a th:href="${bitbucketStats.getRepository().getHtmlUrl()} + '/issues?q=is%3Aissue+is%3Aclosed'"><i class="icon icon-object"></i></a>
     </p>
 
-    <!--Labels-->
+    Labels
     <p class="bold" th:inline="text">
         <span class="highlight">Labels </span>
         <a target="_blank" th:each="label : ${bitbucketStats.getLabels()}" th:href="${bitbucketStats.getRepository().getHtmlUrl() + '/labels/' + label.getName()}" th:text="${label.getName()}"></a>
@@ -173,13 +173,13 @@
 
     <hr/>
 
-    <!-- 3. Pulse (weekly authors/commits(master), file changes master, additions /deletions master)  -->
+     3. Pulse (weekly authors/commits(master), file changes master, additions /deletions master)  
     <h3 class="header-medium secondary">Pulse</h3>
 
-    <!--Last Weeks Stats-->
+    Last Weeks Stats
     <p class="bold" th:inline="text">
         Excluding merges, <span class="highlight" th:text="${bitbucketStats.getCommitsStats().getContributors()}"></span> authors have pushed <span class="highlight" th:text="${bitbucketStats.getCommitsStats().getTotalCommits()}"></span> commits to all branches. On master, <span class="highlight" th:text="${bitbucketStats.getCommitsStats().getTotalChanges()}"></span>      files have changed and there have been <span class="highlight" th:text="${bitbucketStats.getCommitsStats().getTotalAdditions()}"></span> additions and <span class="highlight" th:text="${bitbucketStats.getCommitsStats().getTotalDeletions()}"></span> deletions.
-    </p>
+    </p>-->
 
     <button id="btn-unassign" onclick="unassignRepository()" class="btn btn-danger">Unassign</button>
 
