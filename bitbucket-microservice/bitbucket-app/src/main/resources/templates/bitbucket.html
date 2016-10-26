@@ -104,7 +104,7 @@
 
     <div class="alert alert-warning">Bitbucket Statistics</div>
 
-    <p th:inline="text"><a th:href="'https://bitbucket.com/' + ${bitbucketStats.getRepository().getOwner().getUsername()}">[[${bitbucketStats.getRepository().getOwner().getUsername()}]]</a>/<a th:href="${bitbucketStats.getRepository().getHtml()}">[[${bitbucketStats.getRepository().getName()}]]</a></p>
+    <p th:inline="text"><a th:href="'https://bitbucket.com/' + ${bitbucketStats.getRepository().getOwner().getUsername()}">[[${bitbucketStats.getRepository().getOwner().getUsername()}]]</a>/<a th:href="'https://bitbucket.com/' + ${bitbucketStats.getRepository().getFullName()}">[[${bitbucketStats.getRepository().getName()}]]</a></p>
     <p th:inline="text">[[${bitbucketStats.getRepository().getDescription()}]]</p>
 
     <!--Last Update-->
