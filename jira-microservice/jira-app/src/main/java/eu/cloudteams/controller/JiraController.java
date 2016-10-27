@@ -35,9 +35,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * @author Christos Paraskeva <ch.paraskeva at gmail dot com>
  */
 @Controller
-public class BitbucketController {
+public class JiraController {
 
-    private static final Logger logger = Logger.getLogger(BitbucketController.class.getName());
+    private static final Logger logger = Logger.getLogger(JiraController.class.getName());
 
     @Autowired
     UserService userService;
@@ -45,7 +45,7 @@ public class BitbucketController {
     @Autowired
     ProjectService projectService;
 
-    @RequestMapping(value = "/api/v1/bitbucket/auth", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/v1/jira/auth", method = RequestMethod.GET)
     public String githubAuth(Model model, @RequestParam(value = "code", defaultValue = "") String code, @RequestParam(value = "username", defaultValue = "") String username, HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         JSONObject jsonObject = new JSONObject();
@@ -103,7 +103,7 @@ public class BitbucketController {
             user.setAccessToken(generatedToken.getToken());
         } catch (JOSEException ex) {
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Could not create Access Token...");
-            Logger.getLogger(BitbucketController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(JiraController.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         //Update user data
@@ -116,12 +116,12 @@ public class BitbucketController {
         //Print the generated token
         logger.info("Generated Token: " + generatedToken.getToken());
 
-        return "bitbucket::github-authentication";
+        return "jira::jira-authentication";
 
     }
 
     @CrossOrigin
-    @RequestMapping(value = "/api/v1/bitbucket/repository", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/v1/jira/repository", method = RequestMethod.POST)
     public String getGithubRepositoryInfo(Model model, @RequestParam(value = "project_id", defaultValue = "0", required = true) int project_id) throws IOException {
 
         logger.info("Requesting info for repository assigned to project_id: " + project_id);
@@ -129,7 +129,7 @@ public class BitbucketController {
         if (!WebController.hasAccessToken()) {
             logger.warning("Unauthorized access returing Bitbucket sigin fragment");
             //return github-signin fragment
-            return "bitbucket::github-no-auth";
+            return "jira::jira-no-auth";
         }
 
         JiraUser user = userService.findByUsername(getCurrentUser().getPrincipal().toString());
@@ -139,21 +139,21 @@ public class BitbucketController {
         //Unassigned project
         if (null == project) {
             model.addAttribute("GetRepositories", github.getBitbucketRepositoryService().getRepositories());
-            return "bitbucket::github-no-project";
+            return "jira::jira-no-project";
         }
 
-        logger.info("Returning github-info fragment for user:  " + getCurrentUser().getPrincipal() + " and project_id: " + project_id);
+        logger.info("Returning jira-info fragment for user:  " + getCurrentUser().getPrincipal() + " and project_id: " + project_id);
 
         Optional<Repository> repository = github.getBitbucketRepositoryService().getRepositories().stream().filter(repositoryTofind -> repositoryTofind.getName().equals(project.getJiraRepository())).findFirst();
 
         if (repository.isPresent()) {
             //Generate github statistics
-            BitbucketStatisticsTO githubStatistics = new BitbucketStatisticsTO(github, repository.get());
+            JiraStatisticsTO githubStatistics = new JiraStatisticsTO(github, repository.get());
             model.addAttribute("githubStats", githubStatistics);
-            return "bitbucket::github-auth-project";
+            return "jira::github-auth-project";
         }
 
-        return "bitbucket::github-error";
+        return "jira::jira-error";
     }
 
     //Rest Controller
@@ -181,10 +181,10 @@ public class BitbucketController {
                     return response.toString();
                 }
             } catch (InterruptedException ex) {
-                Logger.getLogger(BitbucketController.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(JiraController.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        logger.info("[Bitbucket Synchronization T#" + Thread.currentThread().getId() + "] could not found user:  " + username + " in database , synchronization failed");
+        logger.info("[Jira Synchronization T#" + Thread.currentThread().getId() + "] could not found user:  " + username + " in database , synchronization failed");
 
         //Token not found return error message
         response.put("code", MESSAGES.FAIL);
@@ -195,7 +195,7 @@ public class BitbucketController {
 
     @CrossOrigin
     @ResponseBody
-    @RequestMapping(value = "/api/v1/bitbucket/add", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/v1/jira/add", method = RequestMethod.POST)
     public String githubAuth(Model model, @RequestParam(value = "project_id", defaultValue = "") long project_id, @RequestParam(value = "reponame", defaultValue = "") String bitbucketRepository) {
 
         JSONObject jsonObject = new JSONObject();
@@ -238,7 +238,7 @@ public class BitbucketController {
 
     @CrossOrigin
     @ResponseBody
-    @RequestMapping(value = "/api/v1/bitbucket/delete", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/v1/jira/delete", method = RequestMethod.POST)
     public String unassignGithubRepository(Model model, @RequestParam(value = "project_id", defaultValue = "0", required = true) int project_id) throws IOException {
 
         logger.info("Requesting unassign Bitbucket repository for project_id: " + project_id);

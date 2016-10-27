@@ -19,7 +19,7 @@ import org.eclipse.egit.github.core.User;
  *
  * @author Christos Paraskeva <ch.paraskeva at gmail dot com>
  */
-public final class BitbucketStatisticsTO {
+public final class JiraStatisticsTO {
 
     private final BitbucketService bitbucketService;
     private final Repository repository;
@@ -49,7 +49,7 @@ public final class BitbucketStatisticsTO {
         return this.labelsList;
     }
 
-    public BitbucketStatisticsTO(BitbucketService githubService, Repository repository) throws IOException {
+    public JiraStatisticsTO(BitbucketService githubService, Repository repository) throws IOException {
         this.bitbucketService = githubService;
         this.repository = repository;
         gatherInfo();
@@ -93,7 +93,7 @@ public final class BitbucketStatisticsTO {
                 totalAdditions += tmpRepositoryCommit.getStats().getAdditions();
                 totalDeletions += tmpRepositoryCommit.getStats().getDeletions();
             } catch (IOException ex) {
-                Logger.getLogger(BitbucketStatisticsTO.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(JiraStatisticsTO.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
 
