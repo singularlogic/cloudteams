@@ -1,5 +1,6 @@
 package eu.cloudteams.util.bitbucket;
 
+import eu.cloudteams.util.bitbucket.models.BranchResponse;
 import eu.cloudteams.util.bitbucket.models.Repository;
 import eu.cloudteams.util.bitbucket.models.RepositoryResponse;
 import eu.cloudteams.util.bitbucket.models.UserResponse;
@@ -33,6 +34,15 @@ public final class BitbucketService {
     public Optional<RepositoryResponse> getRepositories(String username) {
         try {
             ResponseEntity<RepositoryResponse> response = new RestTemplate().exchange(String.format(REPOSITORIES_USER_URL, username), HttpMethod.GET, getHttpEntity(), RepositoryResponse.class);
+            return Optional.ofNullable(response.getBody());
+        } catch (Exception ex) {
+        }
+        return Optional.empty();
+    }
+
+    public Optional<BranchResponse> getBranches(String url) {
+        try {
+            ResponseEntity<BranchResponse> response = new RestTemplate().exchange(url, HttpMethod.GET, getHttpEntity(), BranchResponse.class);
             return Optional.ofNullable(response.getBody());
         } catch (Exception ex) {
         }

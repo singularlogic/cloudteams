@@ -1,16 +1,12 @@
 package eu.cloudteams.controller;
 
 import eu.cloudteams.util.bitbucket.BitbucketService;
+import eu.cloudteams.util.bitbucket.models.BranchResponse;
 import eu.cloudteams.util.bitbucket.models.Repository;
 import java.io.IOException;
-import java.util.Calendar;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
-
 
 /**
  *
@@ -22,51 +18,35 @@ public final class BitbucketStatisticsTO {
     private final Repository repository;
 //    private List<User> collaboratorsList;
 //    private List<Label> labelsList;
-//    private List<RepositoryBranch> branchesList;
+    private BranchResponse branchesList;
 //    private List<RepositoryCommit> commits;
     private CommitsStats commitsStats;
 
     public Repository getRepository() {
         return repository;
     }
-//
-//    public List<User> getCollaborators() {
-//        return collaboratorsList;
-//    }
-//
-//    public List<RepositoryBranch> getBranches() {
-//        return branchesList;
-//    }
-//
-//    public List<RepositoryCommit> getCommits() {
-//        return this.commits;
-//    }
-//
-//    public List<Label> getLabels() {
-//        return this.labelsList;
-//    }
+
+    public BranchResponse getBranches() {
+        return this.branchesList;
+    }
 
     public BitbucketStatisticsTO(BitbucketService githubService, Repository repository) throws IOException {
         this.bitbucketService = githubService;
         this.repository = repository;
-        //gatherInfo();
+        gatherInfo();
     }
 
-//    public void gatherInfo() throws IOException {
-//        
-//        branchesList = bitbucketService.getBitbucketRepositoryService().getBranches(repository);
-//        labelsList = bitbucketService.getLabelService().getLabels(repository);
-//        commits = bitbucketService.getCommitService().getCommits(repository);
-//
-//        //Code section (info for master branch)
-//
-//        labelsList = bitbucketService.getLabelService().getLabels(repository);
-//        collaboratorsList = bitbucketService.getCollaboratorService().getCollaborators(repository);
-//
-//        //Pulse section
+    public void gatherInfo() throws IOException {
+        branchesList = bitbucketService.getBranches(repository.getLinks().getBranches().getHref()).orElse(new BranchResponse());
+        //labelsList = bitbucketService.getLabelService().getLabels(repository);
+        //  commits = bitbucketService.getCommitService().getCommits(repository);
+
+        //Code section (info for master branch)
+        //      labelsList = bitbucketService.getLabelService().getLabels(repository);
+        //    collaboratorsList = bitbucketService.getCollaboratorService().getCollaborators(repository);
+        //Pulse section
 //        setLatMonthCommitsStats();
-//
-//    }
+    }
 
 //    private void setLatMonthCommitsStats() {
 //
@@ -97,7 +77,6 @@ public final class BitbucketStatisticsTO {
 //        //Set commitsStats
 //        this.commitsStats = new CommitsStats(totalAdditions, totalDeletions, commitsSHA.size(), contributors);
 //    }
-
     public CommitsStats getCommitsStats() {
         return this.commitsStats;
     }

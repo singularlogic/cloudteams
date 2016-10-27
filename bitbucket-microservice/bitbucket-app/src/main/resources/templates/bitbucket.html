@@ -109,16 +109,16 @@
 
     <!--Last Update-->
     <p class="bold" th:inline="text">
-        <span class="highlight">Last Update (<span th:text="${bitbucketStats.getRepository().getUpdatedOn()}"></span>)</span>
+        <span class="highlight">Last Update (<span th:text="${#strings.substring(bitbucketStats.getRepository().getUpdatedOn(),0,9)}"></span>)</span>
     </p>
 
     <hr/>
-<!--
-     1. Code Section (commitsTotal,branchesNames,releasesNames,contibutorsTotal,repositoryName(withUrl) )
+
+        <!-- 1. Code Section (commitsTotal,branchesNames,releasesNames,contibutorsTotal,repositoryName(withUrl) )-->
     <h3 class="header-medium secondary">Code</h3>
 
     <div class="data">
-        Commits
+<!--        Commits
         <p class="bold" th:inline="text">
             <span class="highlight">Commits (<span th:text="${bitbucketStats.getCommits().size()}"></span>) </span>
             <a th:href="${bitbucketStats.getRepository().getHtmlUrl()} + '/commits/master'"><i class="icon icon-object"></i></a>
@@ -139,17 +139,17 @@
         Forks
         <p class="bold" th:inline="text">
             <span class="highlight">Forks (<span th:text="${bitbucketStats.getRepository().getForks()}"></span>)</span>
-        </p>
+        </p>-->
 
         Branches
         <p class="bold" th:inline="text">
-            <span class="highlight">Branches (<span th:text="${bitbucketStats.getBranches().size()}"></span>)</span>
-            <a target="_blank" th:each="branch : ${bitbucketStats.getBranches()}" th:href="${bitbucketStats.getRepository().getHtmlUrl() + '/tree/' + branch.getName()}" th:text="${branch.getName()}"></a>
+            <span class="highlight">Branches (<span th:text="${bitbucketStats.getBranches().getValues().size()}"></span>)</span>
+            <a target="_blank" th:each="branch : ${bitbucketStats.getBranches().getValues()}" th:href="'https://bitbucket.com/' +  ${bitbucketStats.getRepository().getFullname() + '/tree/' + branch.getName()}" th:text="${branch.getName()}"></a>
         </p>
     </div>
 
     <hr/>
-
+<!--
      2. Issues Section (openissuesTotal,closedisseusTotal,labelNames,milestonesNames) 
     <h3 class="header-medium secondary">Issues</h3>
 
