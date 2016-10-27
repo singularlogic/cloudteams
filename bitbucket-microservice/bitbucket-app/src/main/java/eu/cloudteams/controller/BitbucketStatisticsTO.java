@@ -31,6 +31,10 @@ public final class BitbucketStatisticsTO {
         return this.branchesList;
     }
 
+    public WatchResponse getWatchers() {
+        return this.watchersList;
+    }
+
     public BitbucketStatisticsTO(BitbucketService githubService, Repository repository) throws IOException {
         this.bitbucketService = githubService;
         this.repository = repository;
