@@ -144,7 +144,7 @@
         Branches
         <p class="bold" th:inline="text">
             <span class="highlight">Branches (<span th:text="${bitbucketStats.getBranches().getValues().size()}"></span>)</span>
-            <a target="_blank" th:each="branch : ${bitbucketStats.getBranches().getValues()}" th:href="${ 'https://bitbucket.com/' +  bitbucketStats.getRepository().getFullname() + '/tree/' + branch.getName()}" th:text="${branch.getName()}"></a>
+            <a target="_blank" th:each="branch : ${bitbucketStats.getBranches().getValues()}" th:href="${ 'https://bitbucket.com/' +  bitbucketStats.getRepository().getFullName() + '/tree/' + branch.getName()}" th:text="${branch.getName()}"></a>
         </p>
     </div>
 
