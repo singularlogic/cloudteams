@@ -3,8 +3,8 @@ package eu.cloudteams.controller;
 import eu.cloudteams.util.bitbucket.BitbucketService;
 import eu.cloudteams.util.bitbucket.models.BranchResponse;
 import eu.cloudteams.util.bitbucket.models.Repository;
+import eu.cloudteams.util.bitbucket.models.WatchResponse;
 import java.io.IOException;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -19,6 +19,7 @@ public final class BitbucketStatisticsTO {
 //    private List<User> collaboratorsList;
 //    private List<Label> labelsList;
     private BranchResponse branchesList;
+    private WatchResponse watchersList;
 //    private List<RepositoryCommit> commits;
     private CommitsStats commitsStats;
 
@@ -38,9 +39,10 @@ public final class BitbucketStatisticsTO {
 
     public void gatherInfo() throws IOException {
         branchesList = bitbucketService.getBranches(repository.getLinks().getBranches().getHref()).orElse(new BranchResponse());
+        watchersList = bitbucketService.getWatchers(repository.getLinks().getWatchers().getHref()).orElse(new WatchResponse());
+
         //labelsList = bitbucketService.getLabelService().getLabels(repository);
         //  commits = bitbucketService.getCommitService().getCommits(repository);
-
         //Code section (info for master branch)
         //      labelsList = bitbucketService.getLabelService().getLabels(repository);
         //    collaboratorsList = bitbucketService.getCollaboratorService().getCollaborators(repository);

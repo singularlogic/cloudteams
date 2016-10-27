@@ -104,12 +104,15 @@
 
     <div class="alert alert-warning">Bitbucket Statistics</div>
 
+    <span class="highlight">Name</span>
     <p th:inline="text"><a th:href="'https://bitbucket.com/' + ${bitbucketStats.getRepository().getOwner().getUsername()}">[[${bitbucketStats.getRepository().getOwner().getUsername()}]]</a>/<a th:href="'https://bitbucket.com/' + ${bitbucketStats.getRepository().getFullName()}">[[${bitbucketStats.getRepository().getName()}]]</a></p>
-    <p th:inline="text">[[${bitbucketStats.getRepository().getDescription()}]]</p>
+    
+    <span class="highlight">Description</span>
+    <p th:inline="text"  th:text="${bitbucketStats.getRepository().getDescription() == null ? 'N/A'  : bitbucketStats.getRepository().getDescription()}"></p>
 
     <!--Last Update-->
     <p class="bold" th:inline="text">
-        <span class="highlight">Last Update (<span th:text="${#strings.substring(bitbucketStats.getRepository().getUpdatedOn(),0,9)}"></span>)</span>
+        <span class="highlight">Last Update (<span th:text="${#strings.substring(bitbucketStats.getRepository().getUpdatedOn(),0,10)}"></span>)</span>
     </p>
 
     <hr/>
@@ -129,13 +132,13 @@
             <span class="highlight">Contributors (<span th:text="${bitbucketStats.getCollaborators().size()}"></span>)</span>
             <a th:href="${bitbucketStats.getRepository().getHtmlUrl()} + '/graphs/contributors'"><i class="icon icon-object"></i></a>
         </p>
-
+-->
         Watchers
         <p class="bold" th:inline="text">
-            <span class="highlight">Watchers (<span th:text="${bitbucketStats.getRepository().getWatchers()}"></span>)</span>
-            <a th:href="${bitbucketStats.getRepository().getHtmlUrl()} + '/watchers'"><i class="icon icon-object"></i></a>
+            <span class="highlight">Watchers (<span th:text="${bitbucketStats.getWatchers().size()}"></span>)</span>
+               <a target="_blank" th:each="watcher : ${bitbucketStats.getWatchers().getValues()}" th:href="${ 'https://bitbucket.com/' + watcher.getUsername()}" th:text="${watcher.getUsername()}"></a>
         </p>
-
+<!-- 
         Forks
         <p class="bold" th:inline="text">
             <span class="highlight">Forks (<span th:text="${bitbucketStats.getRepository().getForks()}"></span>)</span>
@@ -144,7 +147,7 @@
         Branches
         <p class="bold" th:inline="text">
             <span class="highlight">Branches (<span th:text="${bitbucketStats.getBranches().getValues().size()}"></span>)</span>
-            <a target="_blank" th:each="branch : ${bitbucketStats.getBranches().getValues()}" th:href="${ 'https://bitbucket.com/' +  bitbucketStats.getRepository().getFullName() + '/tree/' + branch.getName()}" th:text="${branch.getName()}"></a>
+            <a target="_blank" th:each="branch : ${bitbucketStats.getBranches().getValues()}" th:href="${ 'https://bitbucket.com/' +  bitbucketStats.getRepository().getFullName() + '/branch/' + branch.getName()}" th:text="${branch.getName()}"></a>
         </p>
     </div>
 

@@ -4,6 +4,7 @@ import eu.cloudteams.util.bitbucket.models.BranchResponse;
 import eu.cloudteams.util.bitbucket.models.Repository;
 import eu.cloudteams.util.bitbucket.models.RepositoryResponse;
 import eu.cloudteams.util.bitbucket.models.UserResponse;
+import eu.cloudteams.util.bitbucket.models.WatchResponse;
 import java.util.Arrays;
 import java.util.Optional;
 import org.springframework.http.HttpEntity;
@@ -43,6 +44,15 @@ public final class BitbucketService {
     public Optional<BranchResponse> getBranches(String url) {
         try {
             ResponseEntity<BranchResponse> response = new RestTemplate().exchange(url, HttpMethod.GET, getHttpEntity(), BranchResponse.class);
+            return Optional.ofNullable(response.getBody());
+        } catch (Exception ex) {
+        }
+        return Optional.empty();
+    }
+
+    public Optional<WatchResponse> getWatchers(String url) {
+        try {
+            ResponseEntity<WatchResponse> response = new RestTemplate().exchange(url, HttpMethod.GET, getHttpEntity(), WatchResponse.class);
             return Optional.ofNullable(response.getBody());
         } catch (Exception ex) {
         }
