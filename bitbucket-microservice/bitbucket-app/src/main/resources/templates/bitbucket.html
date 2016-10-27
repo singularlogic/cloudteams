@@ -135,7 +135,7 @@
 -->
         Watchers
         <p class="bold" th:inline="text">
-            <span class="highlight">Watchers (<span th:text="${bitbucketStats.getWatchers().size()}"></span>)</span>
+            <span class="highlight">Watchers (<span th:text="${bitbucketStats.getWatchers().getValues().size()}"></span>)</span>
                <a target="_blank" th:each="watcher : ${bitbucketStats.getWatchers().getValues()}" th:href="${ 'https://bitbucket.com/' + watcher.getUsername()}" th:text="${watcher.getUsername()}"></a>
         </p>
 <!-- 
