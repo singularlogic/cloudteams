@@ -25,7 +25,7 @@ public class WatchResponse {
     @JsonProperty("pagelen")
     private Integer pagelen;
     @JsonProperty("values")
-    private List<Value> values = new ArrayList<Value>();
+    private List<Value2> values = new ArrayList<>();
     @JsonProperty("page")
     private Integer page;
     @JsonProperty("size")
@@ -56,7 +56,7 @@ public class WatchResponse {
      * @return The values
      */
     @JsonProperty("values")
-    public List<Value> getValues() {
+    public List<Value2> getValues() {
         return values;
     }
 
@@ -65,7 +65,7 @@ public class WatchResponse {
      * @param values The values
      */
     @JsonProperty("values")
-    public void setValues(List<Value> values) {
+    public void setValues(List<Value2> values) {
         this.values = values;
     }
 
