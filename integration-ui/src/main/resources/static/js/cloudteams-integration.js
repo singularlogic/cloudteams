@@ -117,7 +117,6 @@ function hasBitbucketAccessToken() {
  */
 
 function loadJiraWidget() {
-    return;
     //Make the call to fect h github data
     $.post({
         beforeSend: function (xhr) {
