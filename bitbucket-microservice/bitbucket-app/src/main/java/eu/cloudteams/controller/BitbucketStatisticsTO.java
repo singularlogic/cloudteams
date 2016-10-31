@@ -1,10 +1,10 @@
 package eu.cloudteams.controller;
 
 import eu.cloudteams.util.bitbucket.BitbucketService;
-import eu.cloudteams.util.bitbucket.models.Author;
 import eu.cloudteams.util.bitbucket.models.BranchResponse;
 import eu.cloudteams.util.bitbucket.models.CommitResponse;
 import eu.cloudteams.util.bitbucket.models.Repository;
+import eu.cloudteams.util.bitbucket.models.TagResponse;
 import eu.cloudteams.util.bitbucket.models.Value3;
 import eu.cloudteams.util.bitbucket.models.WatchResponse;
 import java.io.IOException;
@@ -12,11 +12,8 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -30,7 +27,7 @@ public final class BitbucketStatisticsTO {
     private final BitbucketService bitbucketService;
     private final Repository repository;
 //    private List<User> collaboratorsList;
-//    private List<Label> labelsList;
+    private TagResponse tagsList;
     private BranchResponse branchesList;
     private WatchResponse watchersList;
     private CommitResponse commitsList;
@@ -52,6 +49,10 @@ public final class BitbucketStatisticsTO {
         return this.commitsList;
     }
 
+    public TagResponse getTags() {
+        return this.tagsList;
+    }
+
     public BitbucketStatisticsTO(BitbucketService githubService, Repository repository) throws IOException {
         this.bitbucketService = githubService;
         this.repository = repository;
@@ -62,8 +63,7 @@ public final class BitbucketStatisticsTO {
         branchesList = bitbucketService.getBranches(repository.getLinks().getBranches().getHref()).orElse(new BranchResponse());
         watchersList = bitbucketService.getWatchers(repository.getLinks().getWatchers().getHref()).orElse(new WatchResponse());
         commitsList = bitbucketService.getCommits(repository.getLinks().getCommits().getHref()).orElse(new CommitResponse());
-
-        //labelsList = bitbucketService.getLabelService().getLabels(repository);
+        tagsList = bitbucketService.getTags(repository.getLinks().getTags().getHref()).orElse(new TagResponse());
         //Code section (info for master branch)
         //      labelsList = bitbucketService.getLabelService().getLabels(repository);
         //    collaboratorsList = bitbucketService.getCollaboratorService().getCollaborators(repository);
@@ -76,7 +76,6 @@ public final class BitbucketStatisticsTO {
         Calendar cal = Calendar.getInstance();
         //cal.add(Calendar.DAY_OF_WEEK, -7);
         cal.add(Calendar.YEAR, -4);
-        //final List<RepositoryCommit> lastMonthcommits = commits.stream().filter(commit -> commit.getCommit().getCommitter().getDate().getTime() > cal.getTime().getTime())  .collect(Collectors.toList());
 
         final DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 

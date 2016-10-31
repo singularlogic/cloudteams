@@ -4,6 +4,7 @@ import eu.cloudteams.util.bitbucket.models.BranchResponse;
 import eu.cloudteams.util.bitbucket.models.CommitResponse;
 import eu.cloudteams.util.bitbucket.models.Repository;
 import eu.cloudteams.util.bitbucket.models.RepositoryResponse;
+import eu.cloudteams.util.bitbucket.models.TagResponse;
 import eu.cloudteams.util.bitbucket.models.UserResponse;
 import eu.cloudteams.util.bitbucket.models.WatchResponse;
 import java.text.DateFormat;
@@ -75,6 +76,15 @@ public final class BitbucketService {
         return Optional.empty();
     }
 
+    public Optional<TagResponse> getTags(String url) {
+        try {
+            ResponseEntity<TagResponse> response = new RestTemplate().exchange(url, HttpMethod.GET, getHttpEntity(), TagResponse.class);
+            return Optional.ofNullable(response.getBody());
+        } catch (Exception ex) {
+        }
+        return Optional.empty();
+    }
+
     public Optional<Repository> getRepository(String username, String repository) {
         try {
             ResponseEntity<Repository> response = new RestTemplate().exchange(String.format(REPOSITORIES_USER_URL, username) + "/" + repository, HttpMethod.GET, getHttpEntity(), Repository.class);
@@ -106,8 +116,6 @@ public final class BitbucketService {
     }
 
     public static void main(String... args) {
-
-
 
     }
 
