@@ -121,10 +121,10 @@
     <h3 class="header-medium secondary">Code</h3>
 
     <div class="data">
-<!--        Commits -->
+       Commits 
         <p class="bold" th:inline="text">
             <span class="highlight">Commits (<span th:text="${bitbucketStats.getCommits().getValues().size()}"></span>) </span>
-            <a th:href="${bitbucketStats.getRepository().getHtmlUrl()} + '/commits/all'"><i class="icon icon-object"></i></a>
+            <a th:href="${'https://bitbucket.com/' +  bitbucketStats.getRepository().getFullName()  + '/commits/all' }"><i class="icon icon-object"></i></a>
         </p>
 
         <!--        Contributors
