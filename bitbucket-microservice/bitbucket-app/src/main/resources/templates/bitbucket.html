@@ -156,7 +156,7 @@
 
     <p class="bold" th:inline="text">
         <span class="highlight">Total Issues (<span th:text="${bitbucketStats.getIssues().getValues().size()}"></span>)</span>
-        <a th:href="${'https://bitbucket.com/' +  bitbucketStats.getRepository().getFullName() + '/issues'"><i class="icon icon-object"></i></a>
+        <a th:href="${'https://bitbucket.com/' +  bitbucketStats.getRepository().getFullName() + '/issues'}"><i class="icon icon-object"></i></a>
     </p>
 
     <!--
