@@ -121,18 +121,18 @@
     <h3 class="header-medium secondary">Code</h3>
 
     <div class="data">
-<!--        Commits
+<!--        Commits -->
         <p class="bold" th:inline="text">
-            <span class="highlight">Commits (<span th:text="${bitbucketStats.getCommits().size()}"></span>) </span>
-            <a th:href="${bitbucketStats.getRepository().getHtmlUrl()} + '/commits/master'"><i class="icon icon-object"></i></a>
+            <span class="highlight">Commits (<span th:text="${bitbucketStats.getCommits().getValues().size()}"></span>) </span>
+            <a th:href="${bitbucketStats.getRepository().getHtmlUrl()} + '/commits/all'"><i class="icon icon-object"></i></a>
         </p>
 
-        Contributors
-        <p class="bold" th:inline="text">
-            <span class="highlight">Contributors (<span th:text="${bitbucketStats.getCollaborators().size()}"></span>)</span>
-            <a th:href="${bitbucketStats.getRepository().getHtmlUrl()} + '/graphs/contributors'"><i class="icon icon-object"></i></a>
-        </p>
--->
+        <!--        Contributors
+                <p class="bold" th:inline="text">
+                    <span class="highlight">Contributors (<span th:text="${bitbucketStats.getCollaborators().size()}"></span>)</span>
+                    <a th:href="${bitbucketStats.getRepository().getHtmlUrl()} + '/graphs/contributors'"><i class="icon icon-object"></i></a>
+                </p>-->
+
         Watchers
         <p class="bold" th:inline="text">
             <span class="highlight">Watchers (<span th:text="${bitbucketStats.getWatchers().getValues().size()}"></span>)</span>
@@ -144,7 +144,7 @@
             <span class="highlight">Forks (<span th:text="${bitbucketStats.getRepository().getForks()}"></span>)</span>
         </p>-->
 
-        Branches
+       <!--  Branches -->
         <p class="bold" th:inline="text">
             <span class="highlight">Branches (<span th:text="${bitbucketStats.getBranches().getValues().size()}"></span>)</span>
             <a target="_blank" th:each="branch : ${bitbucketStats.getBranches().getValues()}" th:href="${ 'https://bitbucket.com/' +  bitbucketStats.getRepository().getFullName() + '/branch/' + branch.getName()}" th:text="${branch.getName()}"></a>
@@ -179,10 +179,10 @@
      3. Pulse (weekly authors/commits(master), file changes master, additions /deletions master)  
     <h3 class="header-medium secondary">Pulse</h3>
 
-    Last Weeks Stats
+    Last Weeks Stats-->
     <p class="bold" th:inline="text">
         Excluding merges, <span class="highlight" th:text="${bitbucketStats.getCommitsStats().getContributors()}"></span> authors have pushed <span class="highlight" th:text="${bitbucketStats.getCommitsStats().getTotalCommits()}"></span> commits to all branches. On master, <span class="highlight" th:text="${bitbucketStats.getCommitsStats().getTotalChanges()}"></span>      files have changed and there have been <span class="highlight" th:text="${bitbucketStats.getCommitsStats().getTotalAdditions()}"></span> additions and <span class="highlight" th:text="${bitbucketStats.getCommitsStats().getTotalDeletions()}"></span> deletions.
-    </p>-->
+    </p>
 
     <button id="btn-unassign" onclick="unassignRepository()" class="btn btn-danger">Unassign</button>
 
