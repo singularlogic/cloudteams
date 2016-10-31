@@ -2,6 +2,7 @@ package eu.cloudteams.util.bitbucket;
 
 import eu.cloudteams.util.bitbucket.models.BranchResponse;
 import eu.cloudteams.util.bitbucket.models.CommitResponse;
+import eu.cloudteams.util.bitbucket.models.IssueResponse;
 import eu.cloudteams.util.bitbucket.models.Repository;
 import eu.cloudteams.util.bitbucket.models.RepositoryResponse;
 import eu.cloudteams.util.bitbucket.models.TagResponse;
@@ -85,6 +86,16 @@ public final class BitbucketService {
         return Optional.empty();
     }
 
+    
+        public Optional<IssueResponse> getIssues(String url) {
+        try {
+            ResponseEntity<IssueResponse> response = new RestTemplate().exchange(url, HttpMethod.GET, getHttpEntity(), IssueResponse.class);
+            return Optional.ofNullable(response.getBody());
+        } catch (Exception ex) {
+        }
+        return Optional.empty();
+    }
+    
     public Optional<Repository> getRepository(String username, String repository) {
         try {
             ResponseEntity<Repository> response = new RestTemplate().exchange(String.format(REPOSITORIES_USER_URL, username) + "/" + repository, HttpMethod.GET, getHttpEntity(), Repository.class);

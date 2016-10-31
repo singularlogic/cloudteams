@@ -3,6 +3,7 @@ package eu.cloudteams.controller;
 import eu.cloudteams.util.bitbucket.BitbucketService;
 import eu.cloudteams.util.bitbucket.models.BranchResponse;
 import eu.cloudteams.util.bitbucket.models.CommitResponse;
+import eu.cloudteams.util.bitbucket.models.IssueResponse;
 import eu.cloudteams.util.bitbucket.models.Repository;
 import eu.cloudteams.util.bitbucket.models.TagResponse;
 import eu.cloudteams.util.bitbucket.models.Value3;
@@ -26,11 +27,11 @@ public final class BitbucketStatisticsTO {
 
     private final BitbucketService bitbucketService;
     private final Repository repository;
-//    private List<User> collaboratorsList;
     private TagResponse tagsList;
     private BranchResponse branchesList;
     private WatchResponse watchersList;
     private CommitResponse commitsList;
+    private IssueResponse issuesList;
     private CommitsStats commitsStats;
 
     public Repository getRepository() {
@@ -53,6 +54,10 @@ public final class BitbucketStatisticsTO {
         return this.tagsList;
     }
 
+    public IssueResponse getIssues() {
+        return this.issuesList;
+    }
+
     public BitbucketStatisticsTO(BitbucketService githubService, Repository repository) throws IOException {
         this.bitbucketService = githubService;
         this.repository = repository;
@@ -64,9 +69,8 @@ public final class BitbucketStatisticsTO {
         watchersList = bitbucketService.getWatchers(repository.getLinks().getWatchers().getHref()).orElse(new WatchResponse());
         commitsList = bitbucketService.getCommits(repository.getLinks().getCommits().getHref()).orElse(new CommitResponse());
         tagsList = bitbucketService.getTags(repository.getLinks().getTags().getHref()).orElse(new TagResponse());
-        //Code section (info for master branch)
-        //      labelsList = bitbucketService.getLabelService().getLabels(repository);
-        //    collaboratorsList = bitbucketService.getCollaboratorService().getCollaborators(repository);
+        issuesList = bitbucketService.getIssues(repository.getLinks().getSelf().getHref() + "/issues").orElse(new IssueResponse());
+
         //Pulse section
         setLatMonthCommitsStats();
     }
