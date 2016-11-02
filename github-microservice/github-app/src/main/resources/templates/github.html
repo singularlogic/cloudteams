@@ -101,7 +101,85 @@
 
 <div th:fragment="github-auth-project">
 
-    <div class="alert alert-warning">GitHub Statistics</div>
+    <!--xxxxxx-->
+    <style>
+        /* Header title (alert-warning) */
+        .alert-warning {
+            border-color: #7d3c8c;
+            background-color: #d2d2d2;
+        }
+        .alert-warning .inner-element {
+            display: inline-block;
+            vertical-align: middle;
+        }
+        .alert-warning .title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #000000;
+            margin-top: 3px;
+        }
+        .alert-warning .logo-service {
+            width: 60px;
+            margin-right: 15px;
+        }
+        .highlight {
+            color: #8c8c8c;
+            letter-spacing: 1px;
+            font-weight: bold;
+            font-size: 15px;
+        }
+
+        /* Inner headers */
+        .header-medium.secondary.full-bg {
+            background-color: #7d3c8c;
+            color: #fff;
+            padding: 5px 10px;
+            border-radius: 3px;
+        }
+        .header-medium.secondary.full-bg.custom-icon-code::before {
+  			content: "// ";
+		}
+		.header-medium.secondary.full-bg svg {
+            fill: #fff;
+            vertical-align: top;
+            margin-top: 2px;
+        }
+
+        .data p:last-child {
+            margin-bottom: 20px;
+        }
+
+        /* Labels */
+        .labels { font-size: 0; }
+        .labels .highlight {
+            margin-bottom: 5px;
+        }
+  		.labels a {
+  		    font-size: 15px;
+			color: #fff;
+			display: inline-block;
+  			background-color: #ac5cbd;
+  			margin-right: 3px;
+  			margin-bottom: 3px;
+  			padding: 3px 7px 1px;
+			border-radius: 3px;
+
+			transition: all 0.4s;
+			-webkit-transition: all 0.4s;
+			-moz-transition: all 0.4s;
+			-ms-transition: all 0.4s;
+			-o-transition: all 0.4s;
+  		}
+		.labels a:hover {
+			color: #fff;
+			background-color: #7d3c8c;
+		}
+    </style>
+
+    <div class="alert alert-warning">
+        <div class="inner-element logo-service"><img src="/pub/static//cloudteams/img/logo_github.png" class="img-circle" alt="GiHhub logo"></div>
+        <div class="inner-element title">GitHub Statistics</div>
+    </div>
 
     <span class="highlight">Name</span>
     <p th:inline="text"><a th:href="'https://github.com/' + ${githubStats.getRepository().getOwner().getLogin()}">[[${githubStats.getRepository().getOwner().getLogin()}]]</a>/<a th:href="${githubStats.getRepository().getHtmlUrl()}">[[${githubStats.getRepository().getName()}]]</a></p>
@@ -118,7 +196,10 @@
     <hr/>
 
     <!-- 1. Code Section (commitsTotal,branchesNames,releasesNames,contibutorsTotal,repositoryName(withUrl) )-->
-    <h3 class="header-medium secondary">Code</h3><br/>
+    <h3 class="header-medium secondary full-bg">
+        <svg aria-hidden="true" class="octicon octicon-code" height="16" version="1.1" viewBox="0 0 14 16" width="14"><path d="M9.5 3L8 4.5 11.5 8 8 11.5 9.5 13 14 8 9.5 3zm-5 0L0 8l4.5 5L6 11.5 2.5 8 6 4.5 4.5 3z"></path></svg>
+        <span class="title">Code</span>
+    </h3><br/>
 
     <div class="data">
         <!--Commits-->
@@ -151,10 +232,11 @@
         </p>
     </div>
 
-    <hr/>
-
     <!-- 2. Issues Section (openissuesTotal,closedisseusTotal,labelNames,milestonesNames) -->
-    <h3 class="header-medium secondary">Issues</h3><br/>
+    <h3 class="header-medium secondary full-bg">
+        <svg aria-hidden="true" class="octicon octicon-issue-opened" height="16" version="1.1" viewBox="0 0 14 16" width="14"><path d="M7 2.3c3.14 0 5.7 2.56 5.7 5.7s-2.56 5.7-5.7 5.7A5.71 5.71 0 0 1 1.3 8c0-3.14 2.56-5.7 5.7-5.7zM7 1C3.14 1 0 4.14 0 8s3.14 7 7 7 7-3.14 7-7-3.14-7-7-7zm1 3H6v5h2V4zm0 6H6v2h2v-2z"></path></svg>
+        <span class="title">Issues</span>
+    </h3><br/>
 
     <!--Open Issues-->
     <p th:inline="text">
@@ -169,8 +251,8 @@
     </p>
 
     <!--Labels-->
-    <p th:inline="text">
-        <span class="highlight">Labels </span>
+    <p th:inline="text" class="labels">
+        <div class="highlight">Labels</div>
         <a th:each="label : ${githubStats.getLabels()}" th:href="${githubStats.getRepository().getHtmlUrl() + '/labels/' + label.getName()}" th:text="${label.getName()}" target="_blank"></a>
     </p>
 
