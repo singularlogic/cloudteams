@@ -29,33 +29,88 @@
             <version>1.4.7</version>
         </dependency>
         
-        <dependency>
+<!--        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
             <version>${org.springframework.boot}</version>
         </dependency>     
+        -->
+
         
-        <!-- GitHub Integration library-->
+        <!-- Jira Integration library-->
         <dependency>
-            <groupId>org.eclipse.mylyn.github</groupId>
-            <artifactId>org.eclipse.egit.github.core</artifactId>
-            <version>2.1.5</version>
+            <groupId>com.atlassian.jira</groupId>
+            <artifactId>jira-rest-java-client-core</artifactId>
+            <version>4.0.0</version>
         </dependency>
         
-       <!-- Jira Integration library-->
-       <!--  <repository>
-    <id>spring-milestones</id>
-    <url>http://repo.spring.io/libs-milestone/</url>
-  </repository>-->
-<!--            <dependency>
-             <groupId>com.atlassian.jira</groupId>
-             <artifactId>jira-rest-java-client-core</artifactId>
-             <version>3.0.0</version>
-           </dependency>
--->
+                       
+        <dependency>
+            <groupId>com.atlassian.jira</groupId>
+            <artifactId>jira-rest-java-client-api</artifactId>
+            <version>4.0.0</version>
+        </dependency>
         
+    
+        <dependency>
+            <groupId>com.atlassian.fugue</groupId>
+            <artifactId>fugue</artifactId>
+            <version>2.2.1</version>
+        </dependency>
+
+        <dependency> 
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>1.6.5</version>
+        </dependency>
+        
+       <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.3.6</version>
+        </dependency>
+        
+        
+        <!--   
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.2.1-atlassian-2</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpasyncclient</artifactId>
+            <version>4.0-beta3-atlassian-1</version>
+        </dependency>-->
         
     </dependencies>
     
-
+    
+    <repositories>
+        <repository>
+            <id>atlassian-public</id>
+            <name>Atlassian Snapshots</name>
+            <url>https://maven.atlassian.com/content/repositories/atlassian-public/</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+        
+        
+        <repository>
+            <id>atlassian-public2</id>
+            <url>https://maven.atlassian.com/public/</url>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>daily</updatePolicy>
+                <checksumPolicy>warn</checksumPolicy>
+            </snapshots>
+            <releases>
+                <enabled>true</enabled>
+                <checksumPolicy>warn</checksumPolicy>
+            </releases>
+        </repository>
+    </repositories>
+    
 </project>

@@ -52,8 +52,4 @@ public class UserService {
         return userRepository.findByUsername(username);
     }
 
-    public void setSynchStatus(boolean isSynch, long id) {
-        this.userRepository.setSynchStatus(isSynch, id);
-    }
-
 }
