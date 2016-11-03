@@ -51,7 +51,7 @@ public class JiraController {
         if (!WebController.hasAccessToken()) {
             logger.warning("Unauthorized access returing github sign-in fragment");
             //return github-signin fragment
-            return "Jira::Jira-no-auth";
+            return "jira::jira-no-auth";
         }
 
         JiraUser user = userService.findByUsername(getCurrentUser().getPrincipal().toString());
@@ -63,7 +63,7 @@ public class JiraController {
         if (null == project) {
             sonarService =  JiraService.create(user.getJiraUrl());
             model.addAttribute("JiraProjects", sonarService.getProjects());
-            return "Jira::Jira-no-project";
+            return "jira::jira-no-project";
         }
 
         logger.info("Returning Jira-info fragment for user:  " + getCurrentUser().getPrincipal() + " and project_id: " + project_id);
@@ -77,7 +77,7 @@ public class JiraController {
 //            return "Jira::Jira-auth-project";
 //        }
 
-        return "Jira::Jira-error";
+        return "jira::jira-error";
     }
 
     //Rest Controller
