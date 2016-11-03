@@ -1,6 +1,96 @@
 <div th:fragment="sonarqube-no-auth">
 
-    <div class="alert alert-warning">Please synchronize your SonarQube account</div>
+    <style>
+        /* Header title (alert-warning) */
+        .alert-warning {
+            border-color: #7d3c8c;
+            background-color: #d2d2d2;
+        }
+        .alert-warning .inner-element {
+            display: inline-block;
+            vertical-align: middle;
+        }
+        .alert-warning .title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #000000;
+            margin-top: 3px;
+        }
+        .alert-warning .logo-service {
+            width: 60px;
+            margin-right: 15px;
+        }
+        .highlight {
+            color: #8c8c8c;
+            letter-spacing: 1px;
+            font-weight: bold;
+            font-size: 15px;
+        }
+
+        /* Inner headers */
+        .header-medium.secondary.full-bg {
+            background-color: #7d3c8c;
+            color: #fff;
+            padding: 5px 10px;
+            border-radius: 3px;
+        }
+        .header-medium.secondary.full-bg.custom-icon-code::before {
+  			content: "// ";
+		}
+		.header-medium.secondary.full-bg svg {
+            fill: #fff;
+            vertical-align: top;
+            margin-top: 2px;
+        }
+        .header-medium.secondary.full-bg small {
+            border: 1px solid white;
+            display: block;
+            padding: 5px 3px;
+            border-radius: 2px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+
+        .data p:last-child {
+            margin-bottom: 20px;
+        }
+
+        /* Labels */
+        .labels { font-size: 0; }
+        .labels .highlight {
+            display: block;
+            margin-bottom: 5px;
+        }
+  		.labels a {
+  		    font-size: 15px;
+			color: #fff;
+			display: inline-block;
+  			background-color: #ac5cbd;
+  			margin-right: 3px;
+  			margin-bottom: 3px;
+  			padding: 3px 7px 1px;
+			border-radius: 3px;
+
+			transition: all 0.4s;
+			-webkit-transition: all 0.4s;
+			-moz-transition: all 0.4s;
+			-ms-transition: all 0.4s;
+			-o-transition: all 0.4s;
+  		}
+		.labels a:hover {
+			color: #fff;
+			background-color: #7d3c8c;
+		}
+
+		.form-control {
+		    font-size: 15px;
+		}
+    </style>
+
+    <div class="alert alert-warning">
+        <div class="inner-element logo-service"><img src="/pub/static//cloudteams/img/logo_sonarqube.png" class="img-circle" alt="SonarQube logo"/></div>
+        <div class="inner-element title">Please synchronize your SonarQube account</div>
+    </div>
 
     <div class="form-group">
         <label for="sonar-url">SonarQube Url</label>
@@ -53,13 +143,101 @@
 </div>
 
 <div th:fragment="sonarqube-no-project">
-    <div class="alert alert-warning">Please select a SonarQube project</div>
+
+    <style>
+        /* Header title (alert-warning) */
+        .alert-warning {
+            border-color: #7d3c8c;
+            background-color: #d2d2d2;
+        }
+        .alert-warning .inner-element {
+            display: inline-block;
+            vertical-align: middle;
+        }
+        .alert-warning .title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #000000;
+            margin-top: 3px;
+        }
+        .alert-warning .logo-service {
+            width: 60px;
+            margin-right: 15px;
+        }
+        .highlight {
+            color: #8c8c8c;
+            letter-spacing: 1px;
+            font-weight: bold;
+            font-size: 15px;
+        }
+
+        /* Inner headers */
+        .header-medium.secondary.full-bg {
+            background-color: #7d3c8c;
+            color: #fff;
+            padding: 5px 10px;
+            border-radius: 3px;
+        }
+        .header-medium.secondary.full-bg.custom-icon-code::before {
+  			content: "// ";
+		}
+		.header-medium.secondary.full-bg svg {
+            fill: #fff;
+            vertical-align: top;
+            margin-top: 2px;
+        }
+        .header-medium.secondary.full-bg small {
+            border: 1px solid white;
+            display: block;
+            padding: 5px 3px;
+            border-radius: 2px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+
+        .data p:last-child {
+            margin-bottom: 20px;
+        }
+
+        /* Labels */
+        .labels { font-size: 0; }
+        .labels .highlight {
+            display: block;
+            margin-bottom: 5px;
+        }
+  		.labels a {
+  		    font-size: 15px;
+			color: #fff;
+			display: inline-block;
+  			background-color: #ac5cbd;
+  			margin-right: 3px;
+  			margin-bottom: 3px;
+  			padding: 3px 7px 1px;
+			border-radius: 3px;
+
+			transition: all 0.4s;
+			-webkit-transition: all 0.4s;
+			-moz-transition: all 0.4s;
+			-ms-transition: all 0.4s;
+			-o-transition: all 0.4s;
+  		}
+		.labels a:hover {
+			color: #fff;
+			background-color: #7d3c8c;
+		}
+    </style>
+
+    <div class="alert alert-warning">
+        <div class="inner-element logo-service"><img src="/pub/static//cloudteams/img/logo_sonarqube.png" class="img-circle" alt="SonarQube logo"/></div>
+        <div class="inner-element title">Please select a SonarQube project</div>
+    </div>
+
     <select id="projects" th:if="${!sonarqubeProjects.isEmpty()}">
         <option th:each="project : ${sonarqubeProjects}" th:value="${project.getK()}" th:text="${project.getNm()}"></option>
     </select>
     <br/><br/>
     <button id="btn-oauth" onclick="assignProject()" class="btn btn-danger">Assign Project</button>
-    <button id="btn-oauth" onclick="disconnect()" class="btn-link pull-right">Disconnect SonarQube</button>
+    <button id="btn-disconnect-oauth" onclick="disconnect()" class="btn-link pull-right">Disconnect SonarQube</button>
 
     <script th:inline="javascript">
 
@@ -118,7 +296,94 @@
 
 
 <div th:fragment="sonarqube-auth-project">
-    <div class="alert alert-warning">SonarQube Statistics</div>
+
+    <style>
+        /* Header title (alert-warning) */
+        .alert-warning {
+            border-color: #7d3c8c;
+            background-color: #d2d2d2;
+        }
+        .alert-warning .inner-element {
+            display: inline-block;
+            vertical-align: middle;
+        }
+        .alert-warning .title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #000000;
+            margin-top: 3px;
+        }
+        .alert-warning .logo-service {
+            width: 60px;
+            margin-right: 15px;
+        }
+        .highlight {
+            color: #8c8c8c;
+            letter-spacing: 1px;
+            font-weight: bold;
+            font-size: 15px;
+        }
+
+        /* Inner headers */
+        .header-medium.secondary.full-bg {
+            background-color: #7d3c8c;
+            color: #fff;
+            padding: 5px 10px;
+            border-radius: 3px;
+        }
+        .header-medium.secondary.full-bg.custom-icon-code::before {
+  			content: "// ";
+		}
+		.header-medium.secondary.full-bg svg {
+            fill: #fff;
+            vertical-align: top;
+            margin-top: 2px;
+        }
+        .header-medium.secondary.full-bg small {
+            border: 1px solid white;
+            display: block;
+            padding: 5px 3px;
+            border-radius: 2px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+
+        .data p:last-child {
+            margin-bottom: 20px;
+        }
+
+        /* Labels */
+        .labels { font-size: 0; }
+        .labels .highlight {
+            display: block;
+            margin-bottom: 5px;
+        }
+  		.labels a {
+  		    font-size: 15px;
+			color: #fff;
+			display: inline-block;
+  			background-color: #ac5cbd;
+  			margin-right: 3px;
+  			margin-bottom: 3px;
+  			padding: 3px 7px 1px;
+			border-radius: 3px;
+
+			transition: all 0.4s;
+			-webkit-transition: all 0.4s;
+			-moz-transition: all 0.4s;
+			-ms-transition: all 0.4s;
+			-o-transition: all 0.4s;
+  		}
+		.labels a:hover {
+			color: #fff;
+			background-color: #7d3c8c;
+		}
+    </style>
+
+    <div class="alert alert-warning">
+        <div class="inner-element logo-service"><img src="/pub/static//cloudteams/img/logo_sonarqube.png" class="img-circle" alt="SonarQube logo"/></div>
+        <div class="inner-element title">SonarQube Statistics</div>
+    </div>
 
     <span class="highlight">Name</span>
     <p th:inline="text"><strong>[[${projectInfo.getProjectName()}]]</strong> ([[${projectInfo.getVersion()}]])</p>
@@ -126,20 +391,16 @@
     <span class="highlight">Description</span>
     <p th:inline="text">[[${projectInfo.getDescription()}]]</p>
 
-    <hr/>
-
     <!-- 1. Issues-->
-    <h3 class="header-medium secondary">Issues<br/><small>While running an analysis, SonarQube raises an issue every time a piece of code breaks a coding rule. The set of coding rules is defined through the quality profile associated with the project.</small></h3><br/>
+    <h3 class="header-medium secondary full-bg">Issues<br/><small>While running an analysis, SonarQube raises an issue every time a piece of code breaks a coding rule. The set of coding rules is defined through the quality profile associated with the project.</small></h3><br/>
 
     <!--Total Issues-->
     <p th:inline="text">
         <span class="highlight">Total Issues (<span th:text="${projectInfo.getTotalIssues()}"></span>)</span>
     </p>
 
-    <hr/>
-
     <!-- 2. Metrics-->
-    <h3 class="header-medium secondary">Metrics</h3><br/>
+    <h3 class="header-medium secondary full-bg">Metrics</h3><br/>
 
     <p th:inline="text" th:each="metric : ${projectInfo.getMetrics()}">
         <span class="highlight" th:text="${metric.key}"></span> (<span th:text="${metric.value}"></span>)
