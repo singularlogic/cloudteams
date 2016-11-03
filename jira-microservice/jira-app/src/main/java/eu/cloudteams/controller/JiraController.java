@@ -49,8 +49,8 @@ public class JiraController {
         logger.info("Requesting info for repository assigned to project_id: " + project_id);
 
         if (!WebController.hasAccessToken()) {
-            logger.warning("Unauthorized access returing github sign-in fragment");
-            //return github-signin fragment
+            logger.warning("Unauthorized access returing jira sign-in fragment");
+            //return jira-signin fragment
             return "jira::jira-no-auth";
         }
 
@@ -84,7 +84,7 @@ public class JiraController {
     @CrossOrigin
     @ResponseBody
     @RequestMapping(value = "/api/v1/auth/token", method = RequestMethod.POST)
-    public String getJWT(@RequestParam(value = "username", required = true) String username, @RequestParam(value = "sonarUrl", required = true) String sonarUrl, HttpServletRequest request) throws IOException {
+    public String getJWT(@RequestParam(value = "username", required = true) String username, @RequestParam(value = "jiraUrl", required = true) String jiraUrl, HttpServletRequest request) throws IOException {
 
         //Check if sonar service is running on the given url
 //        if (!new JiraService(sonarUrl).getServerInfo().isPresent()) {
@@ -97,10 +97,10 @@ public class JiraController {
         //Print the status of user
         logger.info(null != user ? "User: " + user.getUsername() + " already exists with id: " + user.getId() : "Creating new user for username: " + username);
 
-        sonarUrl = StringUtils.trimTrailingCharacter(sonarUrl, "/".charAt(0));
+        jiraUrl = StringUtils.trimTrailingCharacter(jiraUrl, "/".charAt(0));
         if (null == user) {
-            user = new JiraUser(null, username, "", sonarUrl, true);
-        } else if (user.getJiraUrl().equalsIgnoreCase(sonarUrl) == false) {
+            user = new JiraUser(null, username, "", jiraUrl, true);
+        } else if (user.getJiraUrl().equalsIgnoreCase(jiraUrl) == false) {
             logger.log(Level.SEVERE, "You do not have access to this project");
             return new JSONObject().put("code", MESSAGES.FAIL).put("message", "You do not have access to this project").toString();
         }
@@ -178,8 +178,8 @@ public class JiraController {
 
         //Check if user is authenticated
         if (!WebController.hasAccessToken()) {
-            logger.warning("Unauthorized access returing github sigin fragment");
-            //return github-signin fragment
+            logger.warning("Unauthorized access returing jira sigin fragment");
+            //return jira-signin fragment
             return new JSONObject().put("code", MESSAGES.FAIL).put("message", "User is not authenticated.").toString();
         }
 
@@ -208,8 +208,8 @@ public class JiraController {
 
         //Check if user is authenticated
         if (!WebController.hasAccessToken()) {
-            logger.warning("Unauthorized access returing github sigin fragment");
-            //return github-signin fragment
+            logger.warning("Unauthorized access returing jira sigin fragment");
+            //return jira-signin fragment
             return new JSONObject().put("code", MESSAGES.FAIL).put("message", "User is not authenticated.").toString();
         }
 
