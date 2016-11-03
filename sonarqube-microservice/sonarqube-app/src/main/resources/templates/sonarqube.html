@@ -53,7 +53,95 @@
 </div>
 
 <div th:fragment="sonarqube-no-project">
-    <div class="alert alert-warning">Please select a SonarQube project</div>
+
+    <style>
+        /* Header title (alert-warning) */
+        .alert-warning {
+            border-color: #7d3c8c;
+            background-color: #d2d2d2;
+        }
+        .alert-warning .inner-element {
+            display: inline-block;
+            vertical-align: middle;
+        }
+        .alert-warning .title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #000000;
+            margin-top: 3px;
+        }
+        .alert-warning .logo-service {
+            width: 60px;
+            margin-right: 15px;
+        }
+        .highlight {
+            color: #8c8c8c;
+            letter-spacing: 1px;
+            font-weight: bold;
+            font-size: 15px;
+        }
+
+        /* Inner headers */
+        .header-medium.secondary.full-bg {
+            background-color: #7d3c8c;
+            color: #fff;
+            padding: 5px 10px;
+            border-radius: 3px;
+        }
+        .header-medium.secondary.full-bg.custom-icon-code::before {
+  			content: "// ";
+		}
+		.header-medium.secondary.full-bg svg {
+            fill: #fff;
+            vertical-align: top;
+            margin-top: 2px;
+        }
+        .header-medium.secondary.full-bg small {
+            border: 1px solid white;
+            display: block;
+            padding: 5px 3px;
+            border-radius: 2px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+
+        .data p:last-child {
+            margin-bottom: 20px;
+        }
+
+        /* Labels */
+        .labels { font-size: 0; }
+        .labels .highlight {
+            display: block;
+            margin-bottom: 5px;
+        }
+  		.labels a {
+  		    font-size: 15px;
+			color: #fff;
+			display: inline-block;
+  			background-color: #ac5cbd;
+  			margin-right: 3px;
+  			margin-bottom: 3px;
+  			padding: 3px 7px 1px;
+			border-radius: 3px;
+
+			transition: all 0.4s;
+			-webkit-transition: all 0.4s;
+			-moz-transition: all 0.4s;
+			-ms-transition: all 0.4s;
+			-o-transition: all 0.4s;
+  		}
+		.labels a:hover {
+			color: #fff;
+			background-color: #7d3c8c;
+		}
+    </style>
+
+    <div class="alert alert-warning">
+        <div class="inner-element logo-service"><img src="/pub/static//cloudteams/img/logo_sonarqube.png" class="img-circle" alt="SonarQube logo"/></div>
+        <div class="inner-element title">Please select a SonarQube project</div>
+    </div>
+
     <select id="projects" th:if="${!sonarqubeProjects.isEmpty()}">
         <option th:each="project : ${sonarqubeProjects}" th:value="${project.getK()}" th:text="${project.getNm()}"></option>
     </select>
