@@ -232,8 +232,8 @@
         <div class="inner-element title">Please select a Jira project</div>
     </div>
 
-    <select id="projects" th:if="${!sonarqubeProjects.isEmpty()}">
-        <option th:each="project : ${sonarqubeProjects}" th:value="${project.getK()}" th:text="${project.getNm()}"></option>
+    <select id="projects" th:if="${!jiraProjects.isEmpty()}">
+        <option th:each="project : ${jiraProjects}" th:value="${project.getKey()}" th:text="${project.getName()}"></option>
     </select>
     <br/><br/>
     <button id="btn-oauth" onclick="assignProject()" class="btn btn-danger">Assign Project</button>

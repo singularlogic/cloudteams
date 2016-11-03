@@ -10,10 +10,10 @@ import eu.cloudteams.repository.service.ProjectService;
 import eu.cloudteams.repository.service.UserService;
 import eu.cloudteams.util.jira.JiraService;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
-
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,26 +57,30 @@ public class JiraController {
         JiraUser user = userService.findByUsername(getCurrentUser().getPrincipal().toString());
         JiraProject project = projectService.findByProjectIdAndUser(project_id, user);
 
-        JiraService sonarService;
+        JiraService jiraService;
+        try {
+            jiraService = JiraService.create(user.getJiraUrl()).authenticateAnonymous();
+        } catch (URISyntaxException ex) {
+            Logger.getLogger(JiraController.class.getName()).log(Level.SEVERE, null, ex);
+            return "jira::jira-error";
+        }
 
         //Unassigned project
         if (null == project) {
-            sonarService =  JiraService.create(user.getJiraUrl());
-            model.addAttribute("JiraProjects", sonarService.getProjects());
+
+            model.addAttribute("jiraProjects", jiraService.getProjects());
             return "jira::jira-no-project";
         }
 
-        logger.info("Returning Jira-info fragment for user:  " + getCurrentUser().getPrincipal() + " and project_id: " + project_id);
+        logger.info("Returning jira-info fragment for user:  " + getCurrentUser().getPrincipal() + " and project_id: " + project_id);
 
-       // sonarService = new JiraService(user.getJiraUrl(), project.getJiraProject());
-
+        // sonarService = new JiraService(user.getJiraUrl(), project.getJiraProject());
 //        Optional<ProjectInfo> repository = sonarService.getProjectInfo();
 //
 //        if (repository.isPresent()) {
 //            model.addAttribute("projectInfo", repository.get());
 //            return "Jira::Jira-auth-project";
 //        }
-
         return "jira::jira-error";
     }
 
@@ -90,7 +94,6 @@ public class JiraController {
 //        if (!new JiraService(sonarUrl).getServerInfo().isPresent()) {
 //            return new JSONObject().put("code", MESSAGES.FAIL).put("message", "Jira service is not available in url: " + sonarUrl).toString();
 //        }
-
         //Check if user already exists
         JiraUser user = userService.findByUsername(username);
 
