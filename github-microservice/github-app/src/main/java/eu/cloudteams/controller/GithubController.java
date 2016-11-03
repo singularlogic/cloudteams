@@ -78,7 +78,7 @@ public class GithubController {
         }
 
         //Is first time ignore this
-        if (!user.getAccessToken().isEmpty()) {            
+        if (!user.getAccessToken().isEmpty()) {
             String userLogin = new GithubService(user.getGithubToken()).getUserService().getUser().getLogin();
             String userLoginToValidate = new GithubService(gitAuthResponse.getAccess_token()).getUserService().getUser().getLogin();
             if (userLogin.equalsIgnoreCase(userLoginToValidate)) {
@@ -259,6 +259,32 @@ public class GithubController {
         }
 
         return new JSONObject().put("code", MESSAGES.SUCCESS).put("message", "Project has been unassigned").toString();
+    }
+
+    @CrossOrigin
+    @ResponseBody
+    @RequestMapping(value = "/api/v1/github/disconnect", method = RequestMethod.POST)
+    public String disconnectGithubProject(Model model, @RequestParam(value = "project_id", defaultValue = "0", required = true) int project_id) throws IOException {
+
+        logger.info("Requesting disconnect sonarqube project for project_id: " + project_id);
+
+        //Check if user is authenticated
+        if (!WebController.hasAccessToken()) {
+            logger.warning("Unauthorized access returing github sigin fragment");
+            //return github-signin fragment
+            return new JSONObject().put("code", MESSAGES.FAIL).put("message", "User is not authenticated.").toString();
+        }
+
+        //Fetch the actual user based on JWT
+        GithubUser user = userService.findByUsername(getCurrentUser().getPrincipal().toString());
+
+        try {
+            userService.deleteUser(user.getId());
+        } catch (Exception ex) {
+            return new JSONObject().put("code", MESSAGES.FAIL).put("message", "Could not disconnect account.").toString();
+        }
+
+        return new JSONObject().put("code", MESSAGES.SUCCESS).put("message", "Account has been disconnected").toString();
     }
 
     private final class MESSAGES {
