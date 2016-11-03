@@ -125,7 +125,7 @@
 
                     var res = JSON.parse(data);
                     if ("SUCCESS" === res.code) {
-                        localStorage.jiraqube_auth_token = res.token;
+                        localStorage.jira_auth_token = res.token;
                         loadJiraWidget();
                     } else {
                         alert(res.message);
