@@ -8,7 +8,7 @@ import eu.cloudteams.repository.domain.JiraProject;
 import eu.cloudteams.repository.domain.JiraUser;
 import eu.cloudteams.repository.service.ProjectService;
 import eu.cloudteams.repository.service.UserService;
-import eu.cloudteams.util.bitbucket.JiraService;
+import eu.cloudteams.util.jira.JiraService;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;

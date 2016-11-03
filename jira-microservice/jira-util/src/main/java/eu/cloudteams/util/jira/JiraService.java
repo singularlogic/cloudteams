@@ -1,4 +1,4 @@
-package eu.cloudteams.util.bitbucket;
+package eu.cloudteams.util.jira;
 
 import com.atlassian.jira.rest.client.api.JiraRestClient;
 import com.atlassian.jira.rest.client.api.domain.BasicProject;
