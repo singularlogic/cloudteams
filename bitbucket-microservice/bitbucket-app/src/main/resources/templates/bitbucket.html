@@ -160,6 +160,7 @@
     </select>
     <br/><br/>
     <button id="btn-oauth" onclick="assignRepository()" class="btn btn-danger">Assign Repository</button>
+    <button id="btn-disconnect-oauth" onclick="disconnect()" class="btn-link pull-right">Disconnect BitBucket</button>
 
     <script th:inline="javascript">
 
@@ -181,6 +182,32 @@
                     loadBitbucketWidget();
                 }
                 console.log(res.message);
+            });
+        }
+
+        function disconnect() {
+
+            $.post({
+                url: CLOUDTEAMS_BITBUCKET_REST_ENDPOINT + "/bitbucket/disconnect",
+                data: {project_id: ct_project_id, projectName: $("#projects :selected").val()},
+                beforeSend: function (xhr) {
+                    if (hasBitbucketAccessToken()) {
+                        xhr.setRequestHeader("Authorization", localStorage.bitbucket_auth_token);
+                    }
+                },
+            }).success(function (data, status, xhr) {
+
+                var res = JSON.parse(data);
+                if ("SUCCESS" === res.code) {
+                    console.log("Success disconnected account, reload BitBucket widget");
+                    //Remove current accessToken
+                    removeAccessToken("bitbucket_auth_token");
+                    //Reload Github widget
+                    loadBitbucketWidget();
+                } else {
+                    alert(res.message);
+                    console.log("Could not disconnect account");
+                }
             });
         }
 

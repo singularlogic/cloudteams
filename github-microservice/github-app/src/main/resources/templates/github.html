@@ -145,12 +145,13 @@
         <div class="inner-element logo-service"><img src="/pub/static//cloudteams/img/logo_github.png" class="img-circle" alt="GiHhub logo"/></div>
         <div class="inner-element title">Please select a Github repository</div>
     </div>
-    
+
     <select id="repository" th:if="${!GetRepositories.isEmpty()}">
         <option th:each="repo : ${GetRepositories}" th:value="${repo.getName()}" th:text="${repo.getName()}"></option>
     </select>
     <br/><br/>
     <button id="btn-oauth" onclick="assignRepository()" class="btn btn-danger">Assign Repository</button>
+    <button id="btn-disconnect-oauth" onclick="disconnect()" class="btn-link pull-right">Disconnect GitHub</button>
 
     <script th:inline="javascript">
 
@@ -172,6 +173,32 @@
                     loadGithubWidget();
                 }
                 console.log(res.message);
+            });
+        }
+
+        function disconnect() {
+
+            $.post({
+                url: CLOUDTEAMS_GITHUB_REST_ENDPOINT + "/github/disconnect",
+                data: {project_id: ct_project_id, projectName: $("#projects :selected").val()},
+                beforeSend: function (xhr) {
+                    if (hasGithubAccessToken()) {
+                        xhr.setRequestHeader("Authorization", localStorage.github_auth_token);
+                    }
+                },
+            }).success(function (data, status, xhr) {
+
+                var res = JSON.parse(data);
+                if ("SUCCESS" === res.code) {
+                    console.log("Success disconnected account, reload GitHub widget");
+                    //Remove current accessToken
+                    removeAccessToken("github_auth_token");
+                    //Reload Github widget
+                    loadGithubWidget();
+                } else {
+                    alert(res.message);
+                    console.log("Could not disconnect account");
+                }
             });
         }
 
