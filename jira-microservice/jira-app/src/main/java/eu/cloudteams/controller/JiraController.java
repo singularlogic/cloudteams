@@ -43,7 +43,7 @@ public class JiraController {
     ProjectService projectService;
 
     @CrossOrigin
-    @RequestMapping(value = "/api/v1/Jira/project", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/v1/jira/repository", method = RequestMethod.POST)
     public String getJiraProjectInfo(Model model, @RequestParam(value = "project_id", defaultValue = "0", required = true) int project_id) throws IOException {
 
         logger.info("Requesting info for repository assigned to project_id: " + project_id);
@@ -133,7 +133,7 @@ public class JiraController {
 
     @CrossOrigin
     @ResponseBody
-    @RequestMapping(value = "/api/v1/Jira/add", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/v1/jira/add", method = RequestMethod.POST)
     public String JiraAuth(Model model, @RequestParam(value = "project_id", defaultValue = "") long project_id, @RequestParam(value = "projectName", defaultValue = "") String projectName) {
 
         //Check if user is authenticated
@@ -171,7 +171,7 @@ public class JiraController {
 
     @CrossOrigin
     @ResponseBody
-    @RequestMapping(value = "/api/v1/Jira/delete", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/v1/jira/delete", method = RequestMethod.POST)
     public String unassignJiraProject(Model model, @RequestParam(value = "project_id", defaultValue = "0", required = true) int project_id) throws IOException {
 
         logger.info("Requesting unassign Jira project for project_id: " + project_id);
@@ -201,7 +201,7 @@ public class JiraController {
 
     @CrossOrigin
     @ResponseBody
-    @RequestMapping(value = "/api/v1/Jira/disconnect", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/v1/jira/disconnect", method = RequestMethod.POST)
     public String disconnectJiraProject(Model model, @RequestParam(value = "project_id", defaultValue = "0", required = true) int project_id) throws IOException {
 
         logger.info("Requesting disconnect Jira project for project_id: " + project_id);
