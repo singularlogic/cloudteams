@@ -249,12 +249,9 @@
 
     <!--Labels-->
     <p th:inline="text" class="labels">
-        <div class="highlight">Labels</div><br/>
+        <span class="highlight">Labels</span><br/>
         <a th:each="label : ${githubStats.getLabels()}" th:href="${githubStats.getRepository().getHtmlUrl() + '/labels/' + label.getName()}" th:text="${label.getName()}" target="_blank"></a>
     </p>
-    <!--<p th:inline="text" class="labels">
-        <a th:each="label : ${githubStats.getLabels()}" th:href="${githubStats.getRepository().getHtmlUrl() + '/labels/' + label.getName()}" th:text="${label.getName()}" target="_blank"></a>
-    </p>-->
 
     <hr/>
 
