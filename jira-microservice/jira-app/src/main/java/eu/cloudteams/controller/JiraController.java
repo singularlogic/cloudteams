@@ -1,5 +1,7 @@
 package eu.cloudteams.controller;
 
+import com.atlassian.jira.rest.client.api.domain.Issue;
+import com.atlassian.jira.rest.client.api.domain.Project;
 import com.nimbusds.jose.JOSEException;
 import eu.cloudteams.authentication.jwt.Token;
 import eu.cloudteams.authentication.jwt.TokenHandler;
@@ -11,8 +13,12 @@ import eu.cloudteams.repository.service.UserService;
 import eu.cloudteams.util.jira.JiraService;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 
 import org.json.JSONObject;
@@ -67,20 +73,33 @@ public class JiraController {
 
         //Unassigned project
         if (null == project) {
-
             model.addAttribute("jiraProjects", jiraService.getProjects());
             return "jira::jira-no-project";
         }
 
         logger.info("Returning jira-info fragment for user:  " + getCurrentUser().getPrincipal() + " and project_id: " + project_id);
 
-        // sonarService = new JiraService(user.getJiraUrl(), project.getJiraProject());
-//        Optional<ProjectInfo> repository = sonarService.getProjectInfo();
-//
-//        if (repository.isPresent()) {
-//            model.addAttribute("projectInfo", repository.get());
-//            return "Jira::Jira-auth-project";
-//        }
+        try {
+            jiraService = JiraService.create(user.getJiraUrl()).authenticateAnonymous();
+
+        } catch (URISyntaxException ex) {
+            Logger.getLogger(JiraController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        Optional<Project> jiraProject = jiraService.getProject(project.getJiraProject());
+
+        if (jiraProject.isPresent()) {
+            //Get Jira Project
+            model.addAttribute("jiraProject", jiraProject.get());
+            List<Issue> issues = jiraService.getIssues(jiraProject.get().getName());
+            //Get Issues Types    
+            model.addAttribute("issuesTypes", issues.stream().collect(Collectors.groupingBy(issue -> issue.getIssueType().getName(), Collectors.counting())));
+            //Get Issues Priorities
+            model.addAttribute("issuesPriority", issues.stream().collect(Collectors.groupingBy(issue -> issue.getPriority().getName(), Collectors.counting())));
+            //Get Issues Statuses
+            model.addAttribute("issuesStatus", issues.stream().collect(Collectors.groupingBy(issue -> issue.getStatus().getName(), Collectors.counting())));
+            return "Jira::Jira-auth-project";
+        }
         return "jira::jira-error";
     }
 

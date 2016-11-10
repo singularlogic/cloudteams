@@ -2,12 +2,16 @@ package eu.cloudteams.util.jira;
 
 import com.atlassian.jira.rest.client.api.JiraRestClient;
 import com.atlassian.jira.rest.client.api.domain.BasicProject;
+import com.atlassian.jira.rest.client.api.domain.Issue;
+import com.atlassian.jira.rest.client.api.domain.Project;
 import com.atlassian.jira.rest.client.auth.AnonymousAuthenticationHandler;
 import com.atlassian.jira.rest.client.internal.async.AsynchronousJiraRestClientFactory;
 import com.google.common.collect.Lists;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -42,9 +46,30 @@ public final class JiraService {
         return Lists.newArrayList(restClient.getProjectClient().getAllProjects().claim());
     }
 
+    public Optional<Project> getProject(String project) {
+        try {
+            return Optional.ofNullable(restClient.getProjectClient().getProject(project).get());
+        } catch (InterruptedException | ExecutionException ex) {
+            Logger.getLogger(JiraService.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return Optional.empty();
+    }
+
+    public List<Issue> getIssues(String projectName) {
+        return Lists.newArrayList(restClient.getSearchClient().searchJql(String.format("project=%s", projectName)).claim().getIssues());
+    }
+
     public static void main(String... args) {
         try {
-            new JiraService("https://cloudteams.atlassian.net").authenticateAnonymous().getProjects().forEach(project -> System.out.println(project.getName()));
+            JiraService jiraService = new JiraService("https://cloudteams.atlassian.net").authenticateAnonymous();
+
+            //Get Project
+            jiraService.getProjects().forEach(project -> System.out.println("Project name: " + project.getName()));
+
+            //Get Issues
+            jiraService.getIssues("CloudTeams");
+
         } catch (URISyntaxException ex) {
             Logger.getLogger(JiraService.class.getName()).log(Level.SEVERE, null, ex);
         }

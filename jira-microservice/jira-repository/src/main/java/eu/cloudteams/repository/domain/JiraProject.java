@@ -36,7 +36,7 @@ public class JiraProject implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Size(min = 0, max = 250)
-    @Column(name = "sonarqubeProject")
+    @Column(name = "jiraProject")
     private String sonarqubeProject;
     @OneToOne
     @JoinColumn(name = "uid", referencedColumnName = "id")
