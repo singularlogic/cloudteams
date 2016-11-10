@@ -39,12 +39,21 @@ public class JiraUser implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 1024)
-    @Column(name = "jira_token")
-    private String jiraToken;
+    @Column(name = "sonarqube_url")
+    private String sonarqubeUrl;
+
     @Basic(optional = false)
     @NotNull
-    @Column(name = "isSynch")
-    private boolean isSynch;
+    @Column(name = "isActive")
+    private boolean isActive;
+
+    public String getJiraUrl() {
+        return sonarqubeUrl;
+    }
+
+    public void setJiraUrl(String sonarqubeUrl) {
+        this.sonarqubeUrl = sonarqubeUrl;
+    }
 
     public JiraUser() {
     }
@@ -53,12 +62,12 @@ public class JiraUser implements Serializable {
         this.id = id;
     }
 
-    public JiraUser(Long id, String username, String accessToken, String bitbucketToken, boolean isSynch) {
+    public JiraUser(Long id, String username, String accessToken, String sonarqubeUrl, boolean isActive) {
         this.id = id;
         this.username = username;
         this.accessToken = accessToken;
-        this.jiraToken = bitbucketToken;
-        this.isSynch = isSynch;
+        this.sonarqubeUrl = sonarqubeUrl;
+        this.isActive = isActive;
     }
 
     public Long getId() {
@@ -85,28 +94,12 @@ public class JiraUser implements Serializable {
         this.accessToken = accessToken;
     }
 
-
-
-    public boolean getIsSynch() {
-        return isSynch;
+    public boolean getIsActive() {
+        return isActive;
     }
 
-    public void setIsSynch(boolean isSynch) {
-        this.isSynch = isSynch;
-    }
-
-    /**
-     * @return the jiraToken
-     */
-    public String getJiraToken() {
-        return jiraToken;
-    }
-
-    /**
-     * @param jiraToken the jiraToken to set
-     */
-    public void setJiraToken(String jiraToken) {
-        this.jiraToken = jiraToken;
+    public void setIsActive(boolean isActive) {
+        this.isActive = isActive;
     }
 
 }

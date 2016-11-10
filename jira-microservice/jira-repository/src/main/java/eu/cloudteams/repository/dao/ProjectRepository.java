@@ -22,7 +22,7 @@ public interface ProjectRepository extends JpaRepository<JiraProject, Long> {
      */
     public JiraProject findByProjectIdAndUser(long projectId, JiraUser user);
 
-   @Transactional
+    @Transactional
     public long deleteByProjectIdAndUser(long projectId, JiraUser user);
 
 }

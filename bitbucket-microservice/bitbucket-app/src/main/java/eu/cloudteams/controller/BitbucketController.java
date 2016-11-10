@@ -176,7 +176,7 @@ public class BitbucketController {
         logger.info("Returning bitbucket-info fragment for user:  " + getCurrentUser().getPrincipal() + " and project_id: " + project_id);
 
         Optional<Repository> repository = bitbucketService.getRepository(userResponse.get().getUsername(), project.getBitbucketRepository());
-        
+
         if (repository.isPresent()) {
 
             //Generate bitbucket statistics
@@ -296,6 +296,32 @@ public class BitbucketController {
         }
 
         return new JSONObject().put("code", MESSAGES.SUCCESS).put("message", "Project has been unassigned").toString();
+    }
+
+    @CrossOrigin
+    @ResponseBody
+    @RequestMapping(value = "/api/v1/bitbucket/disconnect", method = RequestMethod.POST)
+    public String disconnectBitbucketProject(Model model, @RequestParam(value = "project_id", defaultValue = "0", required = true) int project_id) throws IOException {
+
+        logger.info("Requesting disconnect sonarqube project for project_id: " + project_id);
+
+        //Check if user is authenticated
+        if (!WebController.hasAccessToken()) {
+            logger.warning("Unauthorized access returing github sigin fragment");
+            //return github-signin fragment
+            return new JSONObject().put("code", MESSAGES.FAIL).put("message", "User is not authenticated.").toString();
+        }
+
+        //Fetch the actual user based on JWT
+        BitbucketUser user = userService.findByUsername(getCurrentUser().getPrincipal().toString());
+
+        try {
+            userService.deleteUser(user.getId());
+        } catch (Exception ex) {
+            return new JSONObject().put("code", MESSAGES.FAIL).put("message", "Could not disconnect account.").toString();
+        }
+
+        return new JSONObject().put("code", MESSAGES.SUCCESS).put("message", "Account has been disconnected").toString();
     }
 
     private final class MESSAGES {

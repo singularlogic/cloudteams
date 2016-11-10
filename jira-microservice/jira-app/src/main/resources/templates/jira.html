@@ -1,38 +1,103 @@
-<div th:fragment="jira-authentication">
-    <head>
-        <title>Authorize JIRA on CloudTeams</title>
-
-        <meta charset="utf-8"/>
-        <meta name="viewport" content="width=device-width, initial-scale=1"/>
-        <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
-
-        <link href="http://cdn.jsdelivr.net/webjars/bootstrap/3.3.5/css/bootstrap.min.css"
-              th:href="@{/webjars/bootstrap/3.3.5/css/bootstrap.min.css}"
-              rel="stylesheet" media="screen"/>
-        <link rel="stylesheet" href="/github/css/dashboard.css" th:href="@{/github/css/dashboard.css}"/>
-    </head>
-    <body>
-
-        <div class="container">
-            <img class="jira" src="/jira/images/cloudteams-logo.png"/>
-            <div class="alert alert-warning">Successfully authorized with JIRA.</div>
-
-            <button type="button" onclick="window.close();" class="btn btn-danger">
-                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Close window
-            </button>
-        </div>
-
-        <script src="http://cdn.jsdelivr.net/webjars/jquery/2.1.4/jquery.min.js"
-        th:src="@{/webjars/jquery/2.1.4/jquery.min.js}"></script>
-
-    </body>
-
-</div>
-
 <div th:fragment="jira-no-auth">
 
-    <div class="alert alert-warning">Please synchronize your JIRA account --( Under development)</div>
-    <button id="btn-oauth" onclick="authorizeJIRA()" class="btn btn-danger">Synchronize JIRA</button>
+    <style>
+        /* Header title (alert-warning) */
+        .alert-warning {
+            border-color: #7d3c8c;
+            background-color: #d2d2d2;
+        }
+        .alert-warning .inner-element {
+            display: inline-block;
+            vertical-align: middle;
+        }
+        .alert-warning .title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #000000;
+            margin-top: 3px;
+        }
+        .alert-warning .logo-service {
+            width: 60px;
+            margin-right: 15px;
+        }
+        .highlight {
+            color: #8c8c8c;
+            letter-spacing: 1px;
+            font-weight: bold;
+            font-size: 15px;
+        }
+
+        /* Inner headers */
+        .header-medium.secondary.full-bg {
+            background-color: #7d3c8c;
+            color: #fff;
+            padding: 5px 10px;
+            border-radius: 3px;
+        }
+        .header-medium.secondary.full-bg.custom-icon-code::before {
+  			content: "// ";
+		}
+		.header-medium.secondary.full-bg svg {
+            fill: #fff;
+            vertical-align: top;
+            margin-top: 2px;
+        }
+        .header-medium.secondary.full-bg small {
+            border: 1px solid white;
+            display: block;
+            padding: 5px 3px;
+            border-radius: 2px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+
+        .data p:last-child {
+            margin-bottom: 20px;
+        }
+
+        /* Labels */
+        .labels { font-size: 0; }
+        .labels .highlight {
+            display: block;
+            margin-bottom: 5px;
+        }
+  		.labels a {
+  		    font-size: 15px;
+			color: #fff;
+			display: inline-block;
+  			background-color: #ac5cbd;
+  			margin-right: 3px;
+  			margin-bottom: 3px;
+  			padding: 3px 7px 1px;
+			border-radius: 3px;
+
+			transition: all 0.4s;
+			-webkit-transition: all 0.4s;
+			-moz-transition: all 0.4s;
+			-ms-transition: all 0.4s;
+			-o-transition: all 0.4s;
+  		}
+		.labels a:hover {
+			color: #fff;
+			background-color: #7d3c8c;
+		}
+
+		.form-control {
+		    font-size: 15px;
+		}
+    </style>
+
+    <div class="alert alert-warning">
+        <div class="inner-element logo-service"><img src="/pub/static//cloudteams/img/logo_jira.jpg" class="img-circle" alt="Jira logo"/></div>
+        <div class="inner-element title">Please synchronize your Jira account</div>
+    </div>
+
+    <div class="form-group">
+        <label for="jira-url">Jira Url</label>
+        <input id="jira-url" type="text" name="lastname" class="form-control" placeholder="e.g. https://cloudteams.atlassian.net" value="" />
+    </div>
+
+    <button id="btn-oauth" onclick="synchronizeJira()" class="btn btn-danger">Synchronize Jira</button>
     <br/>
 
     <script th:inline="javascript">
@@ -43,47 +108,144 @@
         }
 
 
-        var JIRA_AUTHORIZE_URL = "https://cloudteams.atlassian.net/plugins/servlet/oauth/authorize?oauth_token=xuD9bZrIanrkjErTBpFGr8oqipcaM5Q0&redirect_uri=https://cloudteams.euprojects.net/bitbucket/api/v1/bitbucket/auth?username=" + ct_user_name+ "&amp;scope=account";
-        //var JIRA_AUTHORIZE_URL = "https://cloudteams.atlassian.net/plugins/servlet/oauth/authorize?response_type=code&amp;client_id=6xQqvPuY6ZgFcsGmDj&amp;redirect_uri=https://cloudteams.euprojects.net/bitbucket/api/v1/bitbucket/auth?username=" + ct_user_name+ "&amp;scope=account";
-        //var BITBUCKET_AUTHORIZE_URL = "https://bitbucket.org/site/oauth2/authorize?response_type=code&amp;client_id=6xQqvPuY6ZgFcsGmDj&amp;redirect_uri=http://localhost:8083/api/v1/bitbucket/auth?username=" + ct_user_name+ "&amp;scope=account";
-            //var BITBUCKET_AUTHORIZE_URL = "https://github.com/login/oauth/authorize?response_type=code&amp;client_id=9aababac7a8ec6c9659e&amp;redirect_uri=https://cloudteams.euprojects.net/github/api/v1/github/auth?username=" + ct_user_name + "&amp;scope=user%20public_repo%20repo%20repo:status";
-
-    var POPUP;
-
-        function authorizeJIRA() {
-            POPUP = window.open(JIRA_AUTHORIZE_URL, "mywindow", "status=0,toolbar=0,resizable=0,scrollbars=0,width=1020,height=618");
-
-            $.post({
-                data: {username: ct_user_name},
-                url: CLOUDTEAMS_JIRA_REST_ENDPOINT + "/auth/token"
-            }).success(function (data, status, xhr) {
-                var res = JSON.parse(data);
-                if ("SUCCESS" === res.code) {
-                    localStorage.jira_auth_token = res.token;
-                    loadJiraWidget()();
-                }
-                console.log(res.message);
-            });
+        //Dirty hacking for thymeleaf   
+        // <![CDATA[
+        function isURL() {
+            return new RegExp('^(https?:\\/\\/)((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.?)+[a-z]{2,}|((\\d{1,3}\\.){3}\\d{1,3}))(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*(\\?[;&a-z\\d%_.~+=-]*)?(\\#[-a-z\\d_]*)?$', 'i').test($("#jira-url").val());
         }
+        // ]]>
+
+        function synchronizeJira() {
+            //Check if valid url is given
+            if (isURL()) {
+                $.post({
+                    data: {username: ct_user_name, jiraUrl: $("#jira-url").val()},
+                    url: CLOUDTEAMS_JIRA_REST_ENDPOINT + "/auth/token"
+                }).success(function (data, status, xhr) {
+
+                    var res = JSON.parse(data);
+                    if ("SUCCESS" === res.code) {
+                        localStorage.jiraqube_auth_token = res.token;
+                        loadJiraWidget();
+                    } else {
+                        alert(res.message);
+                        loadJiraWidget();
+                        console.log("Could not synchronize");
+                    }
+                });
+            } else {
+                alert("The jira url is not valid.");
+            }
+        }
+
 
     </script>
 </div>
 
 <div th:fragment="jira-no-project">
-    <div class="alert alert-warning">Please select a JIRA project</div>
-    <select id="repository" th:if="${!GetRepositories.isEmpty()}">
-        <option th:each="repo : ${GetRepositories}" th:value="${repo.getName()}" th:text="${repo.getName()}"></option>
+
+    <style>
+        /* Header title (alert-warning) */
+        .alert-warning {
+            border-color: #7d3c8c;
+            background-color: #d2d2d2;
+        }
+        .alert-warning .inner-element {
+            display: inline-block;
+            vertical-align: middle;
+        }
+        .alert-warning .title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #000000;
+            margin-top: 3px;
+        }
+        .alert-warning .logo-service {
+            width: 60px;
+            margin-right: 15px;
+        }
+        .highlight {
+            color: #8c8c8c;
+            letter-spacing: 1px;
+            font-weight: bold;
+            font-size: 15px;
+        }
+
+        /* Inner headers */
+        .header-medium.secondary.full-bg {
+            background-color: #7d3c8c;
+            color: #fff;
+            padding: 5px 10px;
+            border-radius: 3px;
+        }
+        .header-medium.secondary.full-bg.custom-icon-code::before {
+  			content: "// ";
+		}
+		.header-medium.secondary.full-bg svg {
+            fill: #fff;
+            vertical-align: top;
+            margin-top: 2px;
+        }
+        .header-medium.secondary.full-bg small {
+            border: 1px solid white;
+            display: block;
+            padding: 5px 3px;
+            border-radius: 2px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+
+        .data p:last-child {
+            margin-bottom: 20px;
+        }
+
+        /* Labels */
+        .labels { font-size: 0; }
+        .labels .highlight {
+            display: block;
+            margin-bottom: 5px;
+        }
+  		.labels a {
+  		    font-size: 15px;
+			color: #fff;
+			display: inline-block;
+  			background-color: #ac5cbd;
+  			margin-right: 3px;
+  			margin-bottom: 3px;
+  			padding: 3px 7px 1px;
+			border-radius: 3px;
+
+			transition: all 0.4s;
+			-webkit-transition: all 0.4s;
+			-moz-transition: all 0.4s;
+			-ms-transition: all 0.4s;
+			-o-transition: all 0.4s;
+  		}
+		.labels a:hover {
+			color: #fff;
+			background-color: #7d3c8c;
+		}
+    </style>
+
+    <div class="alert alert-warning">
+        <div class="inner-element logo-service"><img src="/pub/static//cloudteams/img/logo_jira.jpg" class="img-circle" alt="Jira logo"/></div>
+        <div class="inner-element title">Please select a Jira project</div>
+    </div>
+
+    <select id="projects" th:if="${!sonarqubeProjects.isEmpty()}">
+        <option th:each="project : ${sonarqubeProjects}" th:value="${project.getK()}" th:text="${project.getNm()}"></option>
     </select>
     <br/><br/>
-    <button id="btn-oauth" onclick="assignRepository()" class="btn btn-danger">Assign Repository</button>
+    <button id="btn-oauth" onclick="assignProject()" class="btn btn-danger">Assign Project</button>
+    <button id="btn-disconnect-oauth" onclick="disconnect()" class="btn-link pull-right">Disconnect Jira</button>
 
     <script th:inline="javascript">
 
-        function assignRepository() {
+        function assignProject() {
 
             $.post({
-                url: CLOUDTEAMS_JIRA_REST_ENDPOINT + "/bitbucket/add",
-                data: {project_id: ct_project_id, reponame: $("#repository :selected").text()},
+                url: CLOUDTEAMS_JIRA_REST_ENDPOINT + "/jira/add",
+                data: {project_id: ct_project_id, projectName: $("#projects :selected").val()},
                 beforeSend: function (xhr) {
                     if (hasJiraAccessToken()) {
                         xhr.setRequestHeader("Authorization", localStorage.jira_auth_token);
@@ -93,10 +255,39 @@
 
                 var res = JSON.parse(data);
                 if ("SUCCESS" === res.code) {
-                    //Reload Jira widget
+                    console.log("Success assigned project, reload Jira widget");
+                    //Reload Github widget
                     loadJiraWidget();
+                } else {
+                    alert(res.message);
+                    console.log("Could not assign project");
                 }
-                console.log(res.message);
+            });
+        }
+
+        function disconnect() {
+            
+            $.post({
+                url: CLOUDTEAMS_JIRA_REST_ENDPOINT + "/jira/disconnect",
+                data: {project_id: ct_project_id, projectName: $("#projects :selected").val()},
+                beforeSend: function (xhr) {
+                    if (hasJiraAccessToken()) {
+                        xhr.setRequestHeader("Authorization", localStorage.jira_auth_token);
+                    }
+                },
+            }).success(function (data, status, xhr) {
+
+                var res = JSON.parse(data);
+                if ("SUCCESS" === res.code) {
+                    console.log("Success disconnected account, reload Jira widget");
+                    //Remove current accessToken
+                    removeAccessToken("jira_auth_token");
+                    //Reload Github widget
+                    loadJiraWidget();
+                } else {
+                    alert(res.message);
+                    console.log("Could not disconnect account");
+                }
             });
         }
 
@@ -106,97 +297,129 @@
 
 <div th:fragment="jira-auth-project">
 
-    <div class="alert alert-warning">Bitbucket Statistics</div>
+    <style>
+        /* Header title (alert-warning) */
+        .alert-warning {
+            border-color: #7d3c8c;
+            background-color: #d2d2d2;
+        }
+        .alert-warning .inner-element {
+            display: inline-block;
+            vertical-align: middle;
+        }
+        .alert-warning .title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #000000;
+            margin-top: 3px;
+        }
+        .alert-warning .logo-service {
+            width: 60px;
+            margin-right: 15px;
+        }
+        .highlight {
+            color: #8c8c8c;
+            letter-spacing: 1px;
+            font-weight: bold;
+            font-size: 15px;
+        }
 
-    <p th:inline="text"><a th:href="'https://github.com/' + ${githubStats.getRepository().getOwner().getLogin()}">[[${githubStats.getRepository().getOwner().getLogin()}]]</a>/<a th:href="${githubStats.getRepository().getHtmlUrl()}">[[${githubStats.getRepository().getName()}]]</a></p>
-    <p th:inline="text">[[${githubStats.getRepository().getDescription()}]]</p>
+        /* Inner headers */
+        .header-medium.secondary.full-bg {
+            background-color: #7d3c8c;
+            color: #fff;
+            padding: 5px 10px;
+            border-radius: 3px;
+        }
+        .header-medium.secondary.full-bg.custom-icon-code::before {
+  			content: "// ";
+		}
+		.header-medium.secondary.full-bg svg {
+            fill: #fff;
+            vertical-align: top;
+            margin-top: 2px;
+        }
+        .header-medium.secondary.full-bg small {
+            border: 1px solid white;
+            display: block;
+            padding: 5px 3px;
+            border-radius: 2px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
 
-    <!--Last Update-->
-    <p class="bold" th:inline="text">
-        <span class="highlight">Last Update (<span th:text="${githubStats.getRepository().getUpdatedAt()}"></span>)</span>
-    </p>
+        .data p:last-child {
+            margin-bottom: 20px;
+        }
 
-    <hr/>
+        /* Labels */
+        .labels { font-size: 0; }
+        .labels .highlight {
+            display: block;
+            margin-bottom: 5px;
+        }
+  		.labels a {
+  		    font-size: 15px;
+			color: #fff;
+			display: inline-block;
+  			background-color: #ac5cbd;
+  			margin-right: 3px;
+  			margin-bottom: 3px;
+  			padding: 3px 7px 1px;
+			border-radius: 3px;
 
-    <!-- 1. Code Section (commitsTotal,branchesNames,releasesNames,contibutorsTotal,repositoryName(withUrl) )-->
-    <h3 class="header-medium secondary">Code</h3>
+			transition: all 0.4s;
+			-webkit-transition: all 0.4s;
+			-moz-transition: all 0.4s;
+			-ms-transition: all 0.4s;
+			-o-transition: all 0.4s;
+  		}
+		.labels a:hover {
+			color: #fff;
+			background-color: #7d3c8c;
+		}
+    </style>
 
-    <div class="data">
-        <!--Commits-->
-        <p class="bold" th:inline="text">
-            <span class="highlight">Commits (<span th:text="${githubStats.getCommits().size()}"></span>) </span>
-            <a th:href="${githubStats.getRepository().getHtmlUrl()} + '/commits/master'"><i class="icon icon-object"></i></a>
-        </p>
-
-        <!--Contributors-->
-        <p class="bold" th:inline="text">
-            <span class="highlight">Contributors (<span th:text="${githubStats.getCollaborators().size()}"></span>)</span>
-            <a th:href="${githubStats.getRepository().getHtmlUrl()} + '/graphs/contributors'"><i class="icon icon-object"></i></a>
-        </p>
-
-        <!--Watchers-->
-        <p class="bold" th:inline="text">
-            <span class="highlight">Watchers (<span th:text="${githubStats.getRepository().getWatchers()}"></span>)</span>
-            <a th:href="${githubStats.getRepository().getHtmlUrl()} + '/watchers'"><i class="icon icon-object"></i></a>
-        </p>
-
-        <!--Forks-->
-        <p class="bold" th:inline="text">
-            <span class="highlight">Forks (<span th:text="${githubStats.getRepository().getForks()}"></span>)</span>
-        </p>
-
-        <!--Branches-->
-        <p class="bold" th:inline="text">
-            <span class="highlight">Branches (<span th:text="${githubStats.getBranches().size()}"></span>)</span>
-            <a target="_blank" th:each="branch : ${githubStats.getBranches()}" th:href="${githubStats.getRepository().getHtmlUrl() + '/tree/' + branch.getName()}" th:text="${branch.getName()}"></a>
-        </p>
+    <div class="alert alert-warning">
+        <div class="inner-element logo-service"><img src="/pub/static//cloudteams/img/logo_jira.jpg" class="img-circle" alt="Jira logo"/></div>
+        <div class="inner-element title">Jira Statistics</div>
     </div>
 
+    <span class="highlight">Name</span>
+    <p th:inline="text"><strong>[[${projectInfo.getProjectName()}]]</strong> ([[${projectInfo.getVersion()}]])</p>
+
+    <span class="highlight">Description</span>
+    <p th:inline="text">[[${projectInfo.getDescription()}]]</p>
+
+    <!-- 1. Issues-->
+    <h3 class="header-medium secondary full-bg">Issues<br/><small>While running an analysis, Jira raises an issue every time a piece of code breaks a coding rule. The set of coding rules is defined through the quality profile associated with the project.</small></h3><br/>
+
+    <!--Total Issues-->
+    <p th:inline="text">
+        <span class="highlight">Total Issues (<span th:text="${projectInfo.getTotalIssues()}"></span>)</span>
+    </p>
+
+    <!-- 2. Metrics-->
+    <h3 class="header-medium secondary full-bg">Metrics</h3><br/>
+
+    <p th:inline="text" th:each="metric : ${projectInfo.getMetrics()}">
+        <span class="highlight" th:text="${metric.key}"></span> (<span th:text="${metric.value}"></span>)
+    </p>
+
     <hr/>
 
-    <!-- 2. Issues Section (openissuesTotal,closedisseusTotal,labelNames,milestonesNames) -->
-    <h3 class="header-medium secondary">Issues</h3>
-
-    <!--Open Issues-->
-    <p class="bold" th:inline="text">
-        <span class="highlight">Open Issues (<span th:text="${githubStats.getRepository().getOpenIssues()}"></span>)</span>
-        <a th:href="${githubStats.getRepository().getHtmlUrl()} + '/issues'"><i class="icon icon-object"></i></a>
-    </p>
-
-    <!--Closed Issues-->
-    <p class="bold" th:inline="text">
-        <span class="highlight">Closed Issues </span>
-        <a th:href="${githubStats.getRepository().getHtmlUrl()} + '/issues?q=is%3Aissue+is%3Aclosed'"><i class="icon icon-object"></i></a>
-    </p>
-
-    <!--Labels-->
-    <p class="bold" th:inline="text">
-        <span class="highlight">Labels </span>
-        <a target="_blank" th:each="label : ${githubStats.getLabels()}" th:href="${githubStats.getRepository().getHtmlUrl() + '/labels/' + label.getName()}" th:text="${label.getName()}"></a>
-    </p>
-
-    <hr/>
-
-    <!-- 3. Pulse (weekly authors/commits(master), file changes master, additions /deletions master)  -->
-    <h3 class="header-medium secondary">Pulse</h3>
-
-    <!--Last Weeks Stats-->
-    <p class="bold" th:inline="text">
-        Excluding merges, <span class="highlight" th:text="${githubStats.getCommitsStats().getContributors()}"></span> authors have pushed <span class="highlight" th:text="${githubStats.getCommitsStats().getTotalCommits()}"></span> commits to all branches. On master, <span class="highlight" th:text="${githubStats.getCommitsStats().getTotalChanges()}"></span>      files have changed and there have been <span class="highlight" th:text="${githubStats.getCommitsStats().getTotalAdditions()}"></span> additions and <span class="highlight" th:text="${githubStats.getCommitsStats().getTotalDeletions()}"></span> deletions.
-    </p>
-
-    <button id="btn-unassign" onclick="unassignRepository()" class="btn btn-danger">Unassign</button>
+    <button id="btn-unassign" onclick="unassignProject()" class="btn btn-danger">Unassign</button>
 
     <script th:inline="javascript">
 
-        function unassignRepository() {
+        function unassignProject() {
 
             $.post({
                 url: CLOUDTEAMS_JIRA_REST_ENDPOINT + "/jira/delete",
                 data: {project_id: ct_project_id},
                 beforeSend: function (xhr) {
                     if (hasJiraAccessToken()) {
-                        xhr.setRequestHeader("Authorization", localStorage.jira_auth_token);
+                        xhr.setRequestHeader("Authorization", localStorage.sonarqube_auth_token);
                     }
                 },
             }).success(function (data, status, xhr) {
@@ -204,7 +427,9 @@
                 var res = JSON.parse(data);
                 if ("SUCCESS" === res.code) {
                     //Reload Github widget
-                    loadJiraWidget()();
+                    loadJiraWidget();
+                } else {
+                    alert(res.message);
                 }
                 console.log(res.message);
             });

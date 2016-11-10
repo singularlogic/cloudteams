@@ -36,8 +36,8 @@ public class JiraProject implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Size(min = 0, max = 250)
-    @Column(name = "jiraRepository")
-    private String jiraRepository;
+    @Column(name = "sonarqubeProject")
+    private String sonarqubeProject;
     @OneToOne
     @JoinColumn(name = "uid", referencedColumnName = "id")
     @Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
@@ -66,6 +66,13 @@ public class JiraProject implements Serializable {
         this.projectId = projectId;
     }
 
+    public String getJiraProject() {
+        return sonarqubeProject;
+    }
+
+    public void setJiraProject(String sonarqubeProject) {
+        this.sonarqubeProject = sonarqubeProject;
+    }
 
     public JiraUser getUser() {
         return user;
@@ -75,18 +82,5 @@ public class JiraProject implements Serializable {
         this.user = user;
     }
 
-    /**
-     * @return the jiraRepository
-     */
-    public String getJiraRepository() {
-        return jiraRepository;
-    }
-
-    /**
-     * @param jiraRepository the jiraRepository to set
-     */
-    public void setJiraRepository(String jiraRepository) {
-        this.jiraRepository = jiraRepository;
-    }
 
 }
