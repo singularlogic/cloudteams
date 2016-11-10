@@ -401,7 +401,7 @@
                 data: {project_id: ct_project_id},
                 beforeSend: function (xhr) {
                     if (hasJiraAccessToken()) {
-                        xhr.setRequestHeader("Authorization", localStorage.sonarqube_auth_token);
+                        xhr.setRequestHeader("Authorization", localStorage.jira_auth_token);
                     }
                 },
             }).success(function (data, status, xhr) {
