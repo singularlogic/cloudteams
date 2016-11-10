@@ -98,7 +98,7 @@ public class JiraController {
             model.addAttribute("issuesPriority", issues.stream().collect(Collectors.groupingBy(issue -> issue.getPriority().getName(), Collectors.counting())));
             //Get Issues Statuses
             model.addAttribute("issuesStatus", issues.stream().collect(Collectors.groupingBy(issue -> issue.getStatus().getName(), Collectors.counting())));
-            return "Jira::Jira-auth-project";
+            return "jira::jira-auth-project";
         }
         return "jira::jira-error";
     }
