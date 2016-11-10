@@ -388,6 +388,15 @@
     <span class="highlight">Name</span>
     <p th:inline="text"><strong>[[${jiraProject.getName()}]]</strong></p>
 
+    <h3 class="header-medium secondary full-bg">
+        <span class="title">Issues</span>
+    </h3>
+
+    <p>
+        <span class="highlight">Issues Types</span>
+        <span th:text="${issuesTypes}"></span>
+    </p>
+
     <hr/>
 
     <button id="btn-unassign" onclick="unassignProject()" class="btn btn-danger">Unassign</button>
