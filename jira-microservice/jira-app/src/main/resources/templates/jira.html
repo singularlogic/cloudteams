@@ -378,6 +378,13 @@
 			color: #fff;
 			background-color: #7d3c8c;
 		}
+
+		.inner-wrap {
+		    margin-top: 10px;
+		}
+		.inner-wrap ul {
+		    margin-top: 5px;
+		}
     </style>
 
     <div class="alert alert-warning">
@@ -391,29 +398,30 @@
     <h3 class="header-medium secondary full-bg">
         <span class="title">Issues</span>
     </h3>
-    <p>
+
+    <span class="inner-wrap">
         <span class="highlight">Types</span>
 
         <ul>
             <li th:each="types : ${issuesTypes}" th:text="${types}"></li>
         </ul>
-    </p>
+    </span>
 
-    <p>
+    <span class="inner-wrap">
         <span class="highlight">Priorities</span>
 
         <ul>
             <li th:each="priorities : ${issuesPriority}" th:text="${priorities}"></li>
         </ul>
-    </p>
+    </span>
 
-    <p>
+    <span class="inner-wrap">
         <span class="highlight">Status</span>
 
         <ul>
             <li th:each="status : ${issuesStatus}" th:text="${status}"></li>
         </ul>
-    </p>
+    </span>
 
     <hr/>
 
