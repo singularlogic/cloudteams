@@ -394,7 +394,12 @@
 
     <p>
         <span class="highlight">Issues Types</span>
-        <span th:text="${issuesTypes}"></span>
+        <!--<span th:text="${issuesTypes}"></span>-->
+
+        <ul>
+            <li th:each="types : ${issuesTypes}" th:text="${types}"></li>
+        </ul>
+        <!--th:each="instance : ${analysis.instanceMap}">-->
     </p>
 
     <hr/>
