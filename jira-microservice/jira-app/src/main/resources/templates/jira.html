@@ -392,15 +392,23 @@
         <span class="title">Issues</span>
     </h3>
 
-    <p>
-        <span class="highlight">Issues Types</span>
-        <!--<span th:text="${issuesTypes}"></span>-->
+    <span class="highlight">Types</span>
 
-        <ul>
-            <li th:each="types : ${issuesTypes}" th:text="${types}"></li>
-        </ul>
-        <!--th:each="instance : ${analysis.instanceMap}">-->
-    </p>
+    <ul>
+        <li th:each="types : ${issuesTypes}" th:text="${types}"></li>
+    </ul>
+
+    <span class="highlight">Priorities</span>
+
+    <ul>
+        <li th:each="priorities : ${issuesPriority}" th:text="${priorities}"></li>
+    </ul>
+
+    <span class="highlight">Status</span>
+
+    <ul>
+        <li th:each="status : ${issuesStatus}" th:text="${status}"></li>
+    </ul>
 
     <hr/>
 
