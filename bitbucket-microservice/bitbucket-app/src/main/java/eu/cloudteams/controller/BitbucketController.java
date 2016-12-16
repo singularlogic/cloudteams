@@ -49,6 +49,8 @@ public class BitbucketController {
     @RequestMapping(value = "/api/v1/bitbucket/auth", method = RequestMethod.GET)
     public String bitbucketAuth(Model model, @RequestParam(value = "code", defaultValue = "") String code, @RequestParam(value = "username", defaultValue = "") String username, HttpServletRequest request, HttpServletResponse response) throws IOException {
 
+       request.getParameterMap().keySet().forEach(key-> System.out.println(String.format("Key %s value %s", key, request.getParameterValues(key))));
+        
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("code", code);
         jsonObject.put("username", username);

@@ -45,7 +45,6 @@ public final class BitbucketAuthHandler {
                 parameteres.add("code", code);
                 parameteres.add("grant_type", "authorization_code");
                 parameteres.add("redirect_uri", "https://cloudteams.euprojects.net/bitbucket/api/v1/bitbucket/auth?username=" + cteamsusername);
-                //parameteres.add("redirect_uri", "https://cloudteams.euprojects.net/bitbucket/api/v1/bitbucket/auth");
                 HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(parameteres, headers);
                 RestTemplate restTemplate = new RestTemplate();
                 //Make Rest call to fetch AccessToken
