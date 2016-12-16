@@ -3,6 +3,7 @@ package eu.cloudteams.util.jira;
 import com.atlassian.jira.rest.client.api.JiraRestClient;
 import com.atlassian.jira.rest.client.api.domain.BasicProject;
 import com.atlassian.jira.rest.client.api.domain.Issue;
+import com.atlassian.jira.rest.client.api.domain.IssueType;
 import com.atlassian.jira.rest.client.api.domain.Project;
 import com.atlassian.jira.rest.client.auth.AnonymousAuthenticationHandler;
 import com.atlassian.jira.rest.client.internal.async.AsynchronousJiraRestClientFactory;
@@ -10,10 +11,12 @@ import com.google.common.collect.Lists;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -68,7 +71,13 @@ public final class JiraService {
             jiraService.getProjects().forEach(project -> System.out.println("Project name: " + project.getName()));
 
             //Get Issues
-            jiraService.getIssues("CloudTeams");
+           Map<String,Long>  myMap = jiraService.getIssues("CloudTeams").stream().collect(Collectors.groupingBy(issue-> issue.getIssueType().getName() ,Collectors.counting()));
+            
+           
+           myMap.keySet().forEach( type -> System.out.println(type + " count: "+ myMap.get(type)));
+            
+            
+            
 
         } catch (URISyntaxException ex) {
             Logger.getLogger(JiraService.class.getName()).log(Level.SEVERE, null, ex);
