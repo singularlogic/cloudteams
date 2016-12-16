@@ -25,7 +25,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -48,147 +47,145 @@ public class BitbucketController {
     ProjectService projectService;
 
     @RequestMapping(value = "/api/v1/bitbucket/auth", method = RequestMethod.GET)
-    public String bitbucketAuth(Model model,@RequestBody String body, @RequestParam(value = "code", defaultValue = "") String code, @RequestParam(value = "username", defaultValue = "") String username, HttpServletRequest request, HttpServletResponse response) throws IOException {
-        
-        System.out.println("Body is: "+body);
+    public String bitbucketAuth(Model model, @RequestParam(value = "code", defaultValue = "") String code, @RequestParam(value = "username", defaultValue = "") String username, HttpServletRequest request, HttpServletResponse response) throws IOException {
        
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("code", code);
         jsonObject.put("username", username);
 
         logger.log(Level.INFO, "Request from ip: {0} Requestbody: {1}", new Object[]{request.getRemoteAddr(), jsonObject});
-
-        //Actual request to GitHub API
-        BitbucketAuthResponse bitbucketAuthResponse = BitbucketAuthHandler.requestAccesToken(jsonObject);
-
-        logger.log(Level.INFO, "response error:{0}", bitbucketAuthResponse.getError() + " description " + bitbucketAuthResponse.getError_description());
-
-        //Check if AccessToken is successfully fetched
-        if (false == bitbucketAuthResponse.isValid()) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, bitbucketAuthResponse.getError());
-            logger.log(Level.SEVERE, "Fail to get Acess Token reason: {0}", bitbucketAuthResponse.getError());
-            return null;
-        }
-
-        logger.log(Level.INFO, "response error:{0}", bitbucketAuthResponse.getError() + " description " + bitbucketAuthResponse.getError_description());
-        logger.log(Level.INFO, "response token:{0}", bitbucketAuthResponse.getAccess_token());
-
-        //Check if user already exists
-        BitbucketUser user = userService.findByUsername(username);
-
-        //Print the status of user
-        logger.info(null != user ? "User: " + user.getUsername() + " already exists with id: " + user.getId() : "Creating new user for username: " + username);
-
-        //If create new user was not success return
-        if (null == user && false == userService.storeUser(user = new BitbucketUser(null, username, "", bitbucketAuthResponse.getAccess_token(), true))) {
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Could not create user to Cloudteams Database...");
-            logger.log(Level.SEVERE, "Fail to get Acess Token reason: {0}", bitbucketAuthResponse.getError());
-            return null;
-        }
-
-        //Is first time ignore this
-        if (!user.getAccessToken().isEmpty()) {
-            String userLogin;
-            try {
-                userLogin = new BitbucketService(user.getBitbucketToken()).getUser().orElseThrow(() -> new Exception("Could not fetch user via bitbucket toekn")).getUsername();
-            } catch (Throwable ex) {
-                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "");
-                logger.log(Level.SEVERE, "Fail to get Acess Token reason: Could not fetch bitbucket user");
-                return null;
-            }
-            String userLoginToValidate;
-            try {
-                userLoginToValidate = new BitbucketService(bitbucketAuthResponse.getAccess_token()).getUser().orElseThrow(() -> new Exception("Could not fetch user via auth token")).getUsername();
-            } catch (Exception ex) {
-                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "");
-                logger.log(Level.SEVERE, "Fail to get Acess Token reason: Could not fetch bitbucket user via oauth token");
-                return null;
-            }
-            if (userLogin.equalsIgnoreCase(userLoginToValidate)) {
-                userService.setSynchStatus(true, user.getId());
-            } else {
-                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "");
-                logger.log(Level.SEVERE, "Fail to get Acess Token reason: {0}", "User does not have access to this project");
-                return null;
-            }
-        }
-
-        //Create Access Token
-        Token generatedToken = new Token();
-        try {
-            generatedToken = TokenHandler.createToken(request.getRemoteAddr(), username);
-            //Save User
-            user.setAccessToken(generatedToken.getToken());
-        } catch (JOSEException ex) {
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Could not create Access Token...");
-            Logger.getLogger(BitbucketController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        //Update user data
-        if (false == userService.storeUser(user)) {
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Could not update user to Cloudteams Database...");
-            logger.log(Level.SEVERE, "Fail to get Acess Token reason: {0}", "Could not update user to Cloudteams Database...");
-            return null;
-        }
-
-        //Print the generated token
-        logger.info("Generated Token: " + generatedToken.getToken());
-
-        return "bitbucket::bitbucket-authentication";
-
-    }
-
-    @CrossOrigin
-    @RequestMapping(value = "/api/v1/bitbucket/repository", method = RequestMethod.POST)
-    public String getGithubRepositoryInfo(Model model, @RequestParam(value = "project_id", defaultValue = "0", required = true) int project_id) throws IOException {
-
-        logger.info("Requesting info for repository assigned to project_id: " + project_id);
-
-        if (!WebController.hasAccessToken()) {
-            logger.warning("Unauthorized access returing Bitbucket sigin fragment");
-            //return bitbucket-signin fragment
-            return "bitbucket::bitbucket-no-auth";
-        }
-
-        BitbucketUser user = userService.findByUsername(getCurrentUser().getPrincipal().toString());
-        BitbucketProject project = projectService.findByProjectIdAndUser(project_id, user);
-
-        BitbucketService bitbucketService = new BitbucketService(user.getBitbucketToken());
-        Optional<UserResponse> userResponse = bitbucketService.getUser();
-
-        if (!userResponse.isPresent()) {
-            logger.warning("Could not get bitbucket user");
-            return "bitbucket::bitbucket-error";
-        }
-
-        //Unassigned project
-        if (null == project) {
-
-            Optional<RepositoryResponse> repositoryResponse = bitbucketService.getRepositories(userResponse.get().getUsername());
-
-            if (!repositoryResponse.isPresent()) {
-                logger.warning("Could not get repositories for user " + userResponse.get().getUsername());
-                return "bitbucket::bitbucket-error";
-            }
-
-            model.addAttribute("GetRepositories", repositoryResponse.get());
-
-            return "bitbucket::bitbucket-no-project";
-        }
-
-        logger.info("Returning bitbucket-info fragment for user:  " + getCurrentUser().getPrincipal() + " and project_id: " + project_id);
-
-        Optional<Repository> repository = bitbucketService.getRepository(userResponse.get().getUsername(), project.getBitbucketRepository());
-
-        if (repository.isPresent()) {
-
-            //Generate bitbucket statistics
-            BitbucketStatisticsTO bitbucketStatistics = new BitbucketStatisticsTO(bitbucketService, repository.get());
-            model.addAttribute("bitbucketStats", bitbucketStatistics);
-            return "bitbucket::bitbucket-auth-project";
-        }
-
-        return "bitbucket::bitbucket-error";
+return "";
+//        //Actual request to GitHub API
+//        BitbucketAuthResponse bitbucketAuthResponse = BitbucketAuthHandler.requestAccesToken(jsonObject);
+//
+//        logger.log(Level.INFO, "response error:{0}", bitbucketAuthResponse.getError() + " description " + bitbucketAuthResponse.getError_description());
+//
+//        //Check if AccessToken is successfully fetched
+//        if (false == bitbucketAuthResponse.isValid()) {
+//            response.sendError(HttpServletResponse.SC_BAD_REQUEST, bitbucketAuthResponse.getError());
+//            logger.log(Level.SEVERE, "Fail to get Acess Token reason: {0}", bitbucketAuthResponse.getError());
+//            return null;
+//        }
+//
+//        logger.log(Level.INFO, "response error:{0}", bitbucketAuthResponse.getError() + " description " + bitbucketAuthResponse.getError_description());
+//        logger.log(Level.INFO, "response token:{0}", bitbucketAuthResponse.getAccess_token());
+//
+//        //Check if user already exists
+//        BitbucketUser user = userService.findByUsername(username);
+//
+//        //Print the status of user
+//        logger.info(null != user ? "User: " + user.getUsername() + " already exists with id: " + user.getId() : "Creating new user for username: " + username);
+//
+//        //If create new user was not success return
+//        if (null == user && false == userService.storeUser(user = new BitbucketUser(null, username, "", bitbucketAuthResponse.getAccess_token(), true))) {
+//            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Could not create user to Cloudteams Database...");
+//            logger.log(Level.SEVERE, "Fail to get Acess Token reason: {0}", bitbucketAuthResponse.getError());
+//            return null;
+//        }
+//
+//        //Is first time ignore this
+//        if (!user.getAccessToken().isEmpty()) {
+//            String userLogin;
+//            try {
+//                userLogin = new BitbucketService(user.getBitbucketToken()).getUser().orElseThrow(() -> new Exception("Could not fetch user via bitbucket toekn")).getUsername();
+//            } catch (Throwable ex) {
+//                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "");
+//                logger.log(Level.SEVERE, "Fail to get Acess Token reason: Could not fetch bitbucket user");
+//                return null;
+//            }
+//            String userLoginToValidate;
+//            try {
+//                userLoginToValidate = new BitbucketService(bitbucketAuthResponse.getAccess_token()).getUser().orElseThrow(() -> new Exception("Could not fetch user via auth token")).getUsername();
+//            } catch (Exception ex) {
+//                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "");
+//                logger.log(Level.SEVERE, "Fail to get Acess Token reason: Could not fetch bitbucket user via oauth token");
+//                return null;
+//            }
+//            if (userLogin.equalsIgnoreCase(userLoginToValidate)) {
+//                userService.setSynchStatus(true, user.getId());
+//            } else {
+//                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "");
+//                logger.log(Level.SEVERE, "Fail to get Acess Token reason: {0}", "User does not have access to this project");
+//                return null;
+//            }
+//        }
+//
+//        //Create Access Token
+//        Token generatedToken = new Token();
+//        try {
+//            generatedToken = TokenHandler.createToken(request.getRemoteAddr(), username);
+//            //Save User
+//            user.setAccessToken(generatedToken.getToken());
+//        } catch (JOSEException ex) {
+//            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Could not create Access Token...");
+//            Logger.getLogger(BitbucketController.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//
+//        //Update user data
+//        if (false == userService.storeUser(user)) {
+//            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Could not update user to Cloudteams Database...");
+//            logger.log(Level.SEVERE, "Fail to get Acess Token reason: {0}", "Could not update user to Cloudteams Database...");
+//            return null;
+//        }
+//
+//        //Print the generated token
+//        logger.info("Generated Token: " + generatedToken.getToken());
+//
+//        return "bitbucket::bitbucket-authentication";
+//
+//    }
+//
+//    @CrossOrigin
+//    @RequestMapping(value = "/api/v1/bitbucket/repository", method = RequestMethod.POST)
+//    public String getGithubRepositoryInfo(Model model, @RequestParam(value = "project_id", defaultValue = "0", required = true) int project_id) throws IOException {
+//
+//        logger.info("Requesting info for repository assigned to project_id: " + project_id);
+//
+//        if (!WebController.hasAccessToken()) {
+//            logger.warning("Unauthorized access returing Bitbucket sigin fragment");
+//            //return bitbucket-signin fragment
+//            return "bitbucket::bitbucket-no-auth";
+//        }
+//
+//        BitbucketUser user = userService.findByUsername(getCurrentUser().getPrincipal().toString());
+//        BitbucketProject project = projectService.findByProjectIdAndUser(project_id, user);
+//
+//        BitbucketService bitbucketService = new BitbucketService(user.getBitbucketToken());
+//        Optional<UserResponse> userResponse = bitbucketService.getUser();
+//
+//        if (!userResponse.isPresent()) {
+//            logger.warning("Could not get bitbucket user");
+//            return "bitbucket::bitbucket-error";
+//        }
+//
+//        //Unassigned project
+//        if (null == project) {
+//
+//            Optional<RepositoryResponse> repositoryResponse = bitbucketService.getRepositories(userResponse.get().getUsername());
+//
+//            if (!repositoryResponse.isPresent()) {
+//                logger.warning("Could not get repositories for user " + userResponse.get().getUsername());
+//                return "bitbucket::bitbucket-error";
+//            }
+//
+//            model.addAttribute("GetRepositories", repositoryResponse.get());
+//
+//            return "bitbucket::bitbucket-no-project";
+//        }
+//
+//        logger.info("Returning bitbucket-info fragment for user:  " + getCurrentUser().getPrincipal() + " and project_id: " + project_id);
+//
+//        Optional<Repository> repository = bitbucketService.getRepository(userResponse.get().getUsername(), project.getBitbucketRepository());
+//
+//        if (repository.isPresent()) {
+//
+//            //Generate bitbucket statistics
+//            BitbucketStatisticsTO bitbucketStatistics = new BitbucketStatisticsTO(bitbucketService, repository.get());
+//            model.addAttribute("bitbucketStats", bitbucketStatistics);
+//            return "bitbucket::bitbucket-auth-project";
+//        }
+//
+//        return "bitbucket::bitbucket-error";
     }
 
     //Rest Controller
