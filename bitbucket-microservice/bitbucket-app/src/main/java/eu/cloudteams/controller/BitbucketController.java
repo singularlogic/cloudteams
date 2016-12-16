@@ -15,6 +15,8 @@ import eu.cloudteams.util.bitbucket.models.Repository;
 import eu.cloudteams.util.bitbucket.models.RepositoryResponse;
 import eu.cloudteams.util.bitbucket.models.UserResponse;
 import java.io.IOException;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -34,7 +36,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 /**
  * Restful API for integration with CloudTeams Platform
  *
- * @author Christos Paraskeva <ch.paraskeva at gmail dot com>
+ * @author Christos Paraskeva (ch.paraskeva at gmail dot com)
  */
 @Controller
 public class BitbucketController {
@@ -49,7 +51,7 @@ public class BitbucketController {
 
     @RequestMapping(value = "/api/v1/bitbucket/auth", method = RequestMethod.GET)
     public String bitbucketAuth(Model model, @RequestParam(value = "code", defaultValue = "") String code, @RequestParam(value = "username", defaultValue = "") String username, HttpServletRequest request, HttpServletResponse response) throws IOException {
-       
+
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("code", code);
         jsonObject.put("username", username);
@@ -78,7 +80,7 @@ public class BitbucketController {
         logger.info(null != user ? "User: " + user.getUsername() + " already exists with id: " + user.getId() : "Creating new user for username: " + username);
 
         //If create new user was not success return
-        if (null == user && false == userService.storeUser(user = new BitbucketUser(null, username, "", bitbucketAuthResponse.getAccess_token(), true))) {
+        if (null == user && false == userService.storeUser(user = new BitbucketUser(null, username, "", bitbucketAuthResponse.getAccess_token(), bitbucketAuthResponse.getRefresh_token(), true, getTokenExpirationDate()))) {
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Could not create user to Cloudteams Database...");
             logger.log(Level.SEVERE, "Fail to get Acess Token reason: {0}", bitbucketAuthResponse.getError());
             return null;
@@ -130,7 +132,7 @@ public class BitbucketController {
         }
 
         //Print the generated token
-        logger.info("Generated Token: " + generatedToken.getToken());
+        logger.log(Level.INFO, "Generated Token: {0}", generatedToken.getToken());
 
         return "bitbucket::bitbucket-authentication";
 
@@ -144,11 +146,24 @@ public class BitbucketController {
 
         if (!WebController.hasAccessToken()) {
             logger.warning("Unauthorized access returing Bitbucket sigin fragment");
-            //return bitbucket-signin fragment
             return "bitbucket::bitbucket-no-auth";
         }
 
         BitbucketUser user = userService.findByUsername(getCurrentUser().getPrincipal().toString());
+
+        //Check if token has expired
+        if (user.hasTokenExpired()) {
+            try {
+                user.setTokenExpire(getTokenExpirationDate());
+                user.setBitbucketToken(BitbucketAuthHandler.refreshAccessToken(user.getRefreshToken()));
+                //update users' access token
+                userService.storeUser(user);
+            } catch (Exception ex) {
+                Logger.getLogger(BitbucketController.class.getName()).log(Level.SEVERE, null, ex);
+                return "bitbucket::bitbucket-error";
+            }
+        }
+
         BitbucketProject project = projectService.findByProjectIdAndUser(project_id, user);
 
         BitbucketService bitbucketService = new BitbucketService(user.getBitbucketToken());
@@ -330,6 +345,12 @@ public class BitbucketController {
         final static String SUCCESS = "SUCCESS";
         final static String FAIL = "FAIL";
 
+    }
+
+    private Date getTokenExpirationDate() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.SECOND, 3600);
+        return calendar.getTime();
     }
 
 }

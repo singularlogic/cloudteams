@@ -10,6 +10,8 @@ public final class BitbucketAuthResponse {
     private String scopes;
     private String token_type;
     private String refresh_token;
+    private String error;
+    private String error_description;
     //private Integer expires_in;
 
     public String getError() {
@@ -27,7 +29,8 @@ public final class BitbucketAuthResponse {
     public void setError_description(String error_description) {
         this.error_description = error_description;
     }
-/*
+
+    /*
     public String getError_uri() {
         return error_uri;
     }
@@ -35,11 +38,9 @@ public final class BitbucketAuthResponse {
     public void setError_uri(String error_uri) {
         this.error_uri = error_uri;
     }
-*/
-    private String error;
-    private String error_description;
-   // private String error_uri;
+     */
 
+    // private String error_uri;
     public BitbucketAuthResponse() {
 
     }
