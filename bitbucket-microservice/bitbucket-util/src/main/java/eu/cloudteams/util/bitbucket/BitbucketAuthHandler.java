@@ -48,8 +48,8 @@ public final class BitbucketAuthHandler {
                 HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(parameteres, headers);
                 RestTemplate restTemplate = new RestTemplate();
                 //Make Rest call to fetch AccessToken
-                ResponseEntity<BitbucketAuthResponse> accesstokenResponse = restTemplate.postForEntity(BITBUCKET_API_URL, request, BitbucketAuthResponse.class);
-                return accesstokenResponse.getBody();
+             //   ResponseEntity<BitbucketAuthResponse> accesstokenResponse = restTemplate.postForEntity(BITBUCKET_API_URL, request, BitbucketAuthResponse.class);
+               // return accesstokenResponse.getBody();
             }
             authResponse.setError("BitbucketException");
             authResponse.setError_description("Could not get temporary code from Bitbucket API");
