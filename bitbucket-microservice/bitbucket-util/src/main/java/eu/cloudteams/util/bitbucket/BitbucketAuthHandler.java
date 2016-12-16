@@ -50,7 +50,7 @@ public final class BitbucketAuthHandler {
                 //Make Rest call to fetch AccessToken
                 ResponseEntity<BitbucketAuthResponse> accesstokenResponse = restTemplate.postForEntity(BITBUCKET_API_URL, request, BitbucketAuthResponse.class);
                 
-                System.out.println("Body response: "+accesstokenResponse.getBody());
+                System.out.println("Body response: "+ ((BitbucketAuthResponse) accesstokenResponse.getBody()).getRefresh_token());
                 return accesstokenResponse.getBody();
             }
             authResponse.setError("BitbucketException");
