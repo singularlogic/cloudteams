@@ -52,7 +52,7 @@ public class BitbucketUser implements Serializable {
     @NotNull
     @Column(name = "isSynch")
     private boolean isSynch;
-    @Temporal(javax.persistence.TemporalType.DATE)
+    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Date tokenExpire;
 
     public BitbucketUser() {
