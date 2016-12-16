@@ -25,6 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -47,10 +48,10 @@ public class BitbucketController {
     ProjectService projectService;
 
     @RequestMapping(value = "/api/v1/bitbucket/auth", method = RequestMethod.GET)
-    public String bitbucketAuth(Model model, @RequestParam(value = "code", defaultValue = "") String code, @RequestParam(value = "username", defaultValue = "") String username, HttpServletRequest request, HttpServletResponse response) throws IOException {
-
-       request.getParameterMap().keySet().forEach(key-> System.out.println(String.format("Key %s value %s", key, request.getParameterValues(key))));
+    public String bitbucketAuth(Model model,@RequestBody String body, @RequestParam(value = "code", defaultValue = "") String code, @RequestParam(value = "username", defaultValue = "") String username, HttpServletRequest request, HttpServletResponse response) throws IOException {
         
+        System.out.println("Body is: "+body);
+       
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("code", code);
         jsonObject.put("username", username);
