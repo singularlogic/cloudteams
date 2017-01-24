@@ -6,6 +6,8 @@ var CLOUDTEAMS_GITHUB_REST_ENDPOINT = "https://cloudteams.euprojects.net/github/
 var CLOUDTEAMS_SONARQUBE_REST_ENDPOINT = "https://cloudteams.euprojects.net/sonar/api/v1";
 var CLOUDTEAMS_BITBUCKET_REST_ENDPOINT = "https://cloudteams.euprojects.net/bitbucket/api/v1";
 var CLOUDTEAMS_JIRA_REST_ENDPOINT = "https://cloudteams.euprojects.net/jira/api/v1";
+//var CLOUDTEAMS_PAASPORT_REST_ENDPOINT = "https://cloudteams.euprojects.net/paasport/api/v1";
+var CLOUDTEAMS_PAASPORT_REST_ENDPOINT = "http://localhost:8085/api/v1";
 //var CLOUDTEAMS_JIRA_REST_ENDPOINT = "http://localhost:8084/api/v1";
 //var CLOUDTEAMS_BITBUCKET_REST_ENDPOINT = "http://localhost:8083/api/v1";
 
@@ -23,6 +25,7 @@ $(document).ready(function () {
         $("#ct-content-sonarqube").html(LOADIND_DIV);
         $("#ct-content-bitbucket").html(LOADIND_DIV);
         $("#ct-content-jira").html(LOADIND_DIV);
+        $("#ct-content-paasport").html(LOADIND_DIV);
         $("#widget-loading").show();
     });
     //Load Github widget
@@ -33,6 +36,8 @@ $(document).ready(function () {
     loadBitbucketWidget();
     //Load Jira widget
     loadJiraWidget();
+    //Load PaaSport widget
+    loadPaaSportWidget();
 });
 
 /*
@@ -135,6 +140,32 @@ function loadJiraWidget() {
 
 function hasJiraAccessToken() {
     return null !== localStorage.getItem("jira_auth_token");
+}
+
+/*
+ *  Handlers for PaaSport widget
+ */
+
+
+function loadPaaSportWidget() {
+    //Make the call to fetch PaaSport data
+    $.post({
+        beforeSend: function (xhr) {
+            if (hasPaaSportAccessToken()) {
+                xhr.setRequestHeader(AUTHORIZATION_HEADER, localStorage.paasport_auth_token);
+            }
+        },
+        data: {project_id: ct_project_id},
+        url: CLOUDTEAMS_PAASPORT_REST_ENDPOINT + "/paasport/project"
+    }).success(function (data, status, xhr) {
+        $("#ct-content-paasport").html(data);
+    }).fail(function (error) {
+        console.error("[Cloudteams] Code: " + error.status + " Message: " + error.statusText);
+    });
+}
+
+function hasPaaSportAccessToken() {
+    return null !== localStorage.getItem("paasport_auth_token");
 }
 
 

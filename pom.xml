@@ -14,6 +14,7 @@
         <module>sonarqube-microservice</module>
         <module>bitbucket-microservice</module>
         <module>jira-microservice</module>
+        <module>paasport-microservice</module>
         <module>integration-ui</module>
     </modules>
 
