@@ -9,7 +9,7 @@ import eu.cloudteams.repository.domain.PaaSportProject;
 import eu.cloudteams.repository.domain.PaaSportUser;
 import eu.cloudteams.repository.service.ProjectService;
 import eu.cloudteams.repository.service.UserService;
-import eu.cloudteams.util.paasport.PaaSportService;
+import eu.cloudteams.util.sonarqube.PaaSportService;
 
 import java.io.IOException;
 import java.util.Date;
@@ -17,7 +17,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 
-import eu.cloudteams.util.paasport.models.TDeveloperProfile;
+import eu.cloudteams.util.sonarqube.models.TDeveloperProfile;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package eu.cloudteams.util.paasport.models;
+package eu.cloudteams.util.sonarqube.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 

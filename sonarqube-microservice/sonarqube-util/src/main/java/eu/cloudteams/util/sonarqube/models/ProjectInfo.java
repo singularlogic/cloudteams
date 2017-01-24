@@ -1,4 +1,4 @@
-package eu.cloudteams.util.paasport.models;
+package eu.cloudteams.util.sonarqube.models;
 
 import java.util.Map;
 

@@ -1,12 +1,12 @@
-package eu.cloudteams.util.paasport;
+package eu.cloudteams.util.sonarqube;
 
-import eu.cloudteams.util.paasport.models.SonarIssues;
-import eu.cloudteams.util.paasport.models.SonarIssuesResponse;
-import eu.cloudteams.util.paasport.models.Msr;
-import eu.cloudteams.util.paasport.models.Project;
-import eu.cloudteams.util.paasport.models.ProjectInfo;
-import eu.cloudteams.util.paasport.models.ServerInfo;
-import eu.cloudteams.util.paasport.models.SonarMetricsResponse;
+import eu.cloudteams.util.sonarqube.models.SonarIssues;
+import eu.cloudteams.util.sonarqube.models.SonarIssuesResponse;
+import eu.cloudteams.util.sonarqube.models.Msr;
+import eu.cloudteams.util.sonarqube.models.Project;
+import eu.cloudteams.util.sonarqube.models.ProjectInfo;
+import eu.cloudteams.util.sonarqube.models.ServerInfo;
+import eu.cloudteams.util.sonarqube.models.SonarMetricsResponse;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
