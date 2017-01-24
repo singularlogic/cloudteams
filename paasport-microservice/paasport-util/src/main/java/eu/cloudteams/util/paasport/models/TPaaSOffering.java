@@ -1,4 +1,4 @@
-package eu.cloudteams.util.sonarqube.models;
+package eu.cloudteams.util.paasport.models;
 
 import java.io.Serializable;
 import java.util.Date;
