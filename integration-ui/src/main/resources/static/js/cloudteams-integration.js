@@ -6,10 +6,7 @@ var CLOUDTEAMS_GITHUB_REST_ENDPOINT = "https://cloudteams.euprojects.net/github/
 var CLOUDTEAMS_SONARQUBE_REST_ENDPOINT = "https://cloudteams.euprojects.net/sonar/api/v1";
 var CLOUDTEAMS_BITBUCKET_REST_ENDPOINT = "https://cloudteams.euprojects.net/bitbucket/api/v1";
 var CLOUDTEAMS_JIRA_REST_ENDPOINT = "https://cloudteams.euprojects.net/jira/api/v1";
-//var CLOUDTEAMS_PAASPORT_REST_ENDPOINT = "https://cloudteams.euprojects.net/paasport/api/v1";
-var CLOUDTEAMS_PAASPORT_REST_ENDPOINT = "http://localhost:8085/api/v1";
-//var CLOUDTEAMS_JIRA_REST_ENDPOINT = "http://localhost:8084/api/v1";
-//var CLOUDTEAMS_BITBUCKET_REST_ENDPOINT = "http://localhost:8083/api/v1";
+var CLOUDTEAMS_PAASPORT_REST_ENDPOINT = "https://cloudteams.euprojects.net/paasport/api/v1";
 
 $(document).ready(function () {
     console.log("Loaded oauth.js");
