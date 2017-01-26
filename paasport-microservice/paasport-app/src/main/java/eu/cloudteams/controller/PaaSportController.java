@@ -51,7 +51,7 @@ public class PaaSportController {
         PaaSportUser user = userService.findByUsername(username);
         // Print the status of user
         logger.info(null != user ? "User: " + user.getUsername() + " already exists with id: " + user.getId() : "Creating new user for username: " + username);
-        String paasportUrl = "https://paasport.ubitech.eu";
+        String paasportUrl = "http://192.168.3.63:8080";
 
         if (null == user) {
             try {
@@ -102,7 +102,7 @@ public class PaaSportController {
 
         logger.info("Requesting info for repository assigned to project_id: " + project_id);
 
-        String paasportUrl = "https://paasport.ubitech.eu";
+        String paasportUrl = "http://192.168.3.63:8080";
 
         if (!WebController.hasAccessToken()) {
             logger.warning("Unauthorized access returing paasport sign-in fragment");
