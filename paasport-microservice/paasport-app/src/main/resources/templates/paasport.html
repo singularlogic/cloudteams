@@ -226,7 +226,7 @@
     <p><strong><span th:text="${developerProfile.firstName} + ' ' + ${developerProfile.lastName}"></span></strong></p>
 
     <span class="highlight">Email</span>
-    <p><span th:text="${developerProfile.email}"></span></p>
+    <p><a th:href="@{mailto:{developerProfile.email}}" th:text="${developerProfile.email}"></span></p>
 
     <span class="highlight">User Monitoring Key</span>
     <p><span th:text="${developerProfile.userMonitoringKey}"></span></p>
