@@ -252,8 +252,8 @@
         <p>No available PasS Offerings at the moment.</p>
     </div>
 
-    <div th:if="${not #lists.isEmpty(developerProfile.paaSOfferingList)}" class="row" th:inline="text" th:each="value : ${developerProfile.paaSOfferingList}">
-        <div class="col col-sm-6">
+    <div th:if="${not #lists.isEmpty(developerProfile.paaSOfferingList)}" class="row">
+        <div class="col col-sm-6" th:inline="text" th:each="value : ${developerProfile.paaSOfferingList}">
             <div class="show-field show-field-name">[[${value.name}]]</div>
             <div class="show-field show-field-description">[[${value.description}]]</div>
             <div class="show-field show-field-deployment_type">[[${value.deploymentType}]]</div>
