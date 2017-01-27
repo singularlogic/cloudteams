@@ -132,6 +132,12 @@
     </script>
 </div>
 
+
+
+
+
+
+
 <div th:fragment="paasport-info">
 
     <style>
@@ -226,9 +232,9 @@
     <p><strong><span th:text="${developerProfile.firstName} + ' ' + ${developerProfile.lastName}"></span></strong></p>
 
     <span class="highlight">Email</span>
-    <p><a th:href="@{mailto:{developerProfile.email}}" th:text="${developerProfile.email}"></span></p>
+    <p><a th:href="'mailto:' + ${developerProfile.email}" th:text="${developerProfile.email}"></a></p>
 
-    <span class="highlight">User Monitoring Key</span>
+    <span class="highlight">User's Monitoring Key</span>
     <p><span th:text="${developerProfile.userMonitoringKey}"></span></p>
 
     <!-- 1. Issues-->
