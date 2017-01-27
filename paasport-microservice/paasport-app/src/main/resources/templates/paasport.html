@@ -221,6 +221,10 @@
 			color: #fff;
 			background-color: #7d3c8c;
 		}
+
+		.col {
+		    border: 2px solid blueviolet;
+		}
     </style>
 
     <div class="alert alert-warning">
@@ -258,24 +262,15 @@
             <div class="show-field show-field-description">[[${value.description}]]</div>
             <div class="show-field show-field-deployment_type">[[${value.deploymentType}]]</div>
             <div class="show-field show-field-authorization_type">[[${value.authorizationType}]]</div>
-            <div class="show-field show-field-support">[[${value.support}]]</div>
-            <div class="show-field show-field-service">[[${value.service}]]</div>
-            <div class="show-field show-field-price_performance_ratio">[[${value.pricePerformanceRatio}]]</div>
-            <div class="show-field show-field-maintenance">[[${value.maintenance}]]</div>
-            <div class="show-field show-field-sla_reliability">[[${value.slaReliability}]]</div>
-            <div class="show-field show-field-authorized">[[${value.authorized}]]</div>
+            <div class="show-field show-score">
+                <div class="show-field show-field-support">[[${value.support}]]</div>
+                <div class="show-field show-field-service">[[${value.service}]]</div>
+                <div class="show-field show-field-price_performance_ratio">[[${value.pricePerformanceRatio}]]</div>
+                <div class="show-field show-field-maintenance">[[${value.maintenance}]]</div>
+                <div class="show-field show-field-sla_reliability">[[${value.slaReliability}]]</div>
+            </div>
+            <!--<div class="show-field show-field-authorized">[[${value.authorized}]]</div>-->
         </div>
-
-        <!--<span class="highlight" th:text="${value.name}"></span>
-        <span class="highlight" th:text="${value.description}"></span>
-        <span class="highlight" th:text="${value.deploymentType}"></span>
-        <span class="highlight" th:text="${value.authorizationType}"></span>
-        <span class="highlight" th:text="${value.support}"></span>
-        <span class="highlight" th:text="${value.service}"></span>
-        <span class="highlight" th:text="${value.pricePerformanceRatio}"></span>
-        <span class="highlight" th:text="${value.maintenance}"></span>
-        <span class="highlight" th:text="${value.slaReliability}"></span>
-        <span class="highlight" th:text="'Authorized: ' + ${value.authorized}"></span>-->
     </div>
 
     <!-- 2. Applications -->
