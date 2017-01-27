@@ -232,9 +232,9 @@
     <p><strong><span th:text="${developerProfile.firstName} + ' ' + ${developerProfile.lastName}"></span></strong></p>
 
     <span class="highlight">Email</span>
-    <p><a th:href="'mailto:' + ${developerProfile.email}" th:text="${developerProfile.email}"></a></p>
+    <p><a th:href="@{mailto:{developerProfile.email}}" th:text="${developerProfile.email}"></a></p>
 
-    <span class="highlight">User's Monitoring Key</span>
+    <span class="highlight">User Monitoring Key</span>
     <p><span th:text="${developerProfile.userMonitoringKey}"></span></p>
 
     <!-- 1. Issues-->
@@ -248,31 +248,48 @@
     <!-- 1. PaaS Offerings -->
     <h3 class="header-medium secondary full-bg">PaaS Offerings</h3><br/>
 
-    <p th:inline="text" th:each="offering : ${developerProfile.paaSOfferingList}">
-        <span class="highlight" th:text="${offering.name}"></span>
-        <span class="highlight" th:text="${offering.description}"></span>
-        <span class="highlight" th:text="${offering.deploymentType}"></span>
-        <span class="highlight" th:text="${offering.authorizationType}"></span>
-        <span class="highlight" th:text="${offering.support}"></span>
-        <span class="highlight" th:text="${offering.service}"></span>
-        <span class="highlight" th:text="${offering.pricePerformanceRatio}"></span>
-        <span class="highlight" th:text="${offering.maintenance}"></span>
-        <span class="highlight" th:text="${offering.slaReliability}"></span>
-        <span class="highlight" th:text="'Authorized: ' + ${offering.authorized}"></span>
-    </p>
+    <div th:if="${#lists.isEmpty(developerProfile.paaSOfferingList)}" class="row">
+        <p>No available PasS Offerings at the moment.</p>
+    </div>
+
+    <div th:if="${not #lists.isEmpty(developerProfile.paaSOfferingList)}" class="row" th:inline="text" th:each="value : ${developerProfile.paaSOfferingList}">
+        <div class="col col-sm-6">
+            <div class="show-field show-field-name">[[${value.name}]]</div>
+            <div class="show-field show-field-description">[[${value.description}]]</div>
+            <div class="show-field show-field-deployment_type">[[${value.deploymentType}]]</div>
+            <div class="show-field show-field-authorization_type">[[${value.authorizationType}]]</div>
+            <div class="show-field show-field-support">[[${value.support}]]</div>
+            <div class="show-field show-field-service">[[${value.service}]]</div>
+            <div class="show-field show-field-price_performance_ratio">[[${value.pricePerformanceRatio}]]</div>
+            <div class="show-field show-field-maintenance">[[${value.maintenance}]]</div>
+            <div class="show-field show-field-sla_reliability">[[${value.slaReliability}]]</div>
+            <div class="show-field show-field-authorized">[[${value.authorized}]]</div>
+        </div>
+
+        <!--<span class="highlight" th:text="${value.name}"></span>
+        <span class="highlight" th:text="${value.description}"></span>
+        <span class="highlight" th:text="${value.deploymentType}"></span>
+        <span class="highlight" th:text="${value.authorizationType}"></span>
+        <span class="highlight" th:text="${value.support}"></span>
+        <span class="highlight" th:text="${value.service}"></span>
+        <span class="highlight" th:text="${value.pricePerformanceRatio}"></span>
+        <span class="highlight" th:text="${value.maintenance}"></span>
+        <span class="highlight" th:text="${value.slaReliability}"></span>
+        <span class="highlight" th:text="'Authorized: ' + ${value.authorized}"></span>-->
+    </div>
 
     <!-- 2. Applications -->
     <h3 class="header-medium secondary full-bg">Applications</h3><br/>
 
-    <p th:inline="text" th:each="application : ${developerProfile.externalApplications}">
-        <span class="highlight" th:text="${application.name}"></span>
-        <span class="highlight" th:text="${application.description}"></span>
-        <span class="highlight" th:text="${application.region}"></span>
-        <span class="highlight" th:text="${application.endpointURI}"></span>
-        <span class="highlight" th:text="${application.monitoringAppID}"></span>
-        <span class="highlight" th:text="${application.remoteGitURL}"></span>
-        <span class="highlight" th:text="${application.paaSOffering.name}"></span>
-        <span class="highlight" th:text="${application.status}"></span>
+    <p th:inline="text" th:each="value : ${developerProfile.externalApplications}">
+        <span class="highlight" th:text="${value.name}"></span>
+        <span class="highlight" th:text="${value.description}"></span>
+        <span class="highlight" th:text="${value.region}"></span>
+        <span class="highlight" th:text="${value.endpointURI}"></span>
+        <span class="highlight" th:text="${value.monitoringAppID}"></span>
+        <span class="highlight" th:text="${value.remoteGitURL}"></span>
+        <span class="highlight" th:text="${value.paaSOffering.name}"></span>
+        <span class="highlight" th:text="${value.status}"></span>
     </p>
 
     <hr/>
