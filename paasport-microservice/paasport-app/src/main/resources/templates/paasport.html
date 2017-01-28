@@ -236,6 +236,11 @@
 		    font-weight: bold;
             margin: 0;
 		}
+
+		.col .show-field-name {
+		    border-bottom: 1px dotted blueviolet;
+		    margin: 5px 0;
+		}
     </style>
 
     <div class="alert alert-warning">
@@ -269,8 +274,9 @@
 
     <div th:if="${not #lists.isEmpty(developerProfile.paaSOfferingList)}" class="row">
         <div class="col col-sm-12" th:inline="text" th:each="value : ${developerProfile.paaSOfferingList}">
+            <div class="show-field show-field-name highlight">[[${value.name}]]</div>
             <div class="show-field show-field-description">[[${value.description}]]</div>
-            <div class="show-field show-field-name highlight">
+            <div class="show-field show-field-name">
                 <label>Deployment type:</label> [[${value.name}]]
             </div>
             <!--/*<div class="show-field show-field-deployment_type">[[${value.deploymentType}]]</div>*/-->
