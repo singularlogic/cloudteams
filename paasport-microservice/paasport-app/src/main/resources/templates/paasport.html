@@ -287,13 +287,13 @@
     <div th:if="${not #lists.isEmpty(developerProfile.paaSOfferingList)}" class="row">
         <div class="col col-sm-12" th:inline="text" th:each="value : ${developerProfile.paaSOfferingList}">
 
-            <i class="icon icon-upload top-right"></i>
+            <i class="icon icon-upload top-right" th:title="'Deployment type: ' + ${value.deploymentType}"></i>
 
             <div class="show-field show-field-name highlight"><div class="inner-text">[[${value.name}]]</div></div>
             <div style="display:none" class="show-field show-field-description">[[${value.description}]]</div>
-            <div class="show-field show-field-deploy">
+            <!--<div class="show-field show-field-deploy">
                 <label>Deployment type:</label> [[${value.deploymentType}]]
-            </div>
+            </div>-->
             <!--/*<div class="show-field show-field-deployment_type">[[${value.deploymentType}]]</div>*/-->
             <!--/*<div class="show-field show-field-authorization_type">[[${value.authorizationType}]]</div>*/-->
             <div class="show-field show-score">
