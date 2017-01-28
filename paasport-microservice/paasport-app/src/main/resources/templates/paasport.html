@@ -244,6 +244,7 @@
 		}
 		.col .show-field-name > div {
 		    width: calc(100% - 21px);
+		    overflow: hidden;
 		}
 
 		.col .top-right {
@@ -296,7 +297,8 @@
             <!--/*<div class="show-field show-field-deployment_type">[[${value.deploymentType}]]</div>*/-->
             <!--/*<div class="show-field show-field-authorization_type">[[${value.authorizationType}]]</div>*/-->
             <div class="show-field show-score">
-                <div class="show-field show-field-service"><label>Quality of Service:</label> [[${value.service}]]</div>
+                <div class="show-field show-field-service"><label>Quality of Service:</label> <span th:each="i : ${#numbers.sequence(1, value.service)}" th:inline="text">* </span></div>
+
                 <div class="show-field show-field-support"><label>Quality of Support:</label> [[${value.support}]]</div>
                 <div class="show-field show-field-maintenance"><label>Maintenance Activity:</label> [[${value.maintenance}]]</div>
                 <div class="show-field show-field-sla_reliability"><label>SLA Reliability:</label> [[${value.slaReliability}]]</div>
