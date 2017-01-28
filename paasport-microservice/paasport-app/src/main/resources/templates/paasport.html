@@ -222,13 +222,13 @@
 			background-color: #7d3c8c;
 		}
 
-		.row {
+		.ct-content-paasport .row {
 		    margin: 0;
 		    padding: 0;
+		    margin-bottom: 10px;
 		}
 
 		.col {
-		    border: 2px solid #cb99d6;
             border-radius: 5px;
             margin-bottom: 10px;
 		}
@@ -241,6 +241,9 @@
 		.col .show-field-name {
 		    border-bottom: 1px dotted blueviolet;
 		    margin: 5px 0;
+		}
+		.col .show-field-description {
+		    margin-bottom: 10px;
 		}
 		.col .show-field-name > div {
 		    width: calc(100% - 21px);
@@ -290,7 +293,7 @@
             <i class="icon icon-upload top-right" th:title="'Deployment type: ' + ${value.deploymentType}"></i>
 
             <div class="show-field show-field-name highlight"><div class="inner-text">[[${value.name}]]</div></div>
-            <div style="display:none" class="show-field show-field-description">[[${value.description}]]</div>
+            <div class="show-field show-field-description">[[${value.description}]]</div>
             <!--<div class="show-field show-field-deploy">
                 <label>Deployment type:</label> [[${value.deploymentType}]]
             </div>-->
