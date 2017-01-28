@@ -299,10 +299,10 @@
             <div class="show-field show-score">
                 <div class="show-field show-field-service"><label>Quality of Service:</label> <span th:each="i : ${#numbers.sequence(1, value.service)}" th:inline="text">* </span></div>
 
-                <div class="show-field show-field-support"><label>Quality of Support:</label> [[${value.support}]]</div>
-                <div class="show-field show-field-maintenance"><label>Maintenance Activity:</label> [[${value.maintenance}]]</div>
-                <div class="show-field show-field-sla_reliability"><label>SLA Reliability:</label> [[${value.slaReliability}]]</div>
-                <div class="show-field show-field-price_performance_ratio"><label>Price-Perfomance Ratio:</label> [[${value.pricePerformanceRatio}]]</div>
+                <div class="show-field show-field-support"><label>Quality of Support:</label> <span th:each="i : ${#numbers.sequence(1, value.support)}" th:inline="text">* </span></div>
+                <div class="show-field show-field-maintenance"><label>Maintenance Activity:</label> <span th:each="i : ${#numbers.sequence(1, value.maintenance)}" th:inline="text">* </span></div>
+                <div class="show-field show-field-sla_reliability"><label>SLA Reliability:</label> <span th:each="i : ${#numbers.sequence(1, value.slaReliability)}" th:inline="text">* </span></div>
+                <div class="show-field show-field-price_performance_ratio"><label>Price-Perfomance Ratio:</label> <span th:each="i : ${#numbers.sequence(1, value.pricePerformanceRatio)}" th:inline="text">* </span></div>
             </div>
             <!--/*<div class="show-field show-field-authorized">[[${value.authorized}]]</div>*/-->
         </div>
