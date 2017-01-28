@@ -222,8 +222,19 @@
 			background-color: #7d3c8c;
 		}
 
+		.row {
+		    margin: 0;
+		    padding: 0;
+		}
+
 		.col {
 		    border: 2px solid blueviolet;
+            border-radius: 5px;
+		}
+
+		.col label {
+		    font-weight: bold;
+            margin: 0;
 		}
     </style>
 
@@ -257,19 +268,21 @@
     </div>
 
     <div th:if="${not #lists.isEmpty(developerProfile.paaSOfferingList)}" class="row">
-        <div class="col col-sm-6" th:inline="text" th:each="value : ${developerProfile.paaSOfferingList}">
-            <div class="show-field show-field-name">[[${value.name}]]</div>
+        <div class="col col-sm-12" th:inline="text" th:each="value : ${developerProfile.paaSOfferingList}">
             <div class="show-field show-field-description">[[${value.description}]]</div>
-            <div class="show-field show-field-deployment_type">[[${value.deploymentType}]]</div>
-            <div class="show-field show-field-authorization_type">[[${value.authorizationType}]]</div>
-            <div class="show-field show-score">
-                <div class="show-field show-field-support">[[${value.support}]]</div>
-                <div class="show-field show-field-service">[[${value.service}]]</div>
-                <div class="show-field show-field-price_performance_ratio">[[${value.pricePerformanceRatio}]]</div>
-                <div class="show-field show-field-maintenance">[[${value.maintenance}]]</div>
-                <div class="show-field show-field-sla_reliability">[[${value.slaReliability}]]</div>
+            <div class="show-field show-field-name highlight">
+                <label>Deployment type:</label> [[${value.name}]]
             </div>
-            <!--<div class="show-field show-field-authorized">[[${value.authorized}]]</div>-->
+            <!--/*<div class="show-field show-field-deployment_type">[[${value.deploymentType}]]</div>*/-->
+            <!--/*<div class="show-field show-field-authorization_type">[[${value.authorizationType}]]</div>*/-->
+            <div class="show-field show-score">
+                <div class="show-field show-field-service"><label>Quality of Service:</label> [[${value.service}]]</div>
+                <div class="show-field show-field-support"><label>Quality of Support:</label> [[${value.support}]]</div>
+                <div class="show-field show-field-maintenance"><label>Maintenance Activity:</label> [[${value.maintenance}]]</div>
+                <div class="show-field show-field-sla_reliability"><label>SLA Reliability:</label> [[${value.slaReliability}]]</div>
+                <div class="show-field show-field-price_performance_ratio"><label>Price-Perfomance Ratio:</label> [[${value.pricePerformanceRatio}]]</div>
+            </div>
+            <!--/*<div class="show-field show-field-authorized">[[${value.authorized}]]</div>*/-->
         </div>
     </div>
 
