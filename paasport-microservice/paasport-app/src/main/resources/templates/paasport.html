@@ -228,8 +228,9 @@
 		}
 
 		.col {
-		    border: 2px solid blueviolet;
+		    border: 2px solid #cb99d6;
             border-radius: 5px;
+            margin-bottom: 10px;
 		}
 
 		.col label {
@@ -241,6 +242,16 @@
 		    border-bottom: 1px dotted blueviolet;
 		    margin: 5px 0;
 		}
+		.col .show-field-name > div {
+		    width: calc(100% - 21px);
+		}
+
+		.col .top-right {
+		    position: absolute;
+            right: 10px;
+            top: 5px;
+		}
+
     </style>
 
     <div class="alert alert-warning">
@@ -274,10 +285,13 @@
 
     <div th:if="${not #lists.isEmpty(developerProfile.paaSOfferingList)}" class="row">
         <div class="col col-sm-12" th:inline="text" th:each="value : ${developerProfile.paaSOfferingList}">
-            <div class="show-field show-field-name highlight">[[${value.name}]]</div>
-            <div class="show-field show-field-description">[[${value.description}]]</div>
-            <div class="show-field show-field-name">
-                <label>Deployment type:</label> [[${value.name}]]
+
+            <i class="icon icon-upload top-right"></i>
+
+            <div class="show-field show-field-name highlight"><div class="inner-text">[[${value.name}]]</div></div>
+            <div style="display:none" class="show-field show-field-description">[[${value.description}]]</div>
+            <div class="show-field show-field-deploy">
+                <label>Deployment type:</label> [[${value.deploymentType}]]
             </div>
             <!--/*<div class="show-field show-field-deployment_type">[[${value.deploymentType}]]</div>*/-->
             <!--/*<div class="show-field show-field-authorization_type">[[${value.authorizationType}]]</div>*/-->
