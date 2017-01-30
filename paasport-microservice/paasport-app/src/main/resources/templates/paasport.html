@@ -373,10 +373,6 @@
     <div th:if="${not #lists.isEmpty(developerProfile.paaSOfferingList)}" class="row">
         <div class="col col-sm-6" th:inline="text" th:each="value : ${developerProfile.externalApplications}">
 
-            <i class="icon icon-activity top-right my-tooltip">
-                <span class="tooltiptext tooltip-top" th:text="'App status: ' + ${value.status}">Tooltip text</span>
-            </i>
-
             <div class="show-field show-field-name highlight"><div class="inner-text">[[${value.name}]]</div></div>
 
             <div class="show-field show-field-description"><label>Description:</label> [[${value.description}]]</div>
