@@ -412,7 +412,8 @@
     <!-- 2. Applications -->
     <h3 class="header-medium secondary full-bg">Applications</h3><br/>
 
-    <!--<div style="display:none" th:text="${developerProfile.paasportToken}"></div>-->
+    <div style="display:none" th:text="${user.paasportToken}"></div>
+    <div style="display:none" th:text="${user.accessToken}"></div>
 
     <div th:if="${not #lists.isEmpty(developerProfile.paaSOfferingList)}" class="row">
         <div class="col col-sm-6" th:inline="text" th:each="value : ${developerProfile.externalApplications}" th:if="${value.status == 'Running' or value.status == 'Deployed'}">

@@ -112,6 +112,8 @@ public class PaaSportController {
 
         PaaSportUser user = userService.findByUsername(getCurrentUser().getPrincipal().toString());
 
+        model.addAttribute("user", user);
+
         PaaSportService paaSportService = new PaaSportService(paasportUrl, user.getPaasportToken());
 
         PaaSportProject project = projectService.findByProjectIdAndUser(project_id, user);
