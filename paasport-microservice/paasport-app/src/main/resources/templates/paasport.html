@@ -295,6 +295,9 @@
 		    width: calc(100% - 21px);
 		    overflow: hidden;
 		}
+		.col .show-score > div {
+            white-space: nowrap;
+        }
 
 		.col .top-right {
 		    position: absolute;
@@ -334,7 +337,7 @@
     </div>
 
     <div th:if="${not #lists.isEmpty(developerProfile.paaSOfferingList)}" class="row">
-        <div class="col col-sm-6" th:inline="text" th:each="value : ${developerProfile.paaSOfferingList}">
+        <div class="col col-sm-6" th:inline="text" th:each="value : ${developerProfile.paaSOfferingList}" th:if="${value.authorized}">
 
             <i class="icon icon-upload top-right my-tooltip">
                 <span class="tooltiptext tooltip-top" th:text="'Deployment type: ' + ${value.deploymentType}">Tooltip text</span>
@@ -361,16 +364,30 @@
     <!-- 2. Applications -->
     <h3 class="header-medium secondary full-bg">Applications</h3><br/>
 
-    <p th:inline="text" th:each="value : ${developerProfile.externalApplications}">
-        <span class="highlight" th:text="${value.name}"></span>
-        <span class="highlight" th:text="${value.description}"></span>
-        <span class="highlight" th:text="${value.region}"></span>
-        <span class="highlight" th:text="${value.endpointURI}"></span>
-        <span class="highlight" th:text="${value.monitoringAppID}"></span>
-        <span class="highlight" th:text="${value.remoteGitURL}"></span>
-        <span class="highlight" th:text="${value.paaSOffering.name}"></span>
-        <span class="highlight" th:text="${value.status}"></span>
-    </p>
+    <div th:if="${not #lists.isEmpty(developerProfile.paaSOfferingList)}" class="row">
+        <div class="col col-sm-6" th:inline="text" th:each="value : ${developerProfile.externalApplications}">
+
+            <div class="show-field show-field-name highlight"><div class="inner-text">[[${value.name}]]</div></div>
+
+            <div class="show-field show-field-endpointuri"><label>Application URL:</label> [[${value.endpointURI}]]</div>
+
+            <div class="show-field show-field-monitoringappid"><label>Monitoring App ID:</label> [[${value.monitoringAppID}]]</div>
+
+            <div class="show-field show-field-paasoffering"><label>PaaS Offering:</label> [[${value.paaSOffering.name}]]</div>
+
+            <div class="show-field show-field-description">[[${value.description}]]</div>
+
+
+            <!--<span class="highlight" th:text="${value.name}"></span>
+            <span class="highlight" th:text="${value.description}"></span>
+            <span class="highlight" th:text="${value.region}"></span>
+            <span class="highlight" th:text="${value.endpointURI}"></span>
+            <span class="highlight" th:text="${value.monitoringAppID}"></span>
+            <span class="highlight" th:text="${value.remoteGitURL}"></span>
+            <span class="highlight" th:text="${value.paaSOffering.name}"></span>
+            <span class="highlight" th:text="${value.status}"></span>-->
+        </div>
+    </div>
 
     <hr/>
 
