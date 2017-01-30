@@ -310,6 +310,30 @@
             top: 5px;
 		}
 
+
+        .col .show-field.show-field-actions {
+            margin-top: 12px;
+        }
+		.col .show-field .btn.btn-xs {
+		    font-size: 11px;
+            padding: 5px;
+            margin: 0;
+            text-align: center;
+            padding-right: 2px;
+		}
+
+		.btn-danger {
+            background: none;
+            background: #d61e1e;
+            border-color: #d61e1e;
+            color: #fff; }
+
+        .btn-danger:hover {
+            background: #dc5353;
+            border-color: #dc5353;
+            color: #ffffff;
+        }
+
     </style>
 
     <div class="alert alert-warning">
@@ -370,7 +394,7 @@
     <h3 class="header-medium secondary full-bg">Applications</h3><br/>
 
     <div th:if="${not #lists.isEmpty(developerProfile.paaSOfferingList)}" class="row">
-        <div class="col col-sm-6" th:inline="text" th:each="value : ${developerProfile.externalApplications}">
+        <div class="col col-sm-6" th:inline="text" th:each="value : ${developerProfile.externalApplications}" th:if="${value.status == 'Running' or value.status == 'Deployed'}">
 
             <i class="icon icon-activity top-right my-tooltip">
                 <span class="tooltiptext tooltip-top" th:text="'App status: ' + ${value.status}">Tooltip text</span>
@@ -386,15 +410,20 @@
 
             <div class="show-field show-field-paasoffering"><label>PaaS Offering:</label> [[${value.paaSOffering.name}]]</div>
 
+            <div class="show-field show-field-actions">
+                <button th:if="${value.status == 'Running'}" class="btn btn-danger btn-xs">Stop</button>
+                <button th:if="${value.status == 'Deployed'}" class="btn btn-confirm btn-xs">Start</i></button>
+            </div>
 
-            <!--<span class="highlight" th:text="${value.name}"></span>
+
+            <!--/*<span class="highlight" th:text="${value.name}"></span>
             <span class="highlight" th:text="${value.description}"></span>
             <span class="highlight" th:text="${value.region}"></span>
             <span class="highlight" th:text="${value.endpointURI}"></span>
             <span class="highlight" th:text="${value.monitoringAppID}"></span>
             <span class="highlight" th:text="${value.remoteGitURL}"></span>
             <span class="highlight" th:text="${value.paaSOffering.name}"></span>
-            <span class="highlight" th:text="${value.status}"></span>-->
+            <span class="highlight" th:text="${value.status}"></span>*/-->
         </div>
     </div>
 
