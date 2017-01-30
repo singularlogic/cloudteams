@@ -222,6 +222,43 @@
 			background-color: #7d3c8c;
 		}
 
+		/* Tooltip */
+		.tooltip {
+            position: relative;
+            display: inline-block;
+            border-bottom: 1px dotted #ccc;
+            zcursor: help;
+            color: #006080;
+        }
+		.tooltip .tooltiptext {
+            visibility: hidden;
+            position: absolute;
+            width: 120px;
+            background-color: #555;
+            color: #fff;
+            text-align: center;
+            padding: 5px 0;
+            border-radius: 6px;
+            z-index: 1;
+            opacity: 0;
+            transition: opacity .6s;
+        }
+        .tooltip-top {
+            bottom: 125%;
+            left: 50%;
+            margin-left: -60px;
+        }
+        .tooltip-top::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: #555 transparent transparent transparent;
+        }
+
 		#ct-content-paasport .row {
 		    margin: 0;
 		    padding: 0;
@@ -290,7 +327,9 @@
     <div th:if="${not #lists.isEmpty(developerProfile.paaSOfferingList)}" class="row">
         <div class="col col-sm-12" th:inline="text" th:each="value : ${developerProfile.paaSOfferingList}">
 
-            <i class="icon icon-upload top-right" th:title="'Deployment type: ' + ${value.deploymentType}"></i>
+            <i class="icon icon-upload top-right tooltip tooltip-top">
+                <span class="tooltiptext tooltip-top" th:text="'Deployment type: ' + ${value.deploymentType}">Tooltip text</span>
+            </i>
 
             <div class="show-field show-field-name highlight"><div class="inner-text">[[${value.name}]]</div></div>
             <div class="show-field show-field-description">[[${value.description}]]</div>
