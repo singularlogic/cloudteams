@@ -412,9 +412,6 @@
     <!-- 2. Applications -->
     <h3 class="header-medium secondary full-bg">Applications</h3><br/>
 
-    <div style="display:none" th:text="${user.paasportToken}"></div>
-    <div style="display:none" th:text="${user.accessToken}"></div>
-
     <div th:if="${not #lists.isEmpty(developerProfile.paaSOfferingList)}" class="row">
         <div class="col col-sm-6" th:inline="text" th:each="value : ${developerProfile.externalApplications}" th:if="${value.status == 'Running' or value.status == 'Deployed'}">
 
@@ -435,7 +432,7 @@
             <div class="show-field show-field-actions">
                 <!--/*<button th:if="${value.status == 'Running'}" class="btn btn-danger btn-xs">Stop</button>
                 <button th:if="${value.status == 'Deployed'}" class="btn btn-confirm btn-xs">Start</button>*/-->
-                <a class="custom-btn" href="javascript:void(0)" onclick="applicationActionHandler('Running')" th:text="${value.status == 'Running'} ? 'Stop application' : (${value.status == 'Deployed'} ? 'Start application')">Stop</a>
+                <a class="custom-btn" href="javascript:void(0)" th:onclick="${value.status == 'Deployed'} ? 'applicationActionHandler(' + ${value.id} + ', \'' + ${user.paasportToken} + '\', \'start\')' : 'applicationActionHandler(' + ${value.id} + ', \'' + ${user.paasportToken} + '\', \'start\')'" th:text="${value.status == 'Running'} ? 'Stop application' : (${value.status == 'Deployed'} ? 'Start application')">Stop</a>
             </div>
 
             <!--/*<span class="highlight" th:text="${value.name}"></span>
@@ -456,7 +453,6 @@
     <script th:inline="javascript">
 
         function disconnectPaaSport() {
-
             $.post({
                 url: CLOUDTEAMS_PAASPORT_REST_ENDPOINT + "/paasport/disconnect",
                 beforeSend: function (xhr) {
@@ -478,11 +474,28 @@
                     console.log("Could not disconnect account");
                 }
             });
-        }
+        };
 
-        function applicationActionHandler(action) {
-            console.log("TODO application action handling. Action:" + action);
-        }
+        function applicationActionHandler(applicationID, paasportToken, action) {
+
+            // Add UI blocking loader
+
+            $.ajax({
+                type: 'PUT',
+                url: `https://paasport.ubitech.eu/api/v1/application/${applicationID}/${action}`,
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader("Authorization", paasportToken);
+                }
+            }).success(function (data, status, xhr) {
+                if ("SUCCESS" === data.code) {
+                    console.log("Application ID: " + applicationID);
+                } else {
+                    console.log("ERROR => " + data.message);
+                }
+            }).error(function(jqXHR, textStatus, errorThrown) {
+                 console.log(jqXHR.status + " (" + errorThrown + ").<br/> Please contact the system administrator");
+            });
+        };
 
     </script>
 </div>
