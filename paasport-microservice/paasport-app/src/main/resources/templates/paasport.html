@@ -230,7 +230,7 @@
             zcursor: help;
             color: #006080;
         }
-		.tooltip .tooltiptext {
+		.custom-tooltip .tooltiptext {
             visibility: hidden;
             position: absolute;
             width: 120px;
@@ -241,14 +241,23 @@
             border-radius: 6px;
             z-index: 1;
             opacity: 0;
+
+            -o-transition: opacity .6s;
+            -ms-transition: opacity .6s;
+            -moz-transition: opacity .6s;
+            -webkit-transition: opacity .6s;
             transition: opacity .6s;
         }
-        .tooltip-top {
+        .custom-tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+        .custom-tooltip .tooltip-top {
             bottom: 125%;
             left: 50%;
             margin-left: -60px;
         }
-        .tooltip-top::after {
+        .custom-tooltip .tooltip-top::after {
             content: "";
             position: absolute;
             top: 100%;
@@ -327,7 +336,7 @@
     <div th:if="${not #lists.isEmpty(developerProfile.paaSOfferingList)}" class="row">
         <div class="col col-sm-12" th:inline="text" th:each="value : ${developerProfile.paaSOfferingList}">
 
-            <i class="icon icon-upload top-right tooltip tooltip-top">
+            <i class="icon icon-upload top-right custom-tooltip">
                 <span class="tooltiptext tooltip-top" th:text="'Deployment type: ' + ${value.deploymentType}">Tooltip text</span>
             </i>
 
