@@ -326,12 +326,31 @@
             background: none;
             background: #d61e1e;
             border-color: #d61e1e;
-            color: #fff; }
+            color: #fff;
+        }
 
         .btn-danger:hover {
             background: #dc5353;
             border-color: #dc5353;
             color: #ffffff;
+        }
+
+        .col .btn-confirm:focus {
+            background: #29e568;
+            border-color: #29e568;
+            color: #ffffff;
+        }
+
+        .col .btn-danger:focus {
+            background: #dc5353;
+            border-color: #dc5353;
+            color: #ffffff;
+        }
+
+        .col a.custom-btn {
+            border-left: 3px solid #7d3c8c;
+            padding-left: 5px;
+            color: #7d3c8c;
         }
 
     </style>
@@ -411,10 +430,10 @@
             <div class="show-field show-field-paasoffering"><label>PaaS Offering:</label> [[${value.paaSOffering.name}]]</div>
 
             <div class="show-field show-field-actions">
-                <button th:if="${value.status == 'Running'}" class="btn btn-danger btn-xs">Stop</button>
-                <button th:if="${value.status == 'Deployed'}" class="btn btn-confirm btn-xs">Start</button>
+                <!--/*<button th:if="${value.status == 'Running'}" class="btn btn-danger btn-xs">Stop</button>
+                <button th:if="${value.status == 'Deployed'}" class="btn btn-confirm btn-xs">Start</button>*/-->
+                <a class="custom-btn" href="javascript:void(0)" th:text="${value.status == 'Running'} ? 'Stop' : (${value.status == 'Deployed'} ? 'Start')">Stop</a>
             </div>
-
 
             <!--/*<span class="highlight" th:text="${value.name}"></span>
             <span class="highlight" th:text="${value.description}"></span>
@@ -429,7 +448,7 @@
 
     <hr/>
 
-    <button id="btn-unassign" onclick="disconnectPaaSport()" class="btn btn-danger">Disconnect</button>
+    <button id="btn-unassign" onclick="disconnectPaaSport()" class="btn">Disconnect</button>
 
     <script th:inline="javascript">
 
