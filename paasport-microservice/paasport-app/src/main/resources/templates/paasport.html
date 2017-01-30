@@ -432,7 +432,7 @@
             <div class="show-field show-field-actions">
                 <!--/*<button th:if="${value.status == 'Running'}" class="btn btn-danger btn-xs">Stop</button>
                 <button th:if="${value.status == 'Deployed'}" class="btn btn-confirm btn-xs">Start</button>*/-->
-                <a class="custom-btn" href="javascript:void(0)" th:text="${value.status == 'Running'} ? 'Stop' : (${value.status == 'Deployed'} ? 'Start')">Stop</a>
+                <a class="custom-btn" href="javascript:applicationActionHandler('Running')" th:text="${value.status == 'Running'} ? 'Stop application' : (${value.status == 'Deployed'} ? 'Start application')">Stop</a>
             </div>
 
             <!--/*<span class="highlight" th:text="${value.name}"></span>
@@ -475,6 +475,10 @@
                     console.log("Could not disconnect account");
                 }
             });
+        }
+
+        function applicationActionHandler(action) {
+            console.log("TODO application action handling. Action:" + action);
         }
 
     </script>
