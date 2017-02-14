@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.*;
 import java.util.logging.Logger;
 
+import com.sun.tools.doclets.formats.html.SourceToHTMLConverter;
 import eu.cloudteams.util.paasport.models.TDeveloperProfile;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.json.JSONObject;
@@ -44,6 +45,10 @@ public class PaaSportService {
         // TODO - threw exception [Request processing failed; nested exception is org.springframework.web.client.HttpClientErrorException: 401 Unauthorized] with root cause
         // Exception when we use bad credentials
         ResponseEntity<String> response = new RestTemplate().postForEntity(url, jsonObject.toString(), String.class);
+
+        System.out.println("\n\n");
+        System.out.println(response);
+        System.out.println("\n\n");
 
         if (response == null) {
             throw new PaaSportLoginException();

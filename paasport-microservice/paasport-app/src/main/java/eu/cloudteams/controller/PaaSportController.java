@@ -69,15 +69,8 @@ public class PaaSportController {
                 //
                 PaaSportService paaSportService = new PaaSportService(paasportUrl);
                 String paasportToken = null;
-                try {
-                    paasportToken = paaSportService.login(username, password);
-                } catch (PaaSportLoginException e) {
-                    e.printStackTrace();
-                }
-                /*if (paasportToken == "UNAUTHORIZED") {
-                    logger.log(Level.SEVERE, "User " + username + " is unauthorized.");
-                    return new JSONObject().put("code", MESSAGES.FAIL).put("message", "Bad credentials for user " + username).toString();
-                }*/
+
+                paasportToken = paaSportService.login(username, password);
 
                 if (null != paasportToken && !paasportToken.isEmpty()) {
                     user.setPaasportToken(paasportToken);
@@ -94,6 +87,9 @@ public class PaaSportController {
                     Logger.getLogger(PaaSportController.class.getName()).log(Level.INFO, "Could not create paasport token for user: " + username);
                     return new JSONObject().put("code", MESSAGES.FAIL).put("message", "Could not create paasport token for user: " + username).toString();
                 }
+            } catch (PaaSportLoginException ex) {
+                logger.log(Level.SEVERE, "User " + username + " is unauthorized.");
+                return new JSONObject().put("code", MESSAGES.FAIL).put("message", "Bad credentials for user " + username).toString();
             } catch (JOSEException ex) {
                 Logger.getLogger(PaaSportController.class.getName()).log(Level.SEVERE, null, ex);
                 return new JSONObject().put("code", MESSAGES.FAIL).put("message", "Could not create access token for user: " + username).toString();
