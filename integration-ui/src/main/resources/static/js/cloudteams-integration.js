@@ -151,7 +151,10 @@ function paasportOnDOMLoad() {
         localStorage.removeItem("paasport_auth_token");
     }
 
-    $("section.developer-dashboard-project-campaigns-content").prepend('<div style="display:none" class="alert alert-danger custom-alert"></div>');
+    if ($("section.developer-dashboard-project-campaigns-content .custom-alert").length == 0) {
+        $("section.developer-dashboard-project-campaigns-content").prepend('<div style="display:none" class="alert alert-danger custom-alert"></div>');
+    }
+
 }
 
 function synchronizePaaSport() {
@@ -190,6 +193,9 @@ function synchronizePaaSport() {
 
 function loadPaaSportWidget() {
     console.log("loadPaaSportWidget()");
+
+    $(".custom-alert").css('display', 'none');
+    $(".custom-alert").html("");
 
     //if (localStorage.paasport_auth_token === undefined) return;
 

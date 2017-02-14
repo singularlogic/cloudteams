@@ -61,6 +61,7 @@ public class PaaSportService {
             });
 
         } else if (response.getStatusCode().equals(HttpStatus.UNAUTHORIZED)) {
+            System.out.println("\n\nUNAUTHORIZED\n\n");
             return "UNAUTHORIZED";
         }
 
