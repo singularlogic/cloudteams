@@ -46,9 +46,9 @@ public class PaaSportService {
         // Exception when we use bad credentials
         ResponseEntity<String> response = new RestTemplate().postForEntity(url, jsonObject.toString(), String.class);
         // Break here when we give wrong credentials
-        /*if (response == null) {
+        if (response == null) {
             throw new PaaSportLoginException();
-        }*/
+        }
 
         if (response.getStatusCode().equals(HttpStatus.OK)) {
 
