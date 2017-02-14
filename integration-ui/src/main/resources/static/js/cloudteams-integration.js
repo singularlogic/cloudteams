@@ -165,8 +165,7 @@ function synchronizePaaSport() {
 
     if (!(username && password)) {
         console.log("Empty fields");
-        var message = 'Please fill out all the required fields';
-        $("section.developer-dashboard-project-campaigns-content .custom-alert").html(message).fadeIn(400);
+        $("section.developer-dashboard-project-campaigns-content .custom-alert").html("Please fill out all the required fields").fadeIn(400);
 
         return;
     }
@@ -179,6 +178,8 @@ function synchronizePaaSport() {
         url: CLOUDTEAMS_PAASPORT_REST_ENDPOINT + "/auth/token"
     }).success(function (data, status, xhr) {
         var res = JSON.parse(data);
+        //TODO - temporary alert message functionality
+        resetErrorMessage();
         if ("SUCCESS" === res.code) {
             localStorage.paasport_auth_token = res.token;
             loadPaaSportWidget();
@@ -188,14 +189,18 @@ function synchronizePaaSport() {
             loadPaaSportWidget();
             console.log("synchronizePaaSport() => Could not synchronize");
         }
+    }).error(function(jqXHR, textStatus, errorThrown) {
+        var res = JSON.parse(jqXHR.responseText);
+        console.error("Error Status: " + jqXHR.status + ". Error: " + res.error);
+        if (res.message == "401 Unauthorized") {
+            $("section.developer-dashboard-project-campaigns-content .custom-alert").html("Wrong username or password").fadeIn(400);
+        }
+        loadPaaSportWidget();
     });
 }
 
 function loadPaaSportWidget() {
     console.log("loadPaaSportWidget()");
-
-    $(".custom-alert").css('display', 'none');
-    $(".custom-alert").html("");
 
     //if (localStorage.paasport_auth_token === undefined) return;
 
@@ -220,6 +225,11 @@ function loadPaaSportWidget() {
 function hasPaaSportAccessToken() {
     console.log("hasPaaSportAccessToken()");
     return null !== localStorage.getItem("paasport_auth_token");
+}
+
+function resetErrorMessage() {
+    $(".custom-alert").css('display', 'none');
+    $(".custom-alert").html("");
 }
 
 

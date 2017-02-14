@@ -94,7 +94,7 @@ public class PaaSportController {
                 Logger.getLogger(PaaSportController.class.getName()).log(Level.SEVERE, null, ex);
                 return new JSONObject().put("code", MESSAGES.FAIL).put("message", "Could not create access token for user: " + username).toString();
             }
-        } else  {
+        } else {
             //Print the generated token
             logger.log(Level.INFO, "Token Exists: {0}", user.getAccessToken());
             //Success created user and accesstoken
