@@ -3,8 +3,6 @@ package eu.cloudteams.util.paasport;
 import java.io.IOException;
 import java.util.*;
 import java.util.logging.Logger;
-
-import com.sun.tools.doclets.formats.html.SourceToHTMLConverter;
 import eu.cloudteams.util.paasport.models.TDeveloperProfile;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.json.JSONObject;
