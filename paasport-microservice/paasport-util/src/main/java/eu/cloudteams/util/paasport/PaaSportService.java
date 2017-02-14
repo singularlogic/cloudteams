@@ -30,7 +30,7 @@ public class PaaSportService {
         this(paasportUrl, "");
     }
 
-    public String login(String username, String password) {
+    public String login(String username, String password) throws PaaSportLoginException {
 
         logger.info("PaaSport URL for login: " + paasportUrl + "/api/v1/auth/login");
 
@@ -41,7 +41,13 @@ public class PaaSportService {
         jsonObject.put("username", username);
         jsonObject.put("password", password);
 
+        // TODO - threw exception [Request processing failed; nested exception is org.springframework.web.client.HttpClientErrorException: 401 Unauthorized] with root cause
+        // Exception when we use bad credentials
         ResponseEntity<String> response = new RestTemplate().postForEntity(url, jsonObject.toString(), String.class);
+
+        if (response == null) {
+            throw new PaaSportLoginException();
+        }
 
         if (response.getStatusCode().equals(HttpStatus.OK)) {
 
@@ -61,7 +67,6 @@ public class PaaSportService {
             });
 
         } else if (response.getStatusCode().equals(HttpStatus.UNAUTHORIZED)) {
-            System.out.println("\n\nUNAUTHORIZED\n\n");
             return "UNAUTHORIZED";
         }
 
@@ -105,3 +110,4 @@ public class PaaSportService {
     }
 
 }
+

@@ -9,6 +9,7 @@ import eu.cloudteams.repository.domain.PaaSportProject;
 import eu.cloudteams.repository.domain.PaaSportUser;
 import eu.cloudteams.repository.service.ProjectService;
 import eu.cloudteams.repository.service.UserService;
+import eu.cloudteams.util.paasport.PaaSportLoginException;
 import eu.cloudteams.util.paasport.PaaSportService;
 
 import java.io.IOException;
@@ -67,11 +68,16 @@ public class PaaSportController {
 
                 //
                 PaaSportService paaSportService = new PaaSportService(paasportUrl);
-                String paasportToken = paaSportService.login(username, password);
-                if (paasportToken == "UNAUTHORIZED") {
+                String paasportToken = null;
+                try {
+                    paasportToken = paaSportService.login(username, password);
+                } catch (PaaSportLoginException e) {
+                    e.printStackTrace();
+                }
+                /*if (paasportToken == "UNAUTHORIZED") {
                     logger.log(Level.SEVERE, "User " + username + " is unauthorized.");
                     return new JSONObject().put("code", MESSAGES.FAIL).put("message", "Bad credentials for user " + username).toString();
-                }
+                }*/
 
                 if (null != paasportToken && !paasportToken.isEmpty()) {
                     user.setPaasportToken(paasportToken);
