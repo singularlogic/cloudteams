@@ -191,7 +191,7 @@ function synchronizePaaSport() {
 function loadPaaSportWidget() {
     console.log("loadPaaSportWidget()");
 
-    if (localStorage.paasport_auth_token === undefined) return;
+    //if (localStorage.paasport_auth_token === undefined) return;
 
     //Make the call to fetch PaaSport data
     $.post({
