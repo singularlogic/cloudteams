@@ -144,8 +144,55 @@ function hasJiraAccessToken() {
  *  Handlers for PaaSport widget
  */
 
+function paasportOnDOMLoad() {
+    console.log("paasportOnDOMLoad()");
+    //Check if an outdated token exists then removed
+    if (hasPaaSportAccessToken()) {
+        localStorage.removeItem("paasport_auth_token");
+    }
+
+    $("section.developer-dashboard-project-campaigns-content").prepend('<div style="display:none" class="alert alert-danger custom-alert"></div>');
+}
+
+function synchronizePaaSport() {
+    console.log("synchronizePaaSport()");
+
+    var username = $("#paasport-username").val();
+    var password = $("#paasport-password").val();
+
+    if (!(username && password)) {
+        console.log("Empty fields");
+        var message = 'Please fill out all the required fields';
+        $("section.developer-dashboard-project-campaigns-content .custom-alert").html(message).fadeIn(400);
+
+        return;
+    }
+
+    $.post({
+        data: {
+            username: username,
+            password: password
+        },
+        url: CLOUDTEAMS_PAASPORT_REST_ENDPOINT + "/auth/token"
+    }).success(function (data, status, xhr) {
+        var res = JSON.parse(data);
+        if ("SUCCESS" === res.code) {
+            localStorage.paasport_auth_token = res.token;
+            loadPaaSportWidget();
+            console.log("synchronizePaaSport() => Success");
+        } else {
+            $("section.developer-dashboard-project-campaigns-content .custom-alert").html(res.message).fadeIn(400);
+            loadPaaSportWidget();
+            console.log("synchronizePaaSport() => Could not synchronize");
+        }
+    });
+}
 
 function loadPaaSportWidget() {
+    console.log("loadPaaSportWidget()");
+
+    if (localStorage.paasport_auth_token === undefined) return;
+
     //Make the call to fetch PaaSport data
     $.post({
         beforeSend: function (xhr) {
@@ -157,12 +204,15 @@ function loadPaaSportWidget() {
         url: CLOUDTEAMS_PAASPORT_REST_ENDPOINT + "/paasport/project"
     }).success(function (data, status, xhr) {
         $("#ct-content-paasport").html(data);
+        console.log("loadPaaSportWidget() => success");
     }).fail(function (error) {
         console.error("[Cloudteams] Code: " + error.status + " Message: " + error.statusText);
+        console.log("loadPaaSportWidget() => Error");
     });
 }
 
 function hasPaaSportAccessToken() {
+    console.log("hasPaaSportAccessToken()");
     return null !== localStorage.getItem("paasport_auth_token");
 }
 

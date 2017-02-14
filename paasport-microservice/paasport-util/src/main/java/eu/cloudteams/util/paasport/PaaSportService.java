@@ -60,6 +60,8 @@ public class PaaSportService {
 
             });
 
+        } else if (response.getStatusCode().equals(HttpStatus.UNAUTHORIZED)) {
+            return "UNAUTHORIZED";
         }
 
         if (!tokens.isEmpty()) {

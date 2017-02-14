@@ -68,6 +68,11 @@ public class PaaSportController {
                 //
                 PaaSportService paaSportService = new PaaSportService(paasportUrl);
                 String paasportToken = paaSportService.login(username, password);
+                if (paasportToken == "UNAUTHORIZED") {
+                    logger.log(Level.SEVERE, "User " + username + " is unauthorized.");
+                    return new JSONObject().put("code", MESSAGES.FAIL).put("message", "Bad credentials for user " + username).toString();
+                }
+
                 if (null != paasportToken && !paasportToken.isEmpty()) {
                     user.setPaasportToken(paasportToken);
                     if (!userService.storeUser(user)) {

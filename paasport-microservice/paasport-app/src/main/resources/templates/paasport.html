@@ -111,29 +111,7 @@
     <br/>
 
     <script th:inline="javascript">
-
-        //Check if an outdated token exists then removed
-        if (hasPaaSportAccessToken()) {
-            localStorage.removeItem("paasport_auth_token");
-        }
-
-        function synchronizePaaSport() {
-            $.post({
-                data: {username: $("#paasport-username").val(), password: $("#paasport-password").val()},
-                url: CLOUDTEAMS_PAASPORT_REST_ENDPOINT + "/auth/token"
-            }).success(function (data, status, xhr) {
-
-                var res = JSON.parse(data);
-                if ("SUCCESS" === res.code) {
-                    localStorage.paasport_auth_token = res.token;
-                    loadPaaSportWidget();
-                } else {
-                    alert(res.message);
-                    loadPaaSportWidget();
-                    console.log("Could not synchronize");
-                }
-            });
-        }
+        paasportOnDOMLoad();
     </script>
 </div>
 
