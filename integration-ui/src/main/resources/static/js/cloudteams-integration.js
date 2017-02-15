@@ -174,7 +174,7 @@ function githubDisconnect() {
             //Reload Github widget
             loadGithubWidget();
         } else {
-            alert(res.message);
+            customModal("Info", "", res.message, "OK");
             console.log("Could not disconnect account");
         }
     }).error(function(jqXHR, textStatus, errorThrown) {

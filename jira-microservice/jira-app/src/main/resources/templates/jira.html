@@ -128,13 +128,13 @@
                         localStorage.jira_auth_token = res.token;
                         loadJiraWidget();
                     } else {
-                        alert(res.message);
+                        customModal("Info", "", res.message, "OK");
                         loadJiraWidget();
                         console.log("Could not synchronize");
                     }
                 });
             } else {
-                alert("The jira url is not valid.");
+                customModal("Info", "", "The jira url is not valid.", "OK");
             }
         }
 
@@ -259,7 +259,7 @@
                     //Reload Github widget
                     loadJiraWidget();
                 } else {
-                    alert(res.message);
+                    customModal("Info", "", res.message, "OK");
                     console.log("Could not assign project");
                 }
             });
@@ -285,7 +285,7 @@
                     //Reload Github widget
                     loadJiraWidget();
                 } else {
-                    alert(res.message);
+                    customModal("Info", "", res.message, "OK");
                     console.log("Could not disconnect account");
                 }
             });
@@ -448,7 +448,7 @@
                     //Reload Github widget
                     loadJiraWidget();
                 } else {
-                    alert(res.message);
+                    customModal("Info", "", res.message, "OK");
                 }
                 console.log(res.message);
             });
