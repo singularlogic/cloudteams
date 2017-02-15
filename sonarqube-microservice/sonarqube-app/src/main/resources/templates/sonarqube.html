@@ -128,13 +128,13 @@
                         localStorage.sonarqube_auth_token = res.token;
                         loadSonarqubeWidget();
                     } else {
-                        alert(res.message);
+                        customModal("Info", "", res.message, "OK");
                         loadSonarqubeWidget();
                         console.log("Could not synchronize");
                     }
                 });
             } else {
-                alert("The sonarqube url is not valid.");
+                customModal("Info", "", "The sonarqube url is not valid.", "OK");
             }
         }
 
@@ -259,7 +259,7 @@
                     //Reload Github widget
                     loadSonarqubeWidget();
                 } else {
-                    alert(res.message);
+                    customModal("Info", "", res.message, "OK");
                     console.log("Could not assign project");
                 }
             });
@@ -285,7 +285,7 @@
                     //Reload Github widget
                     loadSonarqubeWidget();
                 } else {
-                    alert(res.message);
+                    customModal("Info", "", res.message, "OK");
                     console.log("Could not disconnect account");
                 }
             });
@@ -429,7 +429,7 @@
                     //Reload Github widget
                     loadSonarqubeWidget();
                 } else {
-                    alert(res.message);
+                    customModal("Info", "", res.message, "OK");
                 }
                 console.log(res.message);
             });

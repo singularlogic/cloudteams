@@ -104,12 +104,14 @@ function githubOnDOMLoad() {
         localStorage.removeItem("github_auth_token");
     }
 
-    if ($("section.developer-dashboard-project-campaigns-content .custom-alert").length == 0) {
+    /*if ($("section.developer-dashboard-project-campaigns-content .custom-alert").length == 0) {
         $("section.developer-dashboard-project-campaigns-content").prepend('<div style="display:none" class="alert alert-danger custom-alert"></div>');
-    }
+    }*/
 }
 
 function authorizeGithub() {
+    console.log("authorizeGithub()");
+
     POPUP = window.open(GITHUB_AUTHORIZE_URL, "mywindow", "status=0,toolbar=0,resizable=0,scrollbars=0,width=1020,height=618");
 
     $.post({
@@ -119,14 +121,17 @@ function authorizeGithub() {
         url: CLOUDTEAMS_GITHUB_REST_ENDPOINT + "/auth/token"
     }).success(function (data, status, xhr) {
         var res = JSON.parse(data);
+
         if ("SUCCESS" === res.code) {
             console.log("authorizeGithub() => Success");
             localStorage.github_auth_token = res.token;
             loadGithubWidget();
+            if ("message" in res) {
+                customModal("Info", "", res.message, "OK");
+            }
         }
-        console.log(res.message);
     });
-}
+};
 
 function loadGithubWidget() {
     //Make the call to fect h github data
@@ -145,11 +150,11 @@ function loadGithubWidget() {
     }).fail(function (error) {
         console.error("[Cloudteams] Code: " + error.status + " Message: " + error.statusText);
     });
-}
+};
 
 function hasGithubAccessToken() {
     return null !== localStorage.getItem("github_auth_token");
-}
+};
 
 function githubDisconnect() {
     $.post({
