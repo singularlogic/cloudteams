@@ -114,31 +114,7 @@
     <br/>
 
     <script th:inline="javascript">
-
-        //Check if an outdated token exists then removed
-        if (hasGithubAccessToken()) {
-            localStorage.removeItem("github_auth_token");
-        }
-
-        var GITHUB_AUTHORIZE_URL = "https://github.com/login/oauth/authorize?response_type=code&amp;client_id=9aababac7a8ec6c9659e&amp;redirect_uri=https://cloudteams.euprojects.net/github/api/v1/github/auth?username=" + ct_user_name + "&amp;scope=public_repo%20repo%20repo:status";
-        var POPUP;
-
-        function authorizeGithub() {
-            POPUP = window.open(GITHUB_AUTHORIZE_URL, "mywindow", "status=0,toolbar=0,resizable=0,scrollbars=0,width=1020,height=618");
-
-            $.post({
-                data: {username: ct_user_name},
-                url: CLOUDTEAMS_GITHUB_REST_ENDPOINT + "/auth/token"
-            }).success(function (data, status, xhr) {
-                var res = JSON.parse(data);
-                if ("SUCCESS" === res.code) {
-                    localStorage.github_auth_token = res.token;
-                    loadGithubWidget();
-                }
-                console.log(res.message);
-            });
-        }
-
+        githubOnDOMLoad();
     </script>
 </div>
 

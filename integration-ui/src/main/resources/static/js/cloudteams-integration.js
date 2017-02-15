@@ -38,9 +38,96 @@ $(document).ready(function () {
     loadPaaSportWidget();
 });
 
+// Replacement for classic js alert
+function customModal(title, subtitle, body, btnLabel) {
+    var modal = `<div id="custom-alert" class="delete-element-modal-popup modal fade" style="display:block;opacity:1" role="dialog">` +
+                     `<div class="modal-dialog medium" style="transform: translate(0, 5%);">` +
+                         `<div class="block block-fill">` +
+                             `<header class="modal-header">` +
+                                 `<div class="vertical-align">` +
+                                     `<div class="middle">` +
+                                         `<i class="icon icon-user"></i>` +
+                                         `<h2 class="header-medium secondary">${title}</h2>` +
+                                     `</div>` +
+                                     `<div class="close" data-dismiss="modal" onclick="closeCustomModal(this)">` +
+                                         `<i class="icon icon-close"></i>` +
+                                     `</div>` +
+                                 `</div>` +
+                             `</header>` +
+
+                             `<div class="modal-body">` +
+                                 `<div class="row form-group">` +
+                                     `<div class="col-md-12 text-center">` +
+                                         `<p class="message">${subtitle}</p>` +
+                                         `<p class="description">${body}</p>` +
+                                     `</div>` +
+                                 `</div>` +
+                                 `<div class="row">` +
+                                     `<fieldset class="col-md-12 form-submit" style="text-align:center">` +
+                                         `<a href="#nowhere" data-dismiss="modal" class="btn-transparent" alt="cancel" onclick="closeCustomModal(this)">${btnLabel}</a>` +
+                                     `</fieldset>` +
+                                 `</div>` +
+                             `</div>` +
+                         `</div>` +
+                     `</div>` +
+                 `</div>`;
+
+    $("body").append(modal);
+
+    /*$("body #custom-alert").animate({
+        opacity: 1
+    }, 300);*/
+}
+
+function closeCustomModal($this) {
+    //var parent = $($this).parents(".modal");
+
+    $("body #custom-alert").animate({
+        'opacity': 0
+    }, 300, function() {
+        $("body #custom-alert").remove();
+    });
+}
+
 /*
  *  Handlers for Github widget
  */
+
+var GITHUB_AUTHORIZE_URL = "https://github.com/login/oauth/authorize?response_type=code&amp;client_id=9aababac7a8ec6c9659e&amp;redirect_uri=https://cloudteams.euprojects.net/github/api/v1/github/auth?username=" + ct_user_name + "&amp;scope=public_repo%20repo%20repo:status";
+var POPUP;
+
+function githubOnDOMLoad() {
+    console.log("githubOnDOMLoad()");
+
+    //Check if an outdated token exists then removed
+    if (hasGithubAccessToken()) {
+        localStorage.removeItem("github_auth_token");
+    }
+
+    if ($("section.developer-dashboard-project-campaigns-content .custom-alert").length == 0) {
+        $("section.developer-dashboard-project-campaigns-content").prepend('<div style="display:none" class="alert alert-danger custom-alert"></div>');
+    }
+
+}
+
+function authorizeGithub() {
+    POPUP = window.open(GITHUB_AUTHORIZE_URL, "mywindow", "status=0,toolbar=0,resizable=0,scrollbars=0,width=1020,height=618");
+
+    $.post({
+        data: {
+            username: ct_user_name
+        },
+        url: CLOUDTEAMS_GITHUB_REST_ENDPOINT + "/auth/token"
+    }).success(function (data, status, xhr) {
+        var res = JSON.parse(data);
+        if ("SUCCESS" === res.code) {
+            console.log("authorizeGithub() => Success");
+            localStorage.github_auth_token = res.token;
+            loadGithubWidget();
+        }
+        console.log(res.message);
+    });
+}
 
 function loadGithubWidget() {
     //Make the call to fect h github data
@@ -50,7 +137,9 @@ function loadGithubWidget() {
                 xhr.setRequestHeader(AUTHORIZATION_HEADER, localStorage.github_auth_token);
             }
         },
-        data: {project_id: ct_project_id},
+        data: {
+            project_id: ct_project_id
+        },
         url: CLOUDTEAMS_GITHUB_REST_ENDPOINT + "/github/repository"
     }).success(function (data, status, xhr) {
         $("#ct-content-github").html(data);
@@ -151,10 +240,9 @@ function paasportOnDOMLoad() {
         localStorage.removeItem("paasport_auth_token");
     }
 
-    if ($("section.developer-dashboard-project-campaigns-content .custom-alert").length == 0) {
+    /*if ($("section.developer-dashboard-project-campaigns-content .custom-alert").length == 0) {
         $("section.developer-dashboard-project-campaigns-content").prepend('<div style="display:none" class="alert alert-danger custom-alert"></div>');
-    }
-
+    }*/
 }
 
 function synchronizePaaSport() {
@@ -165,7 +253,7 @@ function synchronizePaaSport() {
 
     if (!(username && password)) {
         console.log("Empty fields");
-        $("section.developer-dashboard-project-campaigns-content .custom-alert").html("Please fill out all the required fields").fadeIn(400);
+        customModal("Info", "", "Please fill out all the required fields", "OK");
 
         return;
     }
@@ -179,13 +267,14 @@ function synchronizePaaSport() {
     }).success(function (data, status, xhr) {
         var res = JSON.parse(data);
         //TODO - temporary alert message functionality
-        resetErrorMessage();
+        //resetErrorMessage();
         if ("SUCCESS" === res.code) {
             localStorage.paasport_auth_token = res.token;
             loadPaaSportWidget();
             console.log("synchronizePaaSport() => Success");
         } else {
-            $("section.developer-dashboard-project-campaigns-content .custom-alert").html(res.message).fadeIn(400);
+            //$("section.developer-dashboard-project-campaigns-content .custom-alert").html(res.message).fadeIn(400);
+            customModal("Info", "", res.message, "OK");
             loadPaaSportWidget();
             console.log("synchronizePaaSport() => Could not synchronize");
         }
@@ -193,7 +282,8 @@ function synchronizePaaSport() {
         var res = JSON.parse(jqXHR.responseText);
         console.error("Error Status: " + jqXHR.status + ". Error: " + res.error);
         if (res.message == "401 Unauthorized") {
-            $("section.developer-dashboard-project-campaigns-content .custom-alert").html("Wrong username or password").fadeIn(400);
+            //$("section.developer-dashboard-project-campaigns-content .custom-alert").html("Wrong username or password").fadeIn(400);
+            customModal("Info", "", "Wrong username or password", "OK");
         }
         loadPaaSportWidget();
     });
