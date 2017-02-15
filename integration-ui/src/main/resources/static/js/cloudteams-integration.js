@@ -107,7 +107,6 @@ function githubOnDOMLoad() {
     if ($("section.developer-dashboard-project-campaigns-content .custom-alert").length == 0) {
         $("section.developer-dashboard-project-campaigns-content").prepend('<div style="display:none" class="alert alert-danger custom-alert"></div>');
     }
-
 }
 
 function authorizeGithub() {
@@ -152,10 +151,92 @@ function hasGithubAccessToken() {
     return null !== localStorage.getItem("github_auth_token");
 }
 
+function githubDisconnect() {
+    $.post({
+        url: CLOUDTEAMS_GITHUB_REST_ENDPOINT + "/github/disconnect",
+        data: {project_id: ct_project_id, projectName: $("#projects :selected").val()},
+        beforeSend: function (xhr) {
+            if (hasGithubAccessToken()) {
+                xhr.setRequestHeader("Authorization", localStorage.github_auth_token);
+            }
+        },
+    }).success(function (data, status, xhr) {
+        var res = JSON.parse(data);
+        if ("SUCCESS" === res.code) {
+            console.log("Success disconnected account, reload GitHub widget");
+            //Remove current accessToken
+            removeAccessToken("github_auth_token");
+            //Reload Github widget
+            loadGithubWidget();
+        } else {
+            alert(res.message);
+            console.log("Could not disconnect account");
+        }
+    }).error(function(jqXHR, textStatus, errorThrown) {
+        var res = JSON.parse(jqXHR.responseText);
+        console.error("Error Status: " + jqXHR.status + ". Error: " + res.error);
+        /*if (res.message == "401 Unauthorized") {
+            customModal("Info", "", "Wrong username or password", "OK");
+        }*/
+        loadGithubWidget();
+    });
+};
+
+function githubAssignRepository() {
+    $.post({
+        url: CLOUDTEAMS_GITHUB_REST_ENDPOINT + "/github/add",
+        data: {project_id: ct_project_id, reponame: $("#repository :selected").text()},
+        beforeSend: function (xhr) {
+            if (hasGithubAccessToken()) {
+                xhr.setRequestHeader("Authorization", localStorage.github_auth_token);
+            }
+        },
+    }).success(function (data, status, xhr) {
+        var res = JSON.parse(data);
+        if ("SUCCESS" === res.code) {
+            //Reload Github widget
+            loadGithubWidget();
+        }
+        console.log(res.message);
+    }).error(function(jqXHR, textStatus, errorThrown) {
+        var res = JSON.parse(jqXHR.responseText);
+        console.error("Error Status: " + jqXHR.status + ". Error: " + res.error);
+        /*if (res.message == "401 Unauthorized") {
+            customModal("Info", "", "Wrong username or password", "OK");
+        }*/
+        loadGithubWidget();
+    });
+};
+
+function githubUnassignRepository() {
+    $.post({
+        url: CLOUDTEAMS_GITHUB_REST_ENDPOINT + "/github/delete",
+        data: {project_id: ct_project_id},
+        beforeSend: function (xhr) {
+            if (hasGithubAccessToken()) {
+                xhr.setRequestHeader("Authorization", localStorage.github_auth_token);
+            }
+        },
+    }).success(function (data, status, xhr) {
+        var res = JSON.parse(data);
+        if ("SUCCESS" === res.code) {
+            //Reload Github widget
+            loadGithubWidget();
+        }
+        console.log(res.message);
+    }).error(function(jqXHR, textStatus, errorThrown) {
+        var res = JSON.parse(jqXHR.responseText);
+        console.error("Error Status: " + jqXHR.status + ". Error: " + res.error);
+        /*if (res.message == "401 Unauthorized") {
+            customModal("Info", "", "Wrong username or password", "OK");
+        }*/
+        loadGithubWidget();
+    });
+};
+
 /*
  *  Handlers for Sonarqube widget
  */
-
 
 function loadSonarqubeWidget() {
     //Make the call to fect h github data

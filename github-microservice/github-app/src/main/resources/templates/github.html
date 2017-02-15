@@ -204,59 +204,9 @@
         <option th:each="repo : ${GetRepositories}" th:value="${repo.getName()}" th:text="${repo.getName()}"></option>
     </select>
     <br/><br/>
-    <button id="btn-oauth" onclick="assignRepository()" class="btn btn-danger">Assign Repository</button>
-    <button id="btn-disconnect-oauth" onclick="disconnect()" class="btn-link pull-right">Disconnect GitHub</button>
+    <button id="btn-oauth" onclick="githubAssignRepository()" class="btn btn-danger">Assign Repository</button>
+    <button id="btn-disconnect-oauth" onclick="githubDisconnect()" class="btn-link pull-right">Disconnect GitHub</button>
 
-    <script th:inline="javascript">
-
-        function assignRepository() {
-
-            $.post({
-                url: CLOUDTEAMS_GITHUB_REST_ENDPOINT + "/github/add",
-                data: {project_id: ct_project_id, reponame: $("#repository :selected").text()},
-                beforeSend: function (xhr) {
-                    if (hasGithubAccessToken()) {
-                        xhr.setRequestHeader("Authorization", localStorage.github_auth_token);
-                    }
-                },
-            }).success(function (data, status, xhr) {
-
-                var res = JSON.parse(data);
-                if ("SUCCESS" === res.code) {
-                    //Reload Github widget
-                    loadGithubWidget();
-                }
-                console.log(res.message);
-            });
-        }
-
-        function disconnect() {
-
-            $.post({
-                url: CLOUDTEAMS_GITHUB_REST_ENDPOINT + "/github/disconnect",
-                data: {project_id: ct_project_id, projectName: $("#projects :selected").val()},
-                beforeSend: function (xhr) {
-                    if (hasGithubAccessToken()) {
-                        xhr.setRequestHeader("Authorization", localStorage.github_auth_token);
-                    }
-                },
-            }).success(function (data, status, xhr) {
-
-                var res = JSON.parse(data);
-                if ("SUCCESS" === res.code) {
-                    console.log("Success disconnected account, reload GitHub widget");
-                    //Remove current accessToken
-                    removeAccessToken("github_auth_token");
-                    //Reload Github widget
-                    loadGithubWidget();
-                } else {
-                    alert(res.message);
-                    console.log("Could not disconnect account");
-                }
-            });
-        }
-
-    </script>
 </div>
 
 
@@ -427,33 +377,8 @@
 
     <hr/>
 
-    <button id="btn-unassign" onclick="unassignRepository()" class="btn btn-danger">Unassign</button>
+    <button id="btn-unassign" onclick="githubUnassignRepository()" class="btn btn-danger">Unassign</button>
 
-    <script th:inline="javascript">
-
-        function unassignRepository() {
-
-            $.post({
-                url: CLOUDTEAMS_GITHUB_REST_ENDPOINT + "/github/delete",
-                data: {project_id: ct_project_id},
-                beforeSend: function (xhr) {
-                    if (hasGithubAccessToken()) {
-                        xhr.setRequestHeader("Authorization", localStorage.github_auth_token);
-                    }
-                },
-            }).success(function (data, status, xhr) {
-
-                var res = JSON.parse(data);
-                if ("SUCCESS" === res.code) {
-                    //Reload Github widget
-                    loadGithubWidget();
-                }
-                console.log(res.message);
-            });
-
-        }
-
-    </script>
 </div>
 
 <div th:fragment="github-error">
