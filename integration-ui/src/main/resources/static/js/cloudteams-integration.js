@@ -330,7 +330,8 @@ function getJiraChartsData() {
                     text: "Types"
                 },
                 tooltip: {
-                    pointFormat: `{series.name}: <b>{point.percentage:.1f}%</b>`
+                    //pointFormat: `{series.name}: <b>{point.percentage:.1f}%</b>`
+                    pointFormat: `<b>{point.percentage:.1f}%</b>`
                 },
                 plotOptions: {
                     pie: {
@@ -343,7 +344,7 @@ function getJiraChartsData() {
                     }
                 },
                 series: [{
-                    name: 'Areas',
+                    name: 'Types',
                     colorByPoint: true,
                     data: returnObject.issueTypes
                 }]
@@ -361,7 +362,8 @@ function getJiraChartsData() {
                     text: "Priorities"
                 },
                 tooltip: {
-                    pointFormat: `{series.name}: <b>{point.percentage:.1f}%</b>`
+                    //pointFormat: `{series.name}: <b>{point.percentage:.1f}%</b>`
+                    pointFormat: `<b>{point.percentage:.1f}%</b>`
                 },
                 plotOptions: {
                     pie: {
@@ -374,7 +376,7 @@ function getJiraChartsData() {
                     }
                 },
                 series: [{
-                    name: 'Areas',
+                    name: 'Priorities',
                     colorByPoint: true,
                     data: returnObject.issuePriority
                 }]
@@ -392,7 +394,7 @@ function getJiraChartsData() {
                     text: "Status"
                 },
                 tooltip: {
-                    pointFormat: `{series.name}: <b>{point.percentage:.1f}%</b>`
+                    pointFormat: `<b>{point.percentage:.1f}%</b>`
                 },
                 plotOptions: {
                     pie: {
@@ -405,7 +407,7 @@ function getJiraChartsData() {
                     }
                 },
                 series: [{
-                    name: 'Areas',
+                    name: 'Status',
                     colorByPoint: true,
                     data: returnObject.issueStatus
                 }]
