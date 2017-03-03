@@ -294,6 +294,24 @@ function hasBitbucketAccessToken() {
  *  Handlers for Jira widget
  */
 
+function getJiraChartsData() {
+    $.ajax({
+        type:"GET",
+        //url: "/api/v1/jira/" + ct_project_id,
+        url: "/api/v1/jira/" + 3519,
+    	contentType: "application/json; charset=utf-8"
+    }).complete(function(data, status, xhr) {
+        if (data.status == 200) {
+            //console.log(JSON.parse(data.responseText));
+            console.log(data);
+        } else {
+            console.log("Status: " + status + ". Something went wrong!");
+        }
+    }).error(function(data, textStatus, jqXHR) {
+        console.log("something went wrong");
+    });
+};
+
 function loadJiraWidget() {
     //Make the call to fect h github data
     $.post({

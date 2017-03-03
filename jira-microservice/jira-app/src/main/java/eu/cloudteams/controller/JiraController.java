@@ -1,6 +1,7 @@
 package eu.cloudteams.controller;
 
 import com.atlassian.jira.rest.client.api.domain.Issue;
+import com.atlassian.jira.rest.client.api.domain.IssueType;
 import com.atlassian.jira.rest.client.api.domain.Project;
 import com.nimbusds.jose.JOSEException;
 import eu.cloudteams.authentication.jwt.Token;
@@ -13,24 +14,20 @@ import eu.cloudteams.repository.service.UserService;
 import eu.cloudteams.util.jira.JiraService;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 
+import net.minidev.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * Restful API for integration with CloudTeams Platform
@@ -47,6 +44,108 @@ public class JiraController {
 
     @Autowired
     ProjectService projectService;
+
+    @CrossOrigin
+    @ResponseBody
+    @RequestMapping(value = "/api/v1/jira/{project_id}", method = RequestMethod.GET)
+    public String getJiraProjectDate(@PathVariable("project_id") int project_id) {
+        logger.info("Requesting info for repository assigned to project_id: " + project_id);
+
+        if (!WebController.hasAccessToken()) {
+            logger.warning("Unauthorized access returing jira sign-in fragment");
+            return new JSONObject().put("code", MESSAGES.FAIL).put("message", "Unauthorized access returing jira sign-in fragment").toString();
+        }
+
+        JiraUser user = userService.findByUsername(getCurrentUser().getPrincipal().toString());
+        JiraProject project = projectService.findByProjectIdAndUser(project_id, user);
+
+        JiraService jiraService;
+        try {
+            jiraService = JiraService.create(user.getJiraUrl()).authenticateAnonymous();
+        } catch (URISyntaxException ex) {
+            Logger.getLogger(JiraController.class.getName()).log(Level.SEVERE, null, ex);
+            return new JSONObject().put("code", MESSAGES.FAIL).put("message", "Jira service failed to start").toString();
+        }
+
+        logger.info("Returning jira-info fragment for user:  " + getCurrentUser().getPrincipal() + " and project_id: " + project_id);
+
+        try {
+            jiraService = JiraService.create(user.getJiraUrl()).authenticateAnonymous();
+
+        } catch (URISyntaxException ex) {
+            Logger.getLogger(JiraController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        Optional<Project> jiraProject = jiraService.getProject(project.getJiraProject());
+
+        if (jiraProject.isPresent()) {
+            //Get Jira Project
+            //model.addAttribute("jiraProject", jiraProject.get());
+
+            // [
+            //      {"name":"name1","y":30},
+            //      {"name":"name2","y":50},
+            //      {"name":"name3","y":20}
+            // ]
+
+            JSONObject jsonIssues = new JSONObject();
+            JSONArray jsonIssueTypes = new JSONArray();
+            JSONArray jsonIssuePriority = new JSONArray();
+            JSONArray jsonIssueStatus = new JSONArray();
+
+            List<Issue> issues = jiraService.getIssues(jiraProject.get().getName());
+
+            Map issueTypes = issues.stream().collect(Collectors.groupingBy(issue -> issue.getIssueType().getName(), Collectors.counting()));
+            Map issuePriority = issues.stream().collect(Collectors.groupingBy(issue -> issue.getPriority().getName(), Collectors.counting()));
+            Map issueStatus = issues.stream().collect(Collectors.groupingBy(issue -> issue.getStatus().getName(), Collectors.counting()));
+
+            Iterator iterator = null;
+            iterator = issueTypes.entrySet().iterator();
+            while (iterator.hasNext()) {
+                JSONObject jsonTemp = new JSONObject();
+                Map.Entry pair = (Map.Entry)iterator.next();
+                System.out.println(pair.getKey() + " = " + pair.getValue());
+                jsonTemp.put("name", pair.getKey());
+                jsonTemp.put("y", pair.getValue());
+
+                jsonIssueTypes.add(jsonTemp);
+
+                iterator.remove();
+            }
+
+            iterator = issuePriority.entrySet().iterator();
+            while (iterator.hasNext()) {
+                JSONObject jsonTemp = new JSONObject();
+                Map.Entry pair = (Map.Entry)iterator.next();
+                System.out.println(pair.getKey() + " = " + pair.getValue());
+                jsonTemp.put("name", pair.getKey());
+                jsonTemp.put("y", pair.getValue());
+
+                jsonIssuePriority.add(jsonTemp);
+
+                iterator.remove();
+            }
+
+            iterator = issueStatus.entrySet().iterator();
+            while (iterator.hasNext()) {
+                JSONObject jsonTemp = new JSONObject();
+                Map.Entry pair = (Map.Entry)iterator.next();
+                System.out.println(pair.getKey() + " = " + pair.getValue());
+                jsonTemp.put("name", pair.getKey());
+                jsonTemp.put("y", pair.getValue());
+
+                jsonIssueStatus.add(jsonTemp);
+
+                iterator.remove();
+            }
+
+            jsonIssues.put("issueTypes", jsonIssueTypes).put("issuePriority", jsonIssuePriority).put("issueStatus", jsonIssueStatus);
+
+            return new JSONObject().put("code", MESSAGES.SUCCESS).put("message", "Jira data sent successfully!").put("returnobject", jsonIssues).toString();
+        }
+
+        return new JSONObject().put("code", MESSAGES.FAIL).put("message", "There are no information about this project").toString();
+    }
 
     @CrossOrigin
     @RequestMapping(value = "/api/v1/jira/repository", method = RequestMethod.POST)
@@ -92,7 +191,7 @@ public class JiraController {
             //Get Jira Project
             model.addAttribute("jiraProject", jiraProject.get());
             List<Issue> issues = jiraService.getIssues(jiraProject.get().getName());
-            //Get Issues Types    
+            //Get Issues Types
             model.addAttribute("issuesTypes", issues.stream().collect(Collectors.groupingBy(issue -> issue.getIssueType().getName(), Collectors.counting())));
             //Get Issues Priorities
             model.addAttribute("issuesPriority", issues.stream().collect(Collectors.groupingBy(issue -> issue.getPriority().getName(), Collectors.counting())));
