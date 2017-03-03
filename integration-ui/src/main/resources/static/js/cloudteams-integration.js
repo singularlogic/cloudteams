@@ -302,7 +302,6 @@ function hasBitbucketAccessToken() {
 function getJiraChartsData() {
     $.ajax({
         type:"GET",
-        //url: "/api/v1/jira/" + ct_project_id,
         url: CLOUDTEAMS_JIRA_REST_ENDPOINT + "/jira/" + ct_project_id,
     	contentType: "application/json; charset=utf-8",
     	beforeSend: function (xhr) {
@@ -312,11 +311,11 @@ function getJiraChartsData() {
         },
     }).complete(function(data, status, xhr) {
 
-        var parseData = JSON.parse(data);
+        var parseData = JSON.parse(data.responseText);
 
         if (parseData.code == "SUCCESS") {
 
-            var returnObject = parseData.responseText.returnobject;
+            var returnObject = parseData.returnobject;
 
             //TODO - make it more generic/optimize
             // Issue types
@@ -359,7 +358,7 @@ function getJiraChartsData() {
                     type: 'pie'
                 },
                 title: {
-                    text: "Types"
+                    text: "Priorities"
                 },
                 tooltip: {
                     pointFormat: `{series.name}: <b>{point.percentage:.1f}%</b>`
@@ -390,7 +389,7 @@ function getJiraChartsData() {
                     type: 'pie'
                 },
                 title: {
-                    text: "Types"
+                    text: "Status"
                 },
                 tooltip: {
                     pointFormat: `{series.name}: <b>{point.percentage:.1f}%</b>`
