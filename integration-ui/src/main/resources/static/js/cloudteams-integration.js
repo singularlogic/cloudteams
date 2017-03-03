@@ -89,6 +89,11 @@ function closeCustomModal($this) {
     });
 }
 
+function setupCharts() {
+    //TODO - make it more generic
+    getJiraChartsData();
+}
+
 /*
  *  Handlers for Github widget
  */
@@ -298,12 +303,115 @@ function getJiraChartsData() {
     $.ajax({
         type:"GET",
         //url: "/api/v1/jira/" + ct_project_id,
-        url: "/api/v1/jira/" + 3519,
-    	contentType: "application/json; charset=utf-8"
+        url: CLOUDTEAMS_JIRA_REST_ENDPOINT + "/jira/" + ct_project_id,
+    	contentType: "application/json; charset=utf-8",
+    	beforeSend: function (xhr) {
+            if (hasJiraAccessToken()) {
+                xhr.setRequestHeader(AUTHORIZATION_HEADER, localStorage.jira_auth_token);
+            }
+        },
     }).complete(function(data, status, xhr) {
-        if (data.status == 200) {
-            //console.log(JSON.parse(data.responseText));
-            console.log(data);
+
+        var parseData = JSON.parse(data);
+
+        if (parseData.code == "SUCCESS") {
+
+            var returnObject = parseData.responseText.returnobject;
+
+            //TODO - make it more generic/optimize
+            // Issue types
+            Highcharts.chart("issue-types", {
+                chart: {
+                    plotBackgroundColor: null,
+                    plotBorderWidth: null,
+                    plotShadow: false,
+                    type: 'pie'
+                },
+                title: {
+                    text: "Types"
+                },
+                tooltip: {
+                    pointFormat: `{series.name}: <b>{point.percentage:.1f}%</b>`
+                },
+                plotOptions: {
+                    pie: {
+                        allowPointSelect: true,
+                        cursor: 'pointer',
+                        dataLabels: {
+                            enabled: false
+                        },
+                        showInLegend: true
+                    }
+                },
+                series: [{
+                    name: 'Areas',
+                    colorByPoint: true,
+                    data: returnObject.issueTypes
+                }]
+            });
+
+            // Issue Priority
+            Highcharts.chart("issue-priority", {
+                chart: {
+                    plotBackgroundColor: null,
+                    plotBorderWidth: null,
+                    plotShadow: false,
+                    type: 'pie'
+                },
+                title: {
+                    text: "Types"
+                },
+                tooltip: {
+                    pointFormat: `{series.name}: <b>{point.percentage:.1f}%</b>`
+                },
+                plotOptions: {
+                    pie: {
+                        allowPointSelect: true,
+                        cursor: 'pointer',
+                        dataLabels: {
+                            enabled: false
+                        },
+                        showInLegend: true
+                    }
+                },
+                series: [{
+                    name: 'Areas',
+                    colorByPoint: true,
+                    data: returnObject.issuePriority
+                }]
+            });
+
+            // Issue Status
+            Highcharts.chart("issue-status", {
+                chart: {
+                    plotBackgroundColor: null,
+                    plotBorderWidth: null,
+                    plotShadow: false,
+                    type: 'pie'
+                },
+                title: {
+                    text: "Types"
+                },
+                tooltip: {
+                    pointFormat: `{series.name}: <b>{point.percentage:.1f}%</b>`
+                },
+                plotOptions: {
+                    pie: {
+                        allowPointSelect: true,
+                        cursor: 'pointer',
+                        dataLabels: {
+                            enabled: false
+                        },
+                        showInLegend: true
+                    }
+                },
+                series: [{
+                    name: 'Areas',
+                    colorByPoint: true,
+                    data: returnObject.issueStatus
+                }]
+            });
+
         } else {
             console.log("Status: " + status + ". Something went wrong!");
         }

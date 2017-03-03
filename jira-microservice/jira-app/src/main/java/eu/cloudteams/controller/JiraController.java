@@ -79,15 +79,6 @@ public class JiraController {
         Optional<Project> jiraProject = jiraService.getProject(project.getJiraProject());
 
         if (jiraProject.isPresent()) {
-            //Get Jira Project
-            //model.addAttribute("jiraProject", jiraProject.get());
-
-            // [
-            //      {"name":"name1","y":30},
-            //      {"name":"name2","y":50},
-            //      {"name":"name3","y":20}
-            // ]
-
             JSONObject jsonIssues = new JSONObject();
             JSONArray jsonIssueTypes = new JSONArray();
             JSONArray jsonIssuePriority = new JSONArray();
@@ -104,7 +95,7 @@ public class JiraController {
             while (iterator.hasNext()) {
                 JSONObject jsonTemp = new JSONObject();
                 Map.Entry pair = (Map.Entry)iterator.next();
-                System.out.println(pair.getKey() + " = " + pair.getValue());
+
                 jsonTemp.put("name", pair.getKey());
                 jsonTemp.put("y", pair.getValue());
 
@@ -117,7 +108,7 @@ public class JiraController {
             while (iterator.hasNext()) {
                 JSONObject jsonTemp = new JSONObject();
                 Map.Entry pair = (Map.Entry)iterator.next();
-                System.out.println(pair.getKey() + " = " + pair.getValue());
+
                 jsonTemp.put("name", pair.getKey());
                 jsonTemp.put("y", pair.getValue());
 
@@ -130,7 +121,7 @@ public class JiraController {
             while (iterator.hasNext()) {
                 JSONObject jsonTemp = new JSONObject();
                 Map.Entry pair = (Map.Entry)iterator.next();
-                System.out.println(pair.getKey() + " = " + pair.getValue());
+
                 jsonTemp.put("name", pair.getKey());
                 jsonTemp.put("y", pair.getValue());
 
