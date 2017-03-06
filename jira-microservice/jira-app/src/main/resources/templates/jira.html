@@ -383,9 +383,17 @@
 		    display: block;
 		    margin-top: 25px;
 		    margin-left: 5px;
+		    position: relative;
 		}
 		.inner-wrap ul {
+            z-index: 200;
+		    position: absolute;
+            top: 0;
+            left: 0;
+            border: 2px solid #f0f0ff;
+            border-radius: 5px;
 		    margin-top: 2px;
+            padding: 10px;
 		}
     </style>
 
@@ -403,28 +411,28 @@
 
     <div class="charts-wrapper">
 
-        <div id="issue-types"></div>
         <span class="inner-wrap">
             <ul>
                 <li th:each="types : ${issuesTypes}" th:text="${types}"></li>
             </ul>
         </span>
+        <div id="issue-types"></div>
         <hr/>
 
-        <div id="issue-priority"></div>
         <span class="inner-wrap">
             <ul>
                 <li th:each="priorities : ${issuesPriority}" th:text="${priorities}"></li>
             </ul>
         </span>
+        <div id="issue-priority"></div>
         <hr/>
 
-        <div id="issue-status"></div>
         <span class="inner-wrap">
             <ul>
                 <li th:each="status : ${issuesStatus}" th:text="${status}"></li>
             </ul>
         </span>
+        <div id="issue-status"></div>
 
     </div>
 
