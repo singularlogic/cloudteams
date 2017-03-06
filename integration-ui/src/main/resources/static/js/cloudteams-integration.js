@@ -422,6 +422,7 @@ function getJiraChartsData() {
 
             $("#widget-loading").remove();
             $(".inner-wrap").show();
+            $("#ct-content-jira hr").show();
 
         } else {
             console.log("Status: " + status + ". Something went wrong!");
