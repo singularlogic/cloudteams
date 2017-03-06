@@ -404,36 +404,29 @@
     <div class="charts-wrapper">
 
         <div id="issue-types"></div>
+        <span class="inner-wrap">
+            <ul>
+                <li th:each="types : ${issuesTypes}" th:text="${types}"></li>
+            </ul>
+        </span>
+        <hr/>
 
         <div id="issue-priority"></div>
+        <span class="inner-wrap">
+            <ul>
+                <li th:each="priorities : ${issuesPriority}" th:text="${priorities}"></li>
+            </ul>
+        </span>
+        <hr/>
 
         <div id="issue-status"></div>
+        <span class="inner-wrap">
+            <ul>
+                <li th:each="status : ${issuesStatus}" th:text="${status}"></li>
+            </ul>
+        </span
 
     </div>
-
-    <!--<span class="inner-wrap">
-        <span class="highlight">Types</span>
-
-        <ul>
-            <li th:each="types : ${issuesTypes}" th:text="${types}"></li>
-        </ul>
-    </span>
-
-    <span class="inner-wrap">
-        <span class="highlight">Priorities</span>
-
-        <ul>
-            <li th:each="priorities : ${issuesPriority}" th:text="${priorities}"></li>
-        </ul>
-    </span>
-
-    <span class="inner-wrap">
-        <span class="highlight">Status</span>
-
-        <ul>
-            <li th:each="status : ${issuesStatus}" th:text="${status}"></li>
-        </ul>
-    </span>-->
 
     <hr/>
 
