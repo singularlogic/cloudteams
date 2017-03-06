@@ -421,6 +421,7 @@ function getJiraChartsData() {
             });
 
             $("#widget-loading").remove();
+            $(".inner-wrap").show();
 
         } else {
             console.log("Status: " + status + ". Something went wrong!");
