@@ -106,7 +106,10 @@ public class SonarqubeService {
     private SonarMetricsResponse getProjectMetrics() throws Exception {
 
         //Construct the Sonarqube service uri
-        String uri = "resources?metrics=".concat(metrics.keySet().stream().collect(Collectors.joining(","))).concat("&format=json&resource=").concat(this.projectKey);
+        
+        //SonarQube API change: Deprecated since v5.4, removed since v6.3 https://sonarqube.com/web_api/api/resources
+        //String uri = "resources?metrics=".concat(metrics.keySet().stream().collect(Collectors.joining(","))).concat("&format=json&resource=").concat(this.projectKey);
+        String uri = "measures/component?metricKeys=".concat(metrics.keySet().stream().collect(Collectors.joining(","))).concat("&format=json&componentKey=").concat(this.projectKey);
 
         SonarMetricsResponse[] result = new RestTemplate().getForObject(getAPIUrl(uri), SonarMetricsResponse[].class);
 
@@ -122,7 +125,7 @@ public class SonarqubeService {
      * @return @throws Exception
      */
     private SonarIssues getProjectIssues() throws Exception {
-
+       
         SonarIssuesResponse response = new RestTemplate().getForObject(getAPIUrl("issues/search?componentRoots=" + this.projectKey), SonarIssuesResponse.class);
         SonarIssues issues = new SonarIssues();
         if (null == response.getPaging().getTotal()) {
