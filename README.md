@@ -1,2 +1,3 @@
 # CLOUDTEAMS
-> Cloudteams project, implementation of Github and SonanQube widgets
+> Cloudteams project, implementation of Github, Bitbucket, JIRA, SonanQube and PaaSport widgets
+
