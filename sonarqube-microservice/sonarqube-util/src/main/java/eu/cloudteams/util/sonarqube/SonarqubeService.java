@@ -1,16 +1,21 @@
 package eu.cloudteams.util.sonarqube;
 
+import eu.cloudteams.util.sonarqube.models.Measure;
 import eu.cloudteams.util.sonarqube.models.SonarIssues;
 import eu.cloudteams.util.sonarqube.models.SonarIssuesResponse;
 import eu.cloudteams.util.sonarqube.models.Msr;
 import eu.cloudteams.util.sonarqube.models.Project;
 import eu.cloudteams.util.sonarqube.models.ProjectInfo;
 import eu.cloudteams.util.sonarqube.models.ServerInfo;
+import eu.cloudteams.util.sonarqube.models.SonarComponentResponse;
+import eu.cloudteams.util.sonarqube.models.SonarMeasuresResponse;
 import eu.cloudteams.util.sonarqube.models.SonarMetricsResponse;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -25,12 +30,14 @@ import org.springframework.web.client.RestTemplate;
 public class SonarqubeService {
 
     //To be deleted
-    private static final String SONAR_URL = "http://paasword.euprojects.net/sonar";//"https://nemo.sonarqube.org";
-    private static final String PROJECT_KEY = "org.apache.tika:tika";
+    private static final String SONAR_URL = "https://sonarqube.com";//"http://paasword.euprojects.net/sonar";//"https://nemo.sonarqube.org";
+    private static final String PROJECT_KEY = "abap-sample-projet";
 
     //List of metrics to fetch for sonarqube ws
     private static final Map<String, String> metrics = new HashMap<>();
+    private static final Logger logger = Logger.getLogger(SonarqubeService.class.getName());
 
+    
     //Prefill sonar metrics
     static {
         //Complexity
@@ -100,7 +107,7 @@ public class SonarqubeService {
     }
 
     /**
-     *
+     * @deprecated : not working properly after v6.3, use getProjectComponentAndMetrics instead
      * @return @throws Exception
      */
     private SonarMetricsResponse getProjectMetrics() throws Exception {
@@ -118,6 +125,29 @@ public class SonarqubeService {
         }
 
         return result[0];
+    }
+    /**
+     *
+     * @return @throws Exception
+     */
+    private SonarComponentResponse getProjectComponentAndMetrics() throws Exception {
+
+        
+        //SonarQube API change: Deprecated since v5.4, removed since v6.3 https://sonarqube.com/web_api/api/resources
+        //String uri = "resources?metrics=".concat(metrics.keySet().stream().collect(Collectors.joining(","))).concat("&format=json&resource=").concat(this.projectKey);
+        String uri = "measures/component?metricKeys=".concat(metrics.keySet().stream().collect(Collectors.joining(","))).concat("&format=json&componentKey=").concat(this.projectKey);
+
+        SonarComponentResponse result = new RestTemplate().getForObject(getAPIUrl(uri), SonarComponentResponse.class);
+   
+        logger.log(Level.INFO, "get project component uri: {0}", getAPIUrl(uri));
+        //logger.info("gert project component result: " + result.toString());
+
+        
+        if (null == result) {
+            throw new Exception("Measures could not be found");
+        }
+
+        return result;
     }
 
     /**
@@ -141,18 +171,26 @@ public class SonarqubeService {
         try {
             ProjectInfo projectInfo = new ProjectInfo();
             SonarIssues sonarIssues = this.getProjectIssues();
-            SonarMetricsResponse sonarMetrics = this.getProjectMetrics();
+            SonarComponentResponse sonarMeasures = this.getProjectComponentAndMetrics();
+            List<Measure> measures = sonarMeasures.getComponent().getMeasures();
+            //Collections.replaceAll(measures, null, "N/A");
+
+            
+            //SonarMeasuresResponse sonarMeasures = this.getProjectMeasures();
+            //SonarMetricsResponse sonarMetrics = this.getProjectMetrics();
             //Set Total Project Issues
             projectInfo.setTotalIssues(String.valueOf(sonarIssues.getNumberOfProjectIssues()));
             //Set Project name
-            projectInfo.setProjectName(sonarMetrics.getName());
+             projectInfo.setProjectName("test");//projectInfo.setProjectName(sonarMetrics.getName());
             //Set Version
-            projectInfo.setVersion(sonarMetrics.getVersion());
+            projectInfo.setVersion("0.0.1");//projectInfo.setVersion(sonarMetrics.getVersion());
             //Set Description
-            projectInfo.setDescription(sonarMetrics.getDescription());
+            projectInfo.setDescription("test");//projectInfo.setDescription(sonarMetrics.getDescription());
             //Set Metrics
-            projectInfo.setMetrics(sonarMetrics.getMsr().stream().collect(Collectors.toMap(msr -> metrics.get(msr.getKey()), Msr::getFrmtVal)));
-
+            //projectInfo.setMetrics(sonarMetrics.getMsr().stream().collect(Collectors.toMap(msr -> metrics.get(msr.getKey()), Msr::getFrmtVal)));
+            projectInfo.setMetrics(measures.stream().filter(c->c.getValue()!= null).collect(Collectors.toMap(msr -> metrics.get(msr.getMetric()), Measure::getValue)));
+           
+           
             return Optional.of(projectInfo);
 
         } catch (Exception ex) {
@@ -176,9 +214,10 @@ public class SonarqubeService {
 
     public static void main(String[] args) throws Exception {
         SonarqubeService sonarqubeService = new SonarqubeService(SONAR_URL, PROJECT_KEY);
-//        sonarqubeService.getProjectInfo();
-
-        sonarqubeService.getServerInfo();
+        Optional<ProjectInfo> projectInfo = sonarqubeService.getProjectInfo();
+        
+        System.out.println("projectInfo::"+ projectInfo.toString());
+//        sonarqubeService.getServerInfo();
     }
 
 }
