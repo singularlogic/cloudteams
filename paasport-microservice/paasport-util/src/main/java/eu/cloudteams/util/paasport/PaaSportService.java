@@ -108,5 +108,49 @@ public class PaaSportService {
 
     }
 
+    public boolean startApplication(long applicationID) {
+
+        String url = paasportUrl + "/api/v1/external/application/" + applicationID + "/start";
+
+        logger.info("PaaSport URL for starting application: " + url);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
+        headers.set("Authorization", projectKey);
+
+        ResponseEntity<String> response = new RestTemplate().exchange(url, HttpMethod.PUT, new HttpEntity<byte[]>(headers), String.class);
+
+        if (response.getStatusCode().equals(HttpStatus.OK)) {
+
+            return true;
+
+        } else {
+            return false;
+        }
+
+    }
+
+    public boolean stopApplication(long applicationID) {
+
+        String url = paasportUrl + "/api/v1/external/application/" + applicationID + "/stop";
+
+        logger.info("PaaSport URL for stopping application: " + url);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
+        headers.set("Authorization", projectKey);
+
+        ResponseEntity<String> response = new RestTemplate().exchange(url, HttpMethod.PUT, new HttpEntity<byte[]>(headers), String.class);
+
+        if (response.getStatusCode().equals(HttpStatus.OK)) {
+
+            return true;
+
+        } else {
+            return false;
+        }
+
+    }
+
 }
 
