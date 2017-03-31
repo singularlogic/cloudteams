@@ -260,13 +260,10 @@ public class SonarqubeService {
 
         try {
 
-            if (new RestTemplate().getForEntity(getAPIUrl(SONAR_SERVER_INFO), Class.class).getStatusCode().equals(HttpStatus.OK)) {
+            if (new RestTemplate().getForEntity(getAPIUrl(SONAR_SERVER_INFO), String.class).getStatusCode().equals(HttpStatus.OK)) {
                 return Optional.of(new ServerInfo());
             }
 
-            //ServerInfo serverInfo = new RestTemplate().getForObject(getAPIUrl(SONAR_SERVER_INFO), ServerInfo.class);
-            //return (!serverInfo.getId().isEmpty() ? Optional.of(serverInfo) : Optional.empty());
-            return Optional.empty();
         } catch (Exception ex) {
             Logger.getLogger(SonarqubeService.class.getName()).log(Level.SEVERE, "Soanqube service not found in url: {0}", this.sonarUrl);
         }
