@@ -40,6 +40,41 @@ $(document).ready(function () {
     loadJiraWidget();
     //Load PaaSport widget
     loadPaaSportWidget();
+
+    // object.title.text = "..."
+    /*object.series.push({
+        name: "...",
+        colorByPoint: true,
+        data: DATA
+    }*/
+    var global_highcharts_options = {
+        chart: {
+            plotBackgroundColor: null,
+            plotBorderWidth: null,
+            plotShadow: false,
+            type: 'pie'
+        },
+        title: {},
+        tooltip: {
+            //pointFormat: `{series.name}: <b>{point.percentage:.1f}%</b>`
+            pointFormat: `<b>{point.percentage:.1f}%</b>`
+        },
+        plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                dataLabels: {
+                    enabled: false
+                },
+                showInLegend: true
+            }
+        },
+        credits: {
+            enabled: false
+        },
+        series: []
+    };
+
 });
 
 // Replacement for classic js alert
@@ -324,101 +359,35 @@ function getJiraChartsData() {
 
             var returnObject = parseData.returnobject;
 
-            //TODO - make it more generic/optimize
             // Issue types
-            Highcharts.chart("issue-types", {
-                chart: {
-                    plotBackgroundColor: null,
-                    plotBorderWidth: null,
-                    plotShadow: false,
-                    type: 'pie'
-                },
-                title: {
-                    text: "Types"
-                },
-                tooltip: {
-                    //pointFormat: `{series.name}: <b>{point.percentage:.1f}%</b>`
-                    pointFormat: `<b>{point.percentage:.1f}%</b>`
-                },
-                plotOptions: {
-                    pie: {
-                        allowPointSelect: true,
-                        cursor: 'pointer',
-                        dataLabels: {
-                            enabled: false
-                        },
-                        showInLegend: true
-                    }
-                },
-                series: [{
-                    name: 'Types',
-                    colorByPoint: true,
-                    data: returnObject.issueTypes
-                }]
+            var issueTypesHighchartsOpts = global_highcharts_options;
+            issueTypesHighchartsOpts.title.text = "Types";
+            issueTypesHighchartsOpts.series.push({
+                name: "Types",
+                colorByPoint: true,
+                data: returnObject.issueTypes
             });
+            Highcharts.chart("issue-types", issueTypesHighchartsOpts);
 
             // Issue Priority
-            Highcharts.chart("issue-priority", {
-                chart: {
-                    plotBackgroundColor: null,
-                    plotBorderWidth: null,
-                    plotShadow: false,
-                    type: 'pie'
-                },
-                title: {
-                    text: "Priorities"
-                },
-                tooltip: {
-                    //pointFormat: `{series.name}: <b>{point.percentage:.1f}%</b>`
-                    pointFormat: `<b>{point.percentage:.1f}%</b>`
-                },
-                plotOptions: {
-                    pie: {
-                        allowPointSelect: true,
-                        cursor: 'pointer',
-                        dataLabels: {
-                            enabled: false
-                        },
-                        showInLegend: true
-                    }
-                },
-                series: [{
-                    name: 'Priorities',
-                    colorByPoint: true,
-                    data: returnObject.issuePriority
-                }]
+            var issuePriorityHighchartsOpts = global_highcharts_options;
+            issuePriorityHighchartsOpts.title.text = "Priorities";
+            issuePriorityHighchartsOpts.series.push({
+                name: "Priorities",
+                colorByPoint: true,
+                data: returnObject.issuePriority
             });
+            Highcharts.chart("issue-priority", issuePriorityHighchartsOpts);
 
             // Issue Status
-            Highcharts.chart("issue-status", {
-                chart: {
-                    plotBackgroundColor: null,
-                    plotBorderWidth: null,
-                    plotShadow: false,
-                    type: 'pie'
-                },
-                title: {
-                    text: "Status"
-                },
-                tooltip: {
-                    pointFormat: `<b>{point.percentage:.1f}%</b>`
-                },
-                plotOptions: {
-                    pie: {
-                        allowPointSelect: true,
-                        cursor: 'pointer',
-                        dataLabels: {
-                            enabled: false
-                        },
-                        showInLegend: true
-                    }
-                },
-                series: [{
-                    name: 'Status',
-                    colorByPoint: true,
-                    data: returnObject.issueStatus
-                }]
+            var issueStatusHighchartsOpts = global_highcharts_options;
+            issueStatusHighchartsOpts.title.text = "Status";
+            issueStatusHighchartsOpts.series.push({
+                name: "Status",
+                colorByPoint: true,
+                data: returnObject.issueStatus
             });
+            Highcharts.chart("issue-status", issueStatusHighchartsOpts);
 
             $("#widget-loading").remove();
             $(".inner-wrap").show();
