@@ -431,7 +431,8 @@
             <div class="show-field show-field-actions">
                 <!--/*<button th:if="${value.status == 'Running'}" class="btn btn-danger btn-xs">Stop</button>
                 <button th:if="${value.status == 'Deployed'}" class="btn btn-confirm btn-xs">Start</button>*/-->
-                <a class="custom-btn" href="javascript:void(0)" th:onclick="${value.status == 'Deployed'} ? 'applicationActionHandler(' + ${value.id} + ', \'' + ${user.paasportToken} + '\', \'start\')' : 'applicationActionHandler(' + ${value.id} + ', \'' + ${user.paasportToken} + '\', \'start\')'" th:text="${value.status == 'Running'} ? 'Stop application' : (${value.status == 'Deployed'} ? 'Start application')">Stop</a>
+                <!--<a class="custom-btn" href="javascript:void(0)" th:onclick="${value.status == 'Deployed'} ? 'applicationActionHandler(' + ${value.id} + ', \'' + ${user.paasportToken} + '\', \'start\')' : 'applicationActionHandler(' + ${value.id} + ', \'' + ${user.paasportToken} + '\', \'start\')'" th:text="${value.status == 'Running'} ? 'Stop application' : (${value.status == 'Deployed'} ? 'Start application')">Stop</a>-->
+                <a class="custom-btn" href="javascript:void(0)" th:onclick="${value.status == 'Running'} ? 'applicationActionHandler(' + ${value.id} + ', \'' + ${user.paasportToken} + '\', \'stop\')' : (${value.status == 'Deployed'} ? 'applicationActionHandler(' + ${value.id} + ', \'' + ${user.paasportToken} + '\', \'start\')')" th:text="${value.status == 'Running'} ? 'Stop application' : (${value.status == 'Deployed'} ? 'Start application')">Stop</a>
             </div>
 
             <!--/*<span class="highlight" th:text="${value.name}"></span>
