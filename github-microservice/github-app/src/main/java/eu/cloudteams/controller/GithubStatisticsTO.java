@@ -6,15 +6,19 @@ import java.io.IOException;
 import java.util.Calendar;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import org.eclipse.egit.github.core.Issue;
 import org.eclipse.egit.github.core.Label;
 import org.eclipse.egit.github.core.Repository;
 import org.eclipse.egit.github.core.RepositoryBranch;
 import org.eclipse.egit.github.core.RepositoryCommit;
 import org.eclipse.egit.github.core.User;
+import org.json.JSONObject;
 
 /**
  *
@@ -29,6 +33,7 @@ public final class GithubStatisticsTO {
     private List<RepositoryBranch> branchesList;
     private List<RepositoryCommit> commits;
     private CommitsStats commitsStats;
+    private JSONObject labelsCount;
 
     public Repository getRepository() {
         return repository;
@@ -50,6 +55,10 @@ public final class GithubStatisticsTO {
         return this.labelsList;
     }
 
+    public JSONObject getLabelsGroup() {
+        return this.labelsCount;
+    }
+
     public GithubStatisticsTO(GithubService githubService, Repository repository) throws IOException {
         this.githubService = githubService;
         this.repository = repository;
@@ -61,13 +70,13 @@ public final class GithubStatisticsTO {
 
     public void gatherInfo() throws IOException {
 
-        githubService.getIssueService().getIssues(repository, null).forEach(issue -> {
+        Map<String, Long> labelsCountMap = githubService.getIssueService()
+                .getIssues(repository, null)
+                .stream().map(Issue::getLabels)
+                .flatMap(List::stream)
+                .collect(Collectors.groupingBy(label -> label.getName(), Collectors.counting()));
 
-            System.out.println("State: "+issue.getState()+" \nLabels:");
-
-            System.out.println(issue.getLabels().stream().map((label) -> label.getName()).collect(Collectors.joining(",")));
-
-        });
+        labelsCount = new JSONObject(labelsCountMap);
 
         branchesList = githubService.getGithubRepositoryService().getBranches(repository);
         labelsList = githubService.getLabelService().getLabels(repository);
