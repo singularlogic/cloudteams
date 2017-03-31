@@ -153,7 +153,7 @@ public class PaaSportController {
     }
 
     @CrossOrigin
-    @ResponseBod
+    @ResponseBody
     @RequestMapping(value = "/api/v1/paasport/application/start/{id}", method = RequestMethod.POST)
     public String startPaaSportApplication(Model model, @RequestParam(value = "project_id", defaultValue = "0", required = true) int project_id, @PathVariable(value = "id") long applicationID) throws IOException {
 
@@ -200,7 +200,7 @@ public class PaaSportController {
     }
 
     @CrossOrigin
-    @ResponseBod
+    @ResponseBody
     @RequestMapping(value = "/api/v1/paasport/application/stop/{id}", method = RequestMethod.POST)
     public String stopPaaSportApplication(Model model, @RequestParam(value = "project_id", defaultValue = "0", required = true) int project_id, @PathVariable(value = "id") long applicationID) throws IOException {
 
