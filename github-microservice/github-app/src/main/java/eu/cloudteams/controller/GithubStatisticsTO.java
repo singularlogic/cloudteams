@@ -77,7 +77,7 @@ public final class GithubStatisticsTO {
                 .collect(Collectors.groupingBy(label -> label.getName(), Collectors.counting()));
 
         labelsCount = new JSONObject(labelsCountMap);
-
+        System.out.println("labelscount---->"+labelsCount.toString());
         branchesList = githubService.getGithubRepositoryService().getBranches(repository);
         labelsList = githubService.getLabelService().getLabels(repository);
         commits = githubService.getCommitService().getCommits(repository);
