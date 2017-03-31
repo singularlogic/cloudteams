@@ -8,6 +8,34 @@ var CLOUDTEAMS_BITBUCKET_REST_ENDPOINT = "https://cloudteams.euprojects.net/bitb
 var CLOUDTEAMS_JIRA_REST_ENDPOINT = "https://cloudteams.euprojects.net/jira/api/v1";
 var CLOUDTEAMS_PAASPORT_REST_ENDPOINT = "https://cloudteams.euprojects.net/paasport/api/v1";
 
+var global_highcharts_options = {
+    chart: {
+        plotBackgroundColor: null,
+        plotBorderWidth: null,
+        plotShadow: false,
+        type: 'pie'
+    },
+    title: {},
+    tooltip: {
+        //pointFormat: `{series.name}: <b>{point.percentage:.1f}%</b>`
+        pointFormat: `<b>{point.percentage:.1f}%</b>`
+    },
+    plotOptions: {
+        pie: {
+            allowPointSelect: true,
+            cursor: 'pointer',
+            dataLabels: {
+                enabled: false
+            },
+            showInLegend: true
+        }
+    },
+    credits: {
+        enabled: false
+    },
+    series: []
+};
+
 function getLoadingHTML(text = "Please wait...") {
     return '<div id="widget-loading" style="text-align: center;"><div class="loader-general loader-general-gray" id="loader-general-1"></div><p><a href="#loader-general-1">' + text + '</a></p></div>';
 }
@@ -47,33 +75,6 @@ $(document).ready(function () {
         colorByPoint: true,
         data: DATA
     }*/
-    var global_highcharts_options = {
-        chart: {
-            plotBackgroundColor: null,
-            plotBorderWidth: null,
-            plotShadow: false,
-            type: 'pie'
-        },
-        title: {},
-        tooltip: {
-            //pointFormat: `{series.name}: <b>{point.percentage:.1f}%</b>`
-            pointFormat: `<b>{point.percentage:.1f}%</b>`
-        },
-        plotOptions: {
-            pie: {
-                allowPointSelect: true,
-                cursor: 'pointer',
-                dataLabels: {
-                    enabled: false
-                },
-                showInLegend: true
-            }
-        },
-        credits: {
-            enabled: false
-        },
-        series: []
-    };
 
 });
 
