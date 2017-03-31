@@ -479,25 +479,27 @@
 
             // Add UI blocking loader
 
-            $.ajax({
-                type: 'PUT',
-                url: `https://paasport.ubitech.eu/api/v1/application/${applicationID}/${action}`,
-                //crossDomain: true,
+            var url = CLOUDTEAMS_PAASPORT_REST_ENDPOINT + "/paasport/application/" + action + "/" + applicationID;
+
+            $.post({
+                url: url,
                 beforeSend: function (xhr) {
-                    //xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-                    //xhr.setRequestHeader("X-Ajax-call", "true");
-                    xhr.setRequestHeader("Authorization", paasportToken);
-                }
+                    if (hasPaaSportAccessToken()) {
+                        xhr.setRequestHeader(AUTHORIZATION_HEADER, localStorage.paasport_auth_token);
+                    }
+                },
+                data: {project_id: ct_project_id},
             }).success(function (data, status, xhr) {
-                if ("SUCCESS" === data.code) {
-                    setTimeout(function() {
-                        console.log("Application ID: " + applicationID);
-                    }, 800);
+
+                var res = JSON.parse(data);
+                if ("SUCCESS" === res.code) {
+                    console.log("Success " + action + " application!!!!");
+                    // TODO
+                    loadPaaSportWidget();
                 } else {
-                    console.log("ERROR => " + data.message);
+                    alert(res.message);
+                    console.log("Could not " + action + " account");
                 }
-            }).error(function(jqXHR, textStatus, errorThrown) {
-                 console.log(jqXHR.status + " (" + errorThrown + ").<br/> Please contact the system administrator");
             });
         };
 

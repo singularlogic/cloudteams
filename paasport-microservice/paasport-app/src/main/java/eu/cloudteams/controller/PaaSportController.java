@@ -23,11 +23,7 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author Spyros Mantzouratos
@@ -157,6 +153,100 @@ public class PaaSportController {
     }
 
     @CrossOrigin
+    @RequestMapping(value = "/api/v1/paasport/application/start/{id}", method = RequestMethod.POST)
+    public String startPaaSportApplication(Model model, @RequestParam(value = "project_id", defaultValue = "0", required = true) int project_id, @PathVariable(value = "id") long applicationID) throws IOException {
+
+        logger.info("Requesting info for starting application: " + applicationID);
+
+        String paasportUrl = "http://192.168.3.63:8080";
+
+        if (!WebController.hasAccessToken()) {
+            logger.warning("Unauthorized access returing paasport sign-in fragment");
+            //return github-signin fragment
+            return "paasport::paasport-no-auth";
+        }
+
+        PaaSportUser user = userService.findByUsername(getCurrentUser().getPrincipal().toString());
+
+        model.addAttribute("user", user);
+
+        PaaSportService paaSportService = new PaaSportService(paasportUrl, user.getPaasportToken());
+
+        PaaSportProject project = projectService.findByProjectIdAndUser(project_id, user);
+
+        //Unassigned project
+        if (null == project) {
+
+            logger.severe("Project error!");
+
+            return "paasport::paasport-error";
+
+        } else {
+
+            // Start application
+            boolean isSuccess = paaSportService.startApplication(applicationID);
+
+            if (isSuccess) {
+
+                return new JSONObject().put("code", MESSAGES.SUCCESS).put("message", "Application with id: " + applicationID + " has been started!").toString();
+
+            } else {
+
+                return new JSONObject().put("code", MESSAGES.FAIL).put("message", "Application with id: " + applicationID + " has not been started!").toString();
+            }
+
+        }
+
+    }
+
+    @CrossOrigin
+    @RequestMapping(value = "/api/v1/paasport/application/stop/{id}", method = RequestMethod.POST)
+    public String stopPaaSportApplication(Model model, @RequestParam(value = "project_id", defaultValue = "0", required = true) int project_id, @PathVariable(value = "id") long applicationID) throws IOException {
+
+        logger.info("Requesting info for stopping application: " + applicationID);
+
+        String paasportUrl = "http://192.168.3.63:8080";
+
+        if (!WebController.hasAccessToken()) {
+            logger.warning("Unauthorized access returing paasport sign-in fragment");
+            //return github-signin fragment
+            return "paasport::paasport-no-auth";
+        }
+
+        PaaSportUser user = userService.findByUsername(getCurrentUser().getPrincipal().toString());
+
+        model.addAttribute("user", user);
+
+        PaaSportService paaSportService = new PaaSportService(paasportUrl, user.getPaasportToken());
+
+        PaaSportProject project = projectService.findByProjectIdAndUser(project_id, user);
+
+        //Unassigned project
+        if (null == project) {
+
+            logger.severe("Project error!");
+
+            return "paasport::paasport-error";
+
+        } else {
+
+            // Stop application
+            boolean isSuccess = paaSportService.stopApplication(applicationID);
+
+            if (isSuccess) {
+
+                return new JSONObject().put("code", MESSAGES.SUCCESS).put("message", "Application with id: " + applicationID + " has been stopped!").toString();
+
+            } else {
+
+                return new JSONObject().put("code", MESSAGES.FAIL).put("message", "Application with id: " + applicationID + " has not been stopped!").toString();
+            }
+
+        }
+
+    }
+
+    @CrossOrigin
     @ResponseBody
     @RequestMapping(value = "/api/v1/paasport/add", method = RequestMethod.POST)
     public String paasportAuth(Model model, @RequestParam(value = "project_id", defaultValue = "") long project_id, @RequestParam(value = "projectName", defaultValue = "") String projectName) {
@@ -193,6 +283,8 @@ public class PaaSportController {
 
         return new JSONObject().put("code", MESSAGES.SUCCESS).put("message", "Project: " + projectName + " has been assigned!").toString();
     }
+
+
 
     @CrossOrigin
     @ResponseBody
