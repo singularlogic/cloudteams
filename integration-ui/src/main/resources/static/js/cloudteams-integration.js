@@ -360,8 +360,10 @@ function getJiraChartsData() {
 
             var returnObject = parseData.returnobject;
 
-            // Issue types
             var issueTypesHighchartsOpts = global_highcharts_options;
+            var issuePriorityHighchartsOpts = global_highcharts_options;
+            var issueStatusHighchartsOpts = global_highcharts_options;
+            // Issue types
             issueTypesHighchartsOpts.title.text = "Types";
             issueTypesHighchartsOpts.series.push({
                 name: "Types",
@@ -371,7 +373,6 @@ function getJiraChartsData() {
             Highcharts.chart("issue-types", issueTypesHighchartsOpts);
 
             // Issue Priority
-            var issuePriorityHighchartsOpts = global_highcharts_options;
             issuePriorityHighchartsOpts.title.text = "Priorities";
             issuePriorityHighchartsOpts.series.push({
                 name: "Priorities",
@@ -381,7 +382,6 @@ function getJiraChartsData() {
             Highcharts.chart("issue-priority", issuePriorityHighchartsOpts);
 
             // Issue Status
-            var issueStatusHighchartsOpts = global_highcharts_options;
             issueStatusHighchartsOpts.title.text = "Status";
             issueStatusHighchartsOpts.series.push({
                 name: "Status",
