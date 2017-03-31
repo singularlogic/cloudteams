@@ -115,6 +115,7 @@ public class SonarqubeController {
         jsonTemp3.put("sqale_debt_ratio", scaleDept);
         jsonTemp3.put("-", hunderdMinusScaledept);
         
+        logger.info("metricJson: " + jsonTemp3.toString());
         
         return new JSONObject().put("code", MESSAGES.SUCCESS).put("message", "Jira data sent successfully!").put("returnobject", projectDataJson).toString();
         }
