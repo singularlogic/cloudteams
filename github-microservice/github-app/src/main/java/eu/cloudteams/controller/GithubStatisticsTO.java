@@ -61,6 +61,14 @@ public final class GithubStatisticsTO {
 
     public void gatherInfo() throws IOException {
 
+        githubService.getIssueService().getIssues(repository, null).forEach(issue -> {
+
+            System.out.println("State: "+issue.getState()+" \nLabels:");
+
+            System.out.println(issue.getLabels().stream().map((label) -> label.getName()).collect(Collectors.joining(",")));
+
+        });
+
         branchesList = githubService.getGithubRepositoryService().getBranches(repository);
         labelsList = githubService.getLabelService().getLabels(repository);
         commits = githubService.getCommitService().getCommits(repository);

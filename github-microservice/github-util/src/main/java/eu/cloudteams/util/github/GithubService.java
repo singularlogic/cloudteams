@@ -6,6 +6,7 @@ import org.eclipse.egit.github.core.service.RepositoryService;
 import org.eclipse.egit.github.core.service.UserService;
 import org.eclipse.egit.github.core.service.CollaboratorService;
 import org.eclipse.egit.github.core.service.LabelService;
+import org.eclipse.egit.github.core.service.IssueService;
 
 /**
  *
@@ -20,6 +21,7 @@ public final class GithubService {
     private final LabelService labelService;
     private final CommitService commitService;
     private final CollaboratorService collaboratorService;
+    private final IssueService issueService;
 
     public GithubService(String accessToken) {
         githubClient.setOAuth2Token(accessToken);
@@ -28,7 +30,11 @@ public final class GithubService {
         labelService = new LabelService(githubClient);
         commitService = new CommitService(githubClient);
         collaboratorService = new CollaboratorService(githubClient);
+        issueService = new IssueService(githubClient);
+    }
 
+    public IssueService getIssueService() {
+        return issueService;
     }
 
     public CollaboratorService getCollaboratorService() {
