@@ -59,15 +59,15 @@ $(document).ready(function () {
         $("#widget-loading").show();
     });
     //Load Github widget
-    loadGithubWidget();
+    $("#ct-content-github").length > 0 ? loadGithubWidget() : null;
     //Load Sonarqube widget
-    loadSonarqubeWidget();
+    $("#ct-content-sonarqube").length > 0 ? loadSonarqubeWidget() : null;
     //Load Bitbucket widget
-    loadBitbucketWidget();
+    $("#ct-content-bitbucket").length > 0 ? loadBitbucketWidget() : null;
     //Load Jira widget
-    loadJiraWidget();
+    $("#ct-content-jira").length > 0 ? loadJiraWidget() : null;
     //Load PaaSport widget
-    loadPaaSportWidget();
+    $("#ct-content-paasport").length > 0 ? loadPaaSportWidget() : null;
 
     // object.title.text = "..."
     /*object.series.push({
