@@ -179,7 +179,7 @@ public class PaaSportController {
 
             logger.severe("Project error!");
 
-            return "paasport::paasport-error";
+            return new JSONObject().put("code", MESSAGES.FAIL).put("message", "Application with id: " + applicationID + " has not been started!").toString();
 
         } else {
 
@@ -191,7 +191,6 @@ public class PaaSportController {
                 return new JSONObject().put("code", MESSAGES.SUCCESS).put("message", "Application with id: " + applicationID + " has been started!").toString();
 
             } else {
-
                 return new JSONObject().put("code", MESSAGES.FAIL).put("message", "Application with id: " + applicationID + " has not been started!").toString();
             }
 
@@ -226,7 +225,7 @@ public class PaaSportController {
 
             logger.severe("Project error!");
 
-            return "paasport::paasport-error";
+            return new JSONObject().put("code", MESSAGES.FAIL).put("message", "Application with id: " + applicationID + " has not been stopped!").toString();
 
         } else {
 
