@@ -44,7 +44,7 @@ public class ProjectService {
     }
 
     public GithubProject findByProjectIdAndUser(long project_id, GithubUser user) {
-        return projectRepository.findByProjectIdAndUser(project_id, user);
+        return projectRepository.findFirst1ByProjectIdAndUser(project_id, user);
     }
 
     public long deleteByProjectIdAndUser(long project_id, GithubUser user) {

@@ -20,7 +20,7 @@ public interface ProjectRepository extends JpaRepository<GithubProject, Long> {
      * @param user
      * @return
      */
-    public GithubProject findByProjectIdAndUser(long projectId, GithubUser user);
+    public GithubProject findFirst1ByProjectIdAndUser(long projectId, GithubUser user);
 
    @Transactional
     public long deleteByProjectIdAndUser(long projectId, GithubUser user);
