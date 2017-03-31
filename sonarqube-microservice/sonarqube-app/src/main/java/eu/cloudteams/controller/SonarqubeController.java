@@ -173,10 +173,11 @@ public class SonarqubeController {
     public String getJWT(@RequestParam(value = "username", required = true) String username, @RequestParam(value = "sonarUrl", required = true) String sonarUrl, HttpServletRequest request) throws IOException {
 
         //Check if sonar service is running on the given url
+        /*
         if (!new SonarqubeService(sonarUrl).getServerInfo().isPresent()) {
             return new JSONObject().put("code", MESSAGES.FAIL).put("message", "Sonarqube service is not available in url: " + sonarUrl).toString();
         }
-
+        */
         //Check if user already exists
         SonarqubeUser user = userService.findByUsername(username);
 

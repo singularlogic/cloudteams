@@ -463,7 +463,10 @@ public class SonarqubeService {
         
         System.out.println("----"+get);
         //System.out.println("----"+get2);
-        sonarqubeService.getServerInfo();
+        Optional<ServerInfo> serverInfo = sonarqubeService.getServerInfo();
+        
+        System.out.println("server info"+ serverInfo.toString());
+        
         
         sonarqubeService.getProjectDataJson();
         
