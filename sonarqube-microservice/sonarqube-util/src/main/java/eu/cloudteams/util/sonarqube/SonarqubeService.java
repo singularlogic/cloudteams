@@ -271,13 +271,11 @@ public class SonarqubeService {
     public JSONObject getProjectDataJson() {
         JSONObject jsonIssues = new JSONObject();
 
-
         try {
            //----ISSUES  ----  
            //TOTAL 
            int totalIssues = this.getProjectIssues().getNumberOfProjectIssues();
            
-            
            //STATUS 
            int openIussues = this.getProjectIssuesByStatus("OPEN").getNumberOfProjectIssues();
            int reopenIussues = this.getProjectIssuesByStatus("REOPENED").getNumberOfProjectIssues();
@@ -298,59 +296,19 @@ public class SonarqubeService {
            int vulnerability = this.getProjectIssuesByType("VULNERABILITY").getNumberOfProjectIssues();
            int otherType = totalIssues-bugs-codesmell-vulnerability;
            
-            System.out.println("total"+totalIssues);
-            //System.out.println("totalusr"+TotalUserIssues);
-            
-            System.out.println("openIussues"+openIussues);
-            System.out.println("reopemn"+reopenIussues);
-            System.out.println("res"+resolvedIssues);
-            System.out.println("clos"+closedIssues);
-            System.out.println("conf"+confirmedIssues);
-            System.out.println("otherIssues"+otherIssues);
-            
-            System.out.println("blocker"+blockerIssues);
-            System.out.println("maj"+majorIssues);
-            System.out.println("min"+minorIssues);
-            System.out.println("other"+otherSeverity);
-            
-            System.out.println("1"+bugs);
-            System.out.println("2"+codesmell);
-            System.out.println("3"+vulnerability);
-            System.out.println("min"+minorIssues);
-            System.out.println("otherSever"+otherSeverity);
-            //String issues = String.valueOf(sonarIssues.getNumberOfProjectIssues());
-
             //----METRICS----        
             SonarComponentResponse sonarMeasures = this.getProjectComponentAndMetrics();
             List<Measure> measures = sonarMeasures.getComponent().getMeasures();
-            
-
-            /*            Map<String, String> collect = measures.stream().filter(c->c.getMetric().equalsIgnoreCase("public_documented_api_density")).collect(Collectors.toMap(msr -> metrics.get(msr.getMetric()), Measure::getValue));
-            //measures.stream().filter(c->c.getValue()!= null).collect(Collectors.toMap(msr -> metrics.get(msr.getMetric()), Measure::getValue)));
-            System.out.println("collectsize"+collect.size());
-            System.out.println("collect"+collect.toString());
-            
-            Map<String, String> collect2 = measures.stream().filter(c->c.getMetric().equalsIgnoreCase("sqale_debt_ratio")).collect(Collectors.toMap(msr -> metrics.get(msr.getMetric()), Measure::getValue));
-            //measures.stream().filter(c->c.getValue()!= null).collect(Collectors.toMap(msr -> metrics.get(msr.getMetric()), Measure::getValue)));
-            System.out.println("sqale_debt_ratio"+collect2.size());
-            System.out.println("sqale_debt_ratio"+collect2.values().toString());*/
             
             //ProjectInfo projectInfo= this.getProjectInfo();
             Optional<Measure> findFirst = measures.stream().filter(c->c.getMetric().equalsIgnoreCase("sqale_debt_ratio")).findFirst();
             String metric = findFirst.get().getMetric();
             String value = findFirst.get().getValue();
             
-            System.out.println("metric"+metric + " value"+ value);
-            
-            JSONObject jsonTemp = new JSONObject();
             JSONArray jsonIssueTypes = new JSONArray();
             JSONArray jsonIssueSeverity = new JSONArray();
             JSONArray jsonIssueStatus = new JSONArray();
-            
-            //Map.Entry pair = (Map.Entry)iterator.next();
-            
 
-            
             jsonIssueStatus.put(new JSONObject().put("name","Open").put("y", openIussues));
             jsonIssueStatus.put(new JSONObject().put("name","Closed").put("y", closedIssues));
             jsonIssueStatus.put(new JSONObject().put("name","Confirmed").put("y", confirmedIssues));
@@ -372,23 +330,11 @@ public class SonarqubeService {
             jsonIssueTypes.put(new JSONObject().put("name","Other").put("y", otherSeverity));
 
            jsonIssues.put("issuesByStatus", jsonIssueStatus).put("issuesBySeverity", jsonIssueSeverity).put("issueType", jsonIssueTypes);
-
-            
-            
-            System.out.println("json:"+jsonIssues.toString());
-            
-            
-            
-            
         } catch (Exception ex) {
             Logger.getLogger(SonarqubeService.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        
- 
-        
         return jsonIssues;
-        
         
     }
 
@@ -410,7 +356,6 @@ public class SonarqubeService {
         
         
         sonarqubeService.getProjectDataJson();
-        
         
     }
 

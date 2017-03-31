@@ -8,6 +8,34 @@ var CLOUDTEAMS_BITBUCKET_REST_ENDPOINT = "https://cloudteams.euprojects.net/bitb
 var CLOUDTEAMS_JIRA_REST_ENDPOINT = "https://cloudteams.euprojects.net/jira/api/v1";
 var CLOUDTEAMS_PAASPORT_REST_ENDPOINT = "https://cloudteams.euprojects.net/paasport/api/v1";
 
+var global_highcharts_options = {
+    chart: {
+        plotBackgroundColor: null,
+        plotBorderWidth: null,
+        plotShadow: false,
+        type: 'pie'
+    },
+    title: {},
+    tooltip: {
+        //pointFormat: `{series.name}: <b>{point.percentage:.1f}%</b>`
+        pointFormat: `<b>{point.percentage:.1f}%</b>`
+    },
+    plotOptions: {
+        pie: {
+            allowPointSelect: true,
+            cursor: 'pointer',
+            dataLabels: {
+                enabled: false
+            },
+            showInLegend: true
+        }
+    },
+    credits: {
+        enabled: false
+    },
+    series: []
+};
+
 function getLoadingHTML(text = "Please wait...") {
     return '<div id="widget-loading" style="text-align: center;"><div class="loader-general loader-general-gray" id="loader-general-1"></div><p><a href="#loader-general-1">' + text + '</a></p></div>';
 }
@@ -40,6 +68,14 @@ $(document).ready(function () {
     loadJiraWidget();
     //Load PaaSport widget
     loadPaaSportWidget();
+
+    // object.title.text = "..."
+    /*object.series.push({
+        name: "...",
+        colorByPoint: true,
+        data: DATA
+    }*/
+
 });
 
 // Replacement for classic js alert
@@ -324,101 +360,35 @@ function getJiraChartsData() {
 
             var returnObject = parseData.returnobject;
 
-            //TODO - make it more generic/optimize
             // Issue types
-            Highcharts.chart("issue-types", {
-                chart: {
-                    plotBackgroundColor: null,
-                    plotBorderWidth: null,
-                    plotShadow: false,
-                    type: 'pie'
-                },
-                title: {
-                    text: "Types"
-                },
-                tooltip: {
-                    //pointFormat: `{series.name}: <b>{point.percentage:.1f}%</b>`
-                    pointFormat: `<b>{point.percentage:.1f}%</b>`
-                },
-                plotOptions: {
-                    pie: {
-                        allowPointSelect: true,
-                        cursor: 'pointer',
-                        dataLabels: {
-                            enabled: false
-                        },
-                        showInLegend: true
-                    }
-                },
-                series: [{
-                    name: 'Types',
-                    colorByPoint: true,
-                    data: returnObject.issueTypes
-                }]
+            var issueTypesHighchartsOpts = global_highcharts_options;
+            issueTypesHighchartsOpts.title.text = "Types";
+            issueTypesHighchartsOpts.series.push({
+                name: "Types",
+                colorByPoint: true,
+                data: returnObject.issueTypes
             });
+            Highcharts.chart("issue-types", issueTypesHighchartsOpts);
 
             // Issue Priority
-            Highcharts.chart("issue-priority", {
-                chart: {
-                    plotBackgroundColor: null,
-                    plotBorderWidth: null,
-                    plotShadow: false,
-                    type: 'pie'
-                },
-                title: {
-                    text: "Priorities"
-                },
-                tooltip: {
-                    //pointFormat: `{series.name}: <b>{point.percentage:.1f}%</b>`
-                    pointFormat: `<b>{point.percentage:.1f}%</b>`
-                },
-                plotOptions: {
-                    pie: {
-                        allowPointSelect: true,
-                        cursor: 'pointer',
-                        dataLabels: {
-                            enabled: false
-                        },
-                        showInLegend: true
-                    }
-                },
-                series: [{
-                    name: 'Priorities',
-                    colorByPoint: true,
-                    data: returnObject.issuePriority
-                }]
+            var issuePriorityHighchartsOpts = global_highcharts_options;
+            issuePriorityHighchartsOpts.title.text = "Priorities";
+            issuePriorityHighchartsOpts.series.push({
+                name: "Priorities",
+                colorByPoint: true,
+                data: returnObject.issuePriority
             });
+            Highcharts.chart("issue-priority", issuePriorityHighchartsOpts);
 
             // Issue Status
-            Highcharts.chart("issue-status", {
-                chart: {
-                    plotBackgroundColor: null,
-                    plotBorderWidth: null,
-                    plotShadow: false,
-                    type: 'pie'
-                },
-                title: {
-                    text: "Status"
-                },
-                tooltip: {
-                    pointFormat: `<b>{point.percentage:.1f}%</b>`
-                },
-                plotOptions: {
-                    pie: {
-                        allowPointSelect: true,
-                        cursor: 'pointer',
-                        dataLabels: {
-                            enabled: false
-                        },
-                        showInLegend: true
-                    }
-                },
-                series: [{
-                    name: 'Status',
-                    colorByPoint: true,
-                    data: returnObject.issueStatus
-                }]
+            var issueStatusHighchartsOpts = global_highcharts_options;
+            issueStatusHighchartsOpts.title.text = "Status";
+            issueStatusHighchartsOpts.series.push({
+                name: "Status",
+                colorByPoint: true,
+                data: returnObject.issueStatus
             });
+            Highcharts.chart("issue-status", issueStatusHighchartsOpts);
 
             $("#widget-loading").remove();
             $(".inner-wrap").show();
