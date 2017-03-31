@@ -345,100 +345,41 @@ public class SonarqubeService {
             JSONObject jsonTemp = new JSONObject();
             JSONArray jsonIssueTypes = new JSONArray();
             JSONArray jsonIssueSeverity = new JSONArray();
+            JSONArray jsonIssueStatus = new JSONArray();
             
             //Map.Entry pair = (Map.Entry)iterator.next();
             
-            jsonTemp.put("name", "Open");
-            jsonTemp.put("y", openIussues);
-            jsonIssueTypes.put(jsonTemp);
+
             
-            
-            jsonTemp.put("open", openIussues);
-            jsonTemp.put("closed", closedIssues);
-            jsonTemp.put("reopen", reopenIussues);
-            jsonTemp.put("resolved", resolvedIssues);
-            jsonTemp.put("confirmend", confirmedIssues);
-            jsonTemp.put("other", otherIssues);
-            jsonIssueTypes.put(jsonTemp);
+            jsonIssueStatus.put(new JSONObject().put("name","Open").put("y", openIussues));
+            jsonIssueStatus.put(new JSONObject().put("name","Closed").put("y", closedIssues));
+            jsonIssueStatus.put(new JSONObject().put("name","Confirmed").put("y", confirmedIssues));
+            jsonIssueStatus.put(new JSONObject().put("name","Resolved").put("y", resolvedIssues));
+            jsonIssueStatus.put(new JSONObject().put("name","Reopen").put("y", reopenIussues));
+            jsonIssueStatus.put(new JSONObject().put("name","Other").put("y", otherIssues));
+
             //SEVERITY
-            JSONObject jsonTemp2 = new JSONObject();
-            jsonTemp2.put("blockerIssues", blockerIssues);
-            jsonTemp2.put("majorIssues", majorIssues);
-            jsonTemp2.put("minorIssues", minorIssues);
-            jsonTemp2.put("otherSeverity", otherSeverity);
+            jsonIssueSeverity.put(new JSONObject().put("name","Blocker").put("y", blockerIssues));
+            jsonIssueSeverity.put(new JSONObject().put("name","Major").put("y", majorIssues));
+            jsonIssueSeverity.put(new JSONObject().put("name","Minor").put("y", minorIssues));
+            jsonIssueSeverity.put(new JSONObject().put("name","Other").put("y", otherSeverity));
+
            //TYPE
-            JSONObject jsonTemp3 = new JSONObject();
-            jsonTemp3.put("bugs", bugs);
-            jsonTemp3.put("codesmell", codesmell);
-            jsonTemp3.put("vulnerability", vulnerability);
-            jsonTemp3.put("minorIssues", minorIssues);
-            jsonTemp3.put("otherSeverity", otherSeverity);
-            
-           jsonIssues.put("issuesByStatus", jsonTemp).put("issuesBySeverity", jsonTemp2).put("issueType", jsonTemp3);
+            jsonIssueTypes.put(new JSONObject().put("name","Bugs").put("y", bugs));
+            jsonIssueTypes.put(new JSONObject().put("name","Code Smell").put("y", codesmell));
+            jsonIssueTypes.put(new JSONObject().put("name","Vulnerability").put("y", vulnerability));
+            jsonIssueTypes.put(new JSONObject().put("name","Minor Issues").put("y", minorIssues));
+            jsonIssueTypes.put(new JSONObject().put("name","Other").put("y", otherSeverity));
+
+           jsonIssues.put("issuesByStatus", jsonIssueStatus).put("issuesBySeverity", jsonIssueSeverity).put("issueType", jsonIssueTypes);
 
             
             
-            System.out.println("json:"+jsonTemp.toString());
             System.out.println("json:"+jsonIssues.toString());
             
             
             
             
-            
-           // jsonIssueTypes.add(jsonTemp);
-            //iterator.remove();
-            
-           // jsonIssueTypes.p
-            /*
-            
-            
-            JSONArray jsonIssueTypes = new JSONArray();
-            JSONArray jsonIssuePriority = new JSONArray();
-            JSONArray jsonIssueStatus = new JSONArray();
-            JSONArray jsonTechnicalDebtRatio = new JSONArray();
-            JSONArray jsonTechnicalDebtRatioNewCode = new JSONArray();
-            JSONArray jsonComments = new JSONArray();
-            JSONArray jsonDuplicatedLines = new JSONArray();
-           // List<Issue> issues = sonarService.getProjectInfo().(project.getProjectId());
-            Map issueTypes = issues.stream().collect(Collectors.groupingBy(issue -> issue.getIssueType().getName(), Collectors.counting()));
-            Map issuePriority = issues.stream().collect(Collectors.groupingBy(issue -> issue.getPriority().getName(), Collectors.counting()));
-            Map issueStatus = issues.stream().collect(Collectors.groupingBy(issue -> issue.getStatus().getName(), Collectors.counting()));
-            Iterator iterator = null;
-            iterator = issueTypes.entrySet().iterator();
-            while (iterator.hasNext()) {
-            JSONObject jsonTemp = new JSONObject();
-            Map.Entry pair = (Map.Entry)iterator.next();
-            jsonTemp.put("name", pair.getKey());
-            jsonTemp.put("y", pair.getValue());
-            jsonIssueTypes.add(jsonTemp);
-            iterator.remove();
-            }
-            iterator = issuePriority.entrySet().iterator();    
-            while (iterator.hasNext()) {
-            JSONObject jsonTemp = new JSONObject();
-            Map.Entry pair = (Map.Entry)iterator.next();
-            jsonTemp.put("name", pair.getKey());
-            jsonTemp.put("y", pair.getValue());
-            jsonIssuePriority.add(jsonTemp);
-            iterator.remove();
-            }
-            iterator = issueStatus.entrySet().iterator();
-            while (iterator.hasNext()) {
-            JSONObject jsonTemp = new JSONObject();
-            Map.Entry pair = (Map.Entry)iterator.next();
-            jsonTemp.put("name", pair.getKey());
-            jsonTemp.put("y", pair.getValue());
-            jsonIssueStatus.add(jsonTemp);
-            iterator.remove();
-            }
-           
-            jsonIssues.put("issueTypes", jsonIssueTypes).put("issuePriority", jsonIssuePriority).put("issueStatus", jsonIssueStatus);
-           
-           
-            return new JSONObject().put("code", MESSAGES.SUCCESS).put("message", "Jira data sent successfully!").put("returnobject", jsonIssues).toString();
-            }
-             */
-            //return new JSONObject().put("code", MESSAGES.FAIL).put("message", "There are no information about this project").toString();
         } catch (Exception ex) {
             Logger.getLogger(SonarqubeService.class.getName()).log(Level.SEVERE, null, ex);
         }
