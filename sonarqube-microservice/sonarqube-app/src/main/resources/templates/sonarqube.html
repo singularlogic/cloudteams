@@ -378,6 +378,8 @@
 			color: #fff;
 			background-color: #7d3c8c;
 		}
+
+		.charts-wrapper hr { display: none; }
     </style>
 
     <div class="alert alert-warning">
@@ -391,14 +393,6 @@
     <span class="highlight">Description</span>
     <p th:inline="text">[[${projectInfo.getDescription()}]]</p>
 
-    <!-- 1. Issues-->
-    <h3 class="header-medium secondary full-bg">Issues<br/><small>While running an analysis, SonarQube raises an issue every time a piece of code breaks a coding rule. The set of coding rules is defined through the quality profile associated with the project.</small></h3><br/>
-
-    <!--Total Issues-->
-    <p th:inline="text">
-        <span class="highlight">Total Issues (<span th:text="${projectInfo.getTotalIssues()}"></span>)</span>
-    </p>
-
     <!-- 2. Metrics-->
     <h3 class="header-medium secondary full-bg">Metrics</h3><br/>
 
@@ -406,11 +400,32 @@
         <span class="highlight" th:text="${metric.key}"></span> (<span th:text="${metric.value}"></span>)
     </p>
 
+    <!-- 1. Issues-->
+    <h3 class="header-medium secondary full-bg">Issues<br/><small>While running an analysis, SonarQube raises an issue every time a piece of code breaks a coding rule. The set of coding rules is defined through the quality profile associated with the project.</small></h3><br/>
+
+    <!--Total Issues-->
+    <p th:inline="text">
+        <span class="highlight">Total Issues (<span th:text="${projectInfo.getTotalIssues()}"></span>)</span>
+    </p>
+    <hr/>
+
+    <div class="charts-wrapper">
+        <div id="issue-types"></div>
+        <hr/>
+
+        <div id="issues-status"></div>
+        <hr/>
+
+        <div id="issues-severity"></div>
+    </div>
+
     <hr/>
 
     <button id="btn-unassign" onclick="unassignProject()" class="btn btn-danger">Unassign</button>
 
     <script th:inline="javascript">
+
+        getSonarChartsData();
 
         function unassignProject() {
 

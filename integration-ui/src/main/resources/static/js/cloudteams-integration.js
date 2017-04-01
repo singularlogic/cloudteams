@@ -297,6 +297,71 @@ function hasSonarqubeAccessToken() {
     return null !== localStorage.getItem("sonarqube_auth_token");
 }
 
+function getSonarChartsData() {
+
+    $(".charts-wrapper").prepend(getLoadingHTML("Loading charts. Please wait..."));
+
+    $.ajax({
+        type:"GET",
+        url: CLOUDTEAMS_SONARQUBE_REST_ENDPOINT + "/sonarqube/projectcharts/" + ct_project_id,
+    	contentType: "application/json; charset=utf-8",
+    	beforeSend: function (xhr) {
+            if (hasJiraAccessToken()) {
+                xhr.setRequestHeader(AUTHORIZATION_HEADER, localStorage.jira_auth_token);
+            }
+        },
+    }).complete(function(data, status, xhr) {
+
+        var parseData = JSON.parse(data.responseText);
+
+        if (parseData.code == "SUCCESS") {
+
+            var returnObject = parseData.returnobject;
+
+            // Issue types
+            var issueTypesHighchartsOpts = jQuery.extend(true, {}, global_highcharts_options);
+            issueTypesHighchartsOpts.title.text = "Types";
+            issueTypesHighchartsOpts.series.push({
+                name: "Types",
+                colorByPoint: true,
+                data: returnObject.issueType
+            });
+            Highcharts.chart("issue-types", issueTypesHighchartsOpts);
+
+            // Issue Status
+            var issueStatusHighchartsOpts = jQuery.extend(true, {}, global_highcharts_options);
+            issueStatusHighchartsOpts.title.text = "Status";
+            issueStatusHighchartsOpts.series.push({
+                name: "Status",
+                colorByPoint: true,
+                data: returnObject.issuesByStatus
+            });
+            Highcharts.chart("issues-status", issueStatusHighchartsOpts);
+
+            // Issue Status
+            var issuesBySeverityHighchartsOpts = jQuery.extend(true, {}, global_highcharts_options);
+            issuesBySeverityHighchartsOpts.title.text = "Severity";
+            issuesBySeverityHighchartsOpts.series.push({
+                name: "Severity",
+                colorByPoint: true,
+                data: returnObject.issuesBySeverity
+            });
+            Highcharts.chart("issue-status", issuesBySeverityHighchartsOpts);
+
+            $("#widget-loading").remove();
+            $(".inner-wrap").show();
+            $("#ct-content-sonarqube hr").show();
+
+        } else {
+            console.log("Status: " + status + ". Something went wrong!");
+            $("#widget-loading").remove();
+            customModal("Info", "", "There are no data to show for this SonarQube project", "OK");
+        }
+    }).error(function(data, textStatus, jqXHR) {
+        console.log("something went wrong");
+    });
+};
+
 
 /*
  *  Handlers for Bitbucket widget

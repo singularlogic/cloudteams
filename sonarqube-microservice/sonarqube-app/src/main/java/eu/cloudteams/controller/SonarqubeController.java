@@ -117,7 +117,7 @@ public class SonarqubeController {
         
         logger.info("metricJson: " + jsonTemp3.toString());
         
-        return new JSONObject().put("code", MESSAGES.SUCCESS).put("message", "Jira data sent successfully!").put("returnobject", projectDataJson).toString();
+        return new JSONObject().put("code", MESSAGES.SUCCESS).put("message", "Sonarcube data sent successfully!").put("returnobject", projectDataJson).toString();
         }
 
         return new JSONObject().put("code", MESSAGES.FAIL).put("message", "There are no information about this project").toString();
