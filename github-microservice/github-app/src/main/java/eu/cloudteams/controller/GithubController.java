@@ -158,10 +158,9 @@ public class GithubController {
 
         logger.info("Requesting info for repository assigned to project_id: " + project_id);
 
-        if (!WebController.hasAccessToken()) {
-            logger.warning("Unauthorized access returing github sigin fragment");
-            //return github-signin fragment
-            return "github::github-no-auth";
+       if (!WebController.hasAccessToken()) {
+            logger.warning("Unauthorized access returing github sign-in fragment");
+            return new JSONObject().put("code", MESSAGES.FAIL).put("message", "Unauthorized access returing github sign-in fragment").toString();
         }
 
         GithubUser user = userService.findByUsername(getCurrentUser().getPrincipal().toString());
