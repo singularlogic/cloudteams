@@ -68,11 +68,11 @@ public class SonarqubeController {
         //}
 
 
-        logger.info("Returning sonarqube-info fragment for user:  " + getCurrentUser().getPrincipal() + " and project_id: " + project_id);
+        logger.info("Creating sonarqube charts fragment for user:  " + getCurrentUser().getPrincipal() + " and project_id: " + project_id);
 
-        Optional<ProjectInfo> repository = sonarService.getProjectInfo();
+      //Optional<ProjectInfo> repository = sonarService.getProjectInfo();
 
-        sonarService = new SonarqubeService(user.getSonarqubeUrl(), project.getSonarqubeProject());
+        //sonarService = new SonarqubeService(user.getSonarqubeUrl(), project.getSonarqubeProject());
 
 
         try {
@@ -88,7 +88,7 @@ public class SonarqubeController {
         if (projectInfo.isPresent()) {
 
             JSONObject projectDataJson = sonarService.getProjectDataJson();
-
+            /*
             Map<String, String> metrics = projectInfo.get().getMetrics();
 
             metrics.getOrDefault("public_documented_api_density", "0");
@@ -106,7 +106,7 @@ public class SonarqubeController {
             jsonTemp3.put("-", hunderdMinusScaledept);
 
             logger.info("metricJson: " + jsonTemp3.toString());
-
+            */
             return new JSONObject().put("code", MESSAGES.SUCCESS).put("message", "Sonarcube data sent successfully!").put("returnobject", projectDataJson).toString();
         }
 

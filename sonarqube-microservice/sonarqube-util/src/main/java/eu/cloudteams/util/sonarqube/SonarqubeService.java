@@ -300,6 +300,7 @@ public class SonarqubeService {
             int otherType = totalIssues - bugs - codesmell - vulnerability;
 
             //----METRICS----        
+            /*
             SonarComponentResponse sonarMeasures = this.getProjectComponentAndMetrics();
             List<Measure> measures = sonarMeasures.getComponent().getMeasures();
 
@@ -307,6 +308,8 @@ public class SonarqubeService {
             Optional<Measure> findFirst = measures.stream().filter(c -> c.getMetric().equalsIgnoreCase("sqale_debt_ratio")).findFirst();
             String metric = findFirst.get().getMetric();
             String value = findFirst.get().getValue();
+            
+            */
 
             JSONArray jsonIssueTypes = new JSONArray();
             JSONArray jsonIssueSeverity = new JSONArray();

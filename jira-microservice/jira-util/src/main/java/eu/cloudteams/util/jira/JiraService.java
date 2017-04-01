@@ -65,15 +65,27 @@ public final class JiraService {
 
     public static void main(String... args) {
         try {
-            JiraService jiraService = new JiraService("https://cloudteams.atlassian.net").authenticateAnonymous();
+            JiraService jiraService = new JiraService("https://jira.atlassian.com").authenticateAnonymous();
 
             //Get Project
             jiraService.getProjects().forEach(project -> System.out.println("Project name: " + project.getName()));
 
             //Get Issues
-           Map<String,Long>  myMap = jiraService.getIssues("CloudTeams").stream().collect(Collectors.groupingBy(issue-> issue.getIssueType().getName() ,Collectors.counting()));
+           Map<String,Long>  myMap = jiraService.getIssues("CLOUD").stream().collect(Collectors.groupingBy(issue-> issue.getIssueType().getName() ,Collectors.counting()));
             
-           
+            Optional<Project> project = jiraService.getProject("CLOUD");
+            
+          
+            List<Issue> issues = jiraService.getIssues("CLOUD");
+            //Get Issues Types
+            Map<String, Long> collect = issues.stream().collect(Collectors.groupingBy(issue -> issue.getIssueType().getName(), Collectors.counting()));
+            //Get Issues Priorities
+            Map<String, Long> collect1 = issues.stream().collect(Collectors.groupingBy(issue -> issue.getPriority().getName(), Collectors.counting()));
+            //Get Issues Statuses
+            Map<String, Long> collect2 = issues.stream().collect(Collectors.groupingBy(issue -> issue.getStatus().getName(), Collectors.counting()));
+            
+            
+            
            myMap.keySet().forEach( type -> System.out.println(type + " count: "+ myMap.get(type)));
             
             
