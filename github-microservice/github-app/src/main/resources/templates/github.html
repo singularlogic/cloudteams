@@ -383,6 +383,10 @@
 
     <button id="btn-unassign" onclick="githubUnassignRepository()" class="btn btn-danger">Unassign</button>
 
+    <script th:inline="javascript">
+        getGithubChartsData();
+    </script>
+
 </div>
 
 <div th:fragment="github-error">
