@@ -32,8 +32,8 @@ var global_highcharts_options = {
     },
     credits: {
         enabled: false
-    }
-    //series: []
+    },
+    series: []
 };
 
 function getLoadingHTML(text = "Please wait...") {
