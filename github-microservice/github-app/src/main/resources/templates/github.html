@@ -365,7 +365,9 @@
         <a th:each="label : ${githubStats.getLabels()}" th:href="${githubStats.getRepository().getHtmlUrl() + '/labels/' + label.getName()}" th:text="${label.getName()}" target="_blank"></a>
     </p>
 
-    <div id="labels-chart"></div>
+    <div class="charts-wrapper">
+        <div id="labels-chart"></div>
+    </div>
 
     <hr/>
 

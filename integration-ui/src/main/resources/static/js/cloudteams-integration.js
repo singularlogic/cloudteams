@@ -180,6 +180,8 @@ function loadGithubWidget() {
         url: CLOUDTEAMS_GITHUB_REST_ENDPOINT + "/github/repository"
     }).success(function (data, status, xhr) {
         $("#ct-content-github").html(data);
+        // Load chart
+        getGithubChartsData();
     }).fail(function (error) {
         console.error("[Cloudteams] Code: " + error.status + " Message: " + error.statusText);
     });

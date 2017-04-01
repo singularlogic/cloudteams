@@ -1,29 +1,19 @@
 package eu.cloudteams.controller;
 
-import static eu.cloudteams.controller.GithubStatisticsTO.getValue;
 import eu.cloudteams.util.github.GithubService;
+import net.minidev.json.JSONArray;
+import org.eclipse.egit.github.core.*;
+import org.json.JSONObject;
+
 import java.io.IOException;
-import java.util.Calendar;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.function.Function;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
-import net.minidev.json.JSONArray;
-import org.eclipse.egit.github.core.Issue;
-import org.eclipse.egit.github.core.Label;
-import org.eclipse.egit.github.core.Repository;
-import org.eclipse.egit.github.core.RepositoryBranch;
-import org.eclipse.egit.github.core.RepositoryCommit;
-import org.eclipse.egit.github.core.User;
-import org.json.JSONObject;
+
+import static eu.cloudteams.controller.GithubStatisticsTO.getValue;
 
 /**
- *
  * @author Christos Paraskeva <ch.paraskeva at gmail dot com>
  */
 public final class GithubStatisticsTO {
@@ -79,7 +69,7 @@ public final class GithubStatisticsTO {
                 .collect(Collectors.groupingBy(label -> label.getName(), Collectors.counting()));
 
         labelsCount = new JSONObject(labelsCountMap);
-        
+
         JSONObject jsonLabels = new JSONObject();
         JSONArray jsonLabelsCount = new JSONArray();
 
@@ -87,7 +77,7 @@ public final class GithubStatisticsTO {
         iterator = labelsCountMap.entrySet().iterator();
         while (iterator.hasNext()) {
             JSONObject jsonTemp = new JSONObject();
-            Map.Entry pair = (Map.Entry)iterator.next();
+            Map.Entry pair = (Map.Entry) iterator.next();
 
             jsonTemp.put("name", pair.getKey());
             jsonTemp.put("y", pair.getValue());
@@ -95,13 +85,13 @@ public final class GithubStatisticsTO {
             jsonLabelsCount.add(jsonTemp);
 
             iterator.remove();
-            }        
-        
+        }
+
         jsonLabels.put("labelCount", jsonLabelsCount);
 
-        
-        System.out.println("labelscount---->"+labelsCount.toString());
-        System.out.println("labelscountForGraphs---->"+jsonLabels.toString());
+
+        System.out.println("labelscount---->" + labelsCount.toString());
+        System.out.println("labelscountForGraphs---->" + jsonLabels.toString());
         branchesList = githubService.getGithubRepositoryService().getBranches(repository);
         labelsList = githubService.getLabelService().getLabels(repository);
         commits = githubService.getCommitService().getCommits(repository);
@@ -113,18 +103,18 @@ public final class GithubStatisticsTO {
         //Pulse section
         setLatMonthCommitsStats();
     }
-     
-    
-        public GithubStatisticsTO(GithubService githubService, Repository repository, String not_used) throws IOException {
+
+
+    public GithubStatisticsTO(GithubService githubService, Repository repository, String not_used) throws IOException {
         this.githubService = githubService;
         this.repository = repository;
 
-       // repository.setDescription(getValue(repository.getDescription()));
+        // repository.setDescription(getValue(repository.getDescription()));
 
-       // gatherInfoForcharts();
+        // gatherInfoForcharts();
     }
-    
-   
+
+
     public JSONObject gatherInfoForcharts() throws IOException {
         JSONObject jsonLabels = new JSONObject();
 
@@ -135,14 +125,14 @@ public final class GithubStatisticsTO {
                 .collect(Collectors.groupingBy(label -> label.getName(), Collectors.counting()));
 
         labelsCount = new JSONObject(labelsCountMap);
-        
+
         JSONArray jsonLabelsCount = new JSONArray();
 
         Iterator iterator = null;
         iterator = labelsCountMap.entrySet().iterator();
         while (iterator.hasNext()) {
             JSONObject jsonTemp = new JSONObject();
-            Map.Entry pair = (Map.Entry)iterator.next();
+            Map.Entry pair = (Map.Entry) iterator.next();
 
             jsonTemp.put("name", pair.getKey());
             jsonTemp.put("y", pair.getValue());
@@ -150,14 +140,14 @@ public final class GithubStatisticsTO {
             jsonLabelsCount.add(jsonTemp);
 
             iterator.remove();
-            }        
-        
+        }
+
         jsonLabels.put("labelCount", jsonLabelsCount);
 
-        
-        System.out.println("labelscount---->"+labelsCount.toString());
-        System.out.println("labelscountForGraphs---->"+jsonLabels.toString());
-   
+
+        System.out.println("labelscount---->" + labelsCount.toString());
+        System.out.println("labelscountForGraphs---->" + jsonLabels.toString());
+
         return jsonLabels;
     }
 
@@ -239,5 +229,5 @@ class CommitsStats {
     public String getContributorsNames() {
         return getValue(this.contributors.stream().collect(Collectors.joining(" ")));
     }
-    
+
 }
