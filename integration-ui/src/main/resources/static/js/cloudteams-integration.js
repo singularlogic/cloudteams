@@ -346,11 +346,11 @@ function getSonarChartsData() {
                 colorByPoint: true,
                 data: returnObject.issuesBySeverity
             });
-            Highcharts.chart("issue-status", issuesBySeverityHighchartsOpts);
+            Highcharts.chart("issues-severity", issuesBySeverityHighchartsOpts);
 
             $("#widget-loading").remove();
-            $(".inner-wrap").show();
-            $("#ct-content-sonarqube hr").show();
+            //$(".inner-wrap").show();
+            $("#ct-content-sonarqube .charts-wrapper hr").show();
 
         } else {
             console.log("Status: " + status + ". Something went wrong!");
