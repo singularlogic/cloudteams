@@ -153,6 +153,7 @@ public class GithubController {
     }
 
     @CrossOrigin
+    @ResponseBody
     @RequestMapping(value = "/api/v1/github/repository/repositorycharts/{project_id}", method = RequestMethod.GET)
     public String getGithubRepositoryCharts(@PathVariable("project_id") int project_id) throws IOException {
 
