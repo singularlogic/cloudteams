@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -153,7 +154,7 @@ public class GithubController {
 
     @CrossOrigin
     @RequestMapping(value = "/api/v1/github/repository/repositorycharts/{project_id}", method = RequestMethod.GET)
-    public String getGithubRepositoryCharts(Model model, @RequestParam(value = "project_id", defaultValue = "0", required = true) int project_id) throws IOException {
+    public String getGithubRepositoryCharts(@PathVariable("project_id") int project_id) throws IOException {
 
         logger.info("Requesting info for repository assigned to project_id: " + project_id);
 
@@ -167,13 +168,9 @@ public class GithubController {
         GithubProject project = projectService.findByProjectIdAndUser(project_id, user);
 
         GithubService github = new GithubService(user.getGithubToken());
-        //Unassigned project
-        if (null == project) {
-            model.addAttribute("GetRepositories", github.getGithubRepositoryService().getRepositories());
-            return "github::github-no-project";
-        }
+      
 
-        logger.info("Returning github-info fragment for user:  " + getCurrentUser().getPrincipal() + " and project_id: " + project_id);
+        logger.info("Fetching github-chart info for user:  " + getCurrentUser().getPrincipal() + " and project_id: " + project_id);
 
         Optional<Repository> repository = github.getGithubRepositoryService().getRepositories().stream().filter(repositoryTofind -> repositoryTofind.getName().equals(project.getGithubRepository())).findFirst();
 
