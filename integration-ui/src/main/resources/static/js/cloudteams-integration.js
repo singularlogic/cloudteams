@@ -18,7 +18,7 @@ var global_highcharts_options = {
     title: {},
     tooltip: {
         //pointFormat: `{series.name}: <b>{point.percentage:.1f}%</b>`
-        pointFormat: `<b>{point.percentage:.1f}%</b>`
+        pointFormat: `<b>{point.percentage:.1f}% (value: {point})</b>`
     },
     plotOptions: {
         pie: {
@@ -297,7 +297,7 @@ function getGithubChartsData() {
 
             // Labels
             var labelsHighchartsOpts = jQuery.extend(true, {}, global_highcharts_options);
-            labelsHighchartsOpts.title.text = "Labels";
+            labelsHighchartsOpts.title.text = "Issues by Label";
             labelsHighchartsOpts.series.push({
                 name: "Labels",
                 colorByPoint: true,
