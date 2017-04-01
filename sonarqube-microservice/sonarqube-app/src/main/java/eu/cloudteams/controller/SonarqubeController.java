@@ -3,35 +3,27 @@ package eu.cloudteams.controller;
 import com.nimbusds.jose.JOSEException;
 import eu.cloudteams.authentication.jwt.Token;
 import eu.cloudteams.authentication.jwt.TokenHandler;
-import static eu.cloudteams.controller.WebController.getCurrentUser;
 import eu.cloudteams.repository.domain.SonarqubeProject;
 import eu.cloudteams.repository.domain.SonarqubeUser;
 import eu.cloudteams.repository.service.ProjectService;
 import eu.cloudteams.repository.service.UserService;
 import eu.cloudteams.util.sonarqube.SonarqubeService;
 import eu.cloudteams.util.sonarqube.models.ProjectInfo;
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.stream.Collectors;
-import javax.servlet.http.HttpServletRequest;
-import net.minidev.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.util.Map;
+import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import static eu.cloudteams.controller.WebController.getCurrentUser;
 
 /**
  *
@@ -48,13 +40,13 @@ public class SonarqubeController {
     @Autowired
     ProjectService projectService;
 
-    
-  @CrossOrigin
+
+    @CrossOrigin
     @ResponseBody
     @RequestMapping(value = "/api/v1/sonarqube/projectcharts/{project_id}", method = RequestMethod.GET)
     public String getSonarJsonData(@PathVariable("project_id") int project_id) {
-        
-        
+
+
         logger.info("Requesting json for charts for repository assigned to project_id: " + project_id);
 
         if (!WebController.hasAccessToken()) {
@@ -66,67 +58,60 @@ public class SonarqubeController {
         SonarqubeUser user = userService.findByUsername(getCurrentUser().getPrincipal().toString());
         SonarqubeProject project = projectService.findByProjectIdAndUser(project_id, user);
 
-        SonarqubeService sonarService= new SonarqubeService(user.getSonarqubeUrl());
-                
+        SonarqubeService sonarService = new SonarqubeService(user.getSonarqubeUrl());
+
         //Unassigned project
-       // if (null == project) {
-       //     sonarService = new SonarqubeService(user.getSonarqubeUrl());
-            //model.addAttribute("sonarqubeProjects", sonarService.getProjects());
+        // if (null == project) {
+        //     sonarService = new SonarqubeService(user.getSonarqubeUrl());
+        //model.addAttribute("sonarqubeProjects", sonarService.getProjects());
         ///    return "sonarqube::sonarqube-no-project";
         //}
-        
+
 
         logger.info("Returning sonarqube-info fragment for user:  " + getCurrentUser().getPrincipal() + " and project_id: " + project_id);
-       
+
         Optional<ProjectInfo> repository = sonarService.getProjectInfo();
 
-                       sonarService = new SonarqubeService(user.getSonarqubeUrl(), project.getSonarqubeProject());
+        sonarService = new SonarqubeService(user.getSonarqubeUrl(), project.getSonarqubeProject());
 
-        
+
         try {
-                 sonarService = new SonarqubeService(user.getSonarqubeUrl(), project.getSonarqubeProject());
+            sonarService = new SonarqubeService(user.getSonarqubeUrl(), project.getSonarqubeProject());
         } catch (Exception ex) {
             Logger.getLogger(SonarqubeController.class.getName()).log(Level.SEVERE, null, ex);
             return new JSONObject().put("code", MESSAGES.FAIL).put("message", "Sonar service failed to start").toString();
         }
-        
-        
+
+
         Optional<ProjectInfo> projectInfo = sonarService.getProjectInfo();
-        
+
         if (projectInfo.isPresent()) {
-            
-        JSONObject projectDataJson = sonarService.getProjectDataJson();
+
+            JSONObject projectDataJson = sonarService.getProjectDataJson();
 
             Map<String, String> metrics = projectInfo.get().getMetrics();
 
-        metrics.getOrDefault("public_documented_api_density","0");
-        metrics.getOrDefault("test_success_density","0");
-        metrics.getOrDefault("coverage","0");
-        metrics.getOrDefault("duplicated_lines_density","0");
-        metrics.getOrDefault("comment_lines_density","0");
-        
-        Float scaleDept = Float.parseFloat(metrics.getOrDefault("sqale_debt_ratio","0"));
-        Float hunderdMinusScaledept= 100 -scaleDept;
+            metrics.getOrDefault("public_documented_api_density", "0");
+            metrics.getOrDefault("test_success_density", "0");
+            metrics.getOrDefault("coverage", "0");
+            metrics.getOrDefault("duplicated_lines_density", "0");
+            metrics.getOrDefault("comment_lines_density", "0");
 
-        
-        
-        
-        JSONObject jsonTemp3 = new JSONObject();
-        jsonTemp3.put("sqale_debt_ratio", scaleDept);
-        jsonTemp3.put("-", hunderdMinusScaledept);
-        
-        logger.info("metricJson: " + jsonTemp3.toString());
-        
-        return new JSONObject().put("code", MESSAGES.SUCCESS).put("message", "Sonarcube data sent successfully!").put("returnobject", projectDataJson).toString();
+            Float scaleDept = Float.parseFloat(metrics.getOrDefault("sqale_debt_ratio", "0"));
+            Float hunderdMinusScaledept = 100 - scaleDept;
+
+
+            JSONObject jsonTemp3 = new JSONObject();
+            jsonTemp3.put("sqale_debt_ratio", scaleDept);
+            jsonTemp3.put("-", hunderdMinusScaledept);
+
+            logger.info("metricJson: " + jsonTemp3.toString());
+
+            return new JSONObject().put("code", MESSAGES.SUCCESS).put("message", "Sonarcube data sent successfully!").put("returnobject", projectDataJson).toString();
         }
 
         return new JSONObject().put("code", MESSAGES.FAIL).put("message", "There are no information about this project").toString();
-    }   
-    
-    
-    
-    
-    
+    }
     
     
     @CrossOrigin
