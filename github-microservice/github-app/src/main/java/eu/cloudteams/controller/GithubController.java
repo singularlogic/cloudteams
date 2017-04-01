@@ -151,6 +151,46 @@ public class GithubController {
         return "github::github-error";
     }
 
+    @CrossOrigin
+    @RequestMapping(value = "/api/v1/github/repository/repositorycharts/{project_id}", method = RequestMethod.GET)
+    public String getGithubRepositoryCharts(Model model, @RequestParam(value = "project_id", defaultValue = "0", required = true) int project_id) throws IOException {
+
+        logger.info("Requesting info for repository assigned to project_id: " + project_id);
+
+        if (!WebController.hasAccessToken()) {
+            logger.warning("Unauthorized access returing github sigin fragment");
+            //return github-signin fragment
+            return "github::github-no-auth";
+        }
+
+        GithubUser user = userService.findByUsername(getCurrentUser().getPrincipal().toString());
+        GithubProject project = projectService.findByProjectIdAndUser(project_id, user);
+
+        GithubService github = new GithubService(user.getGithubToken());
+        //Unassigned project
+        if (null == project) {
+            model.addAttribute("GetRepositories", github.getGithubRepositoryService().getRepositories());
+            return "github::github-no-project";
+        }
+
+        logger.info("Returning github-info fragment for user:  " + getCurrentUser().getPrincipal() + " and project_id: " + project_id);
+
+        Optional<Repository> repository = github.getGithubRepositoryService().getRepositories().stream().filter(repositoryTofind -> repositoryTofind.getName().equals(project.getGithubRepository())).findFirst();
+
+        if (repository.isPresent()) {
+            //Generate github statistics
+            GithubStatisticsTO githubStatistics = new GithubStatisticsTO(github, repository.get(),"test");
+            JSONObject gatherInfoForcharts = githubStatistics.gatherInfoForcharts();
+      
+
+        return new JSONObject().put("code", MESSAGES.SUCCESS).put("message", "GithubCharts data sent successfully!").put("returnobject", gatherInfoForcharts).toString();
+        }
+
+        return new JSONObject().put("code", MESSAGES.FAIL).put("message", "There are no information about this project").toString();
+        
+        
+    }
+
     //Rest Controller
     @CrossOrigin
     @ResponseBody
