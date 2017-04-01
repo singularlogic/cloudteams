@@ -122,11 +122,6 @@ function closeCustomModal($this) {
     });
 }
 
-function setupCharts() {
-    //TODO - make it more generic
-    getJiraChartsData();
-}
-
 /*
  *  Handlers for Github widget
  */
@@ -354,8 +349,8 @@ function getJiraChartsData() {
             var returnObject = parseData.returnobject;
 
             //var issueTypesHighchartsOpts = global_highcharts_options;
-            var issueTypesHighchartsOptsn = jQuery.extend(true, {}, global_highcharts_options);
             // Issue types
+            var issueTypesHighchartsOpts = jQuery.extend(true, {}, global_highcharts_options);
             issueTypesHighchartsOpts.title.text = "Types";
             issueTypesHighchartsOpts.series.push({
                 name: "Types",
