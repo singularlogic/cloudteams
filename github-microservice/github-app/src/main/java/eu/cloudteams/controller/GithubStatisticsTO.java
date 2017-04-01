@@ -26,6 +26,7 @@ public final class GithubStatisticsTO {
     private List<RepositoryCommit> commits;
     private CommitsStats commitsStats;
     private JSONObject labelsCount;
+    private Map<String, Long> labelsCountMap;
 
     public Repository getRepository() {
         return repository;
@@ -50,6 +51,12 @@ public final class GithubStatisticsTO {
     public JSONObject getLabelsGroup() {
         return this.labelsCount;
     }
+    /**
+     * @return the labelsCountMap
+     */
+    public Map<String, Long> getLabelsCountMap() {
+        return labelsCountMap;
+    }
 
     public GithubStatisticsTO(GithubService githubService, Repository repository) throws IOException {
         this.githubService = githubService;
@@ -62,14 +69,14 @@ public final class GithubStatisticsTO {
 
     public void gatherInfo() throws IOException {
 
-        Map<String, Long> labelsCountMap = githubService.getIssueService()
+        labelsCountMap = githubService.getIssueService()
                 .getIssues(repository, null)
                 .stream().map(Issue::getLabels)
                 .flatMap(List::stream)
                 .collect(Collectors.groupingBy(label -> label.getName(), Collectors.counting()));
 
-        labelsCount = new JSONObject(labelsCountMap);
-
+        labelsCount = new JSONObject(getLabelsCountMap());
+        /*
         JSONObject jsonLabels = new JSONObject();
         JSONArray jsonLabelsCount = new JSONArray();
 
@@ -92,6 +99,7 @@ public final class GithubStatisticsTO {
 
         System.out.println("labelscount---->" + labelsCount.toString());
         System.out.println("labelscountForGraphs---->" + jsonLabels.toString());
+        */
         branchesList = githubService.getGithubRepositoryService().getBranches(repository);
         labelsList = githubService.getLabelService().getLabels(repository);
         commits = githubService.getCommitService().getCommits(repository);
@@ -188,6 +196,7 @@ public final class GithubStatisticsTO {
     public static String getValue(String value) {
         return (null == value || value.isEmpty()) ? "N/A" : value;
     }
+
 
 }
 
