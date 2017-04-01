@@ -18,7 +18,7 @@ var global_highcharts_options = {
     title: {},
     tooltip: {
         //pointFormat: `{series.name}: <b>{point.percentage:.1f}%</b>`
-        pointFormat: `<b>{point.percentage:.1f}% (value: {point.y})</b>`
+        pointFormat: `<b>{point.percentage:.1f}% (Value: {point.y})</b>`
     },
     plotOptions: {
         pie: {

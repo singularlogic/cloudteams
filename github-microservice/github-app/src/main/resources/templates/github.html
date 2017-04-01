@@ -362,7 +362,7 @@
     <!--Labels-->
     <p th:inline="text" class="labels">
         <span class="highlight">Labels</span><br/>
-        <a th:each="label : ${githubStats.getLabelsCountMap()}" th:href="${githubStats.getRepository().getHtmlUrl() + '/labels/' + label.key}" th:text="${label.key + '(' + label.value + ')'}" target="_blank"></a>
+        <a th:each="label : ${githubStats.getLabelsCountMap()}" th:href="${githubStats.getRepository().getHtmlUrl() + '/labels/' + label.key}" th:text="${label.key + ' (' + label.value + ')'}" target="_blank"></a>
     </p>
 
     <div class="charts-wrapper">
