@@ -396,9 +396,11 @@
     <!-- 2. Metrics-->
     <h3 class="header-medium secondary full-bg">Metrics</h3><br/>
 
-    <p th:inline="text" th:each="metric : ${projectInfo.getMetrics()}">
-        <span class="highlight" th:text="${metric.key}"></span> (<span th:text="${metric.value}"></span>)
-    </p>
+    <ul class="vertical-line-bullets">
+        <li th:inline="text" th:each="metric : ${projectInfo.getMetrics()}">
+            <span class="highlight" th:text="${metric.key}"></span> (<span th:text="${metric.value}"></span>)
+        </li>
+    </ul>
 
     <!-- 1. Issues-->
     <h3 class="header-medium secondary full-bg">Issues<br/><small>While running an analysis, SonarQube raises an issue every time a piece of code breaks a coding rule. The set of coding rules is defined through the quality profile associated with the project.</small></h3><br/>
