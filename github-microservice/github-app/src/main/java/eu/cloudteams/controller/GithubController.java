@@ -1,6 +1,5 @@
 package eu.cloudteams.controller;
 
-import static eu.cloudteams.controller.WebController.getCurrentUser;
 import com.nimbusds.jose.JOSEException;
 import eu.cloudteams.authentication.jwt.Token;
 import eu.cloudteams.authentication.jwt.TokenHandler;
@@ -11,24 +10,21 @@ import eu.cloudteams.repository.service.UserService;
 import eu.cloudteams.util.github.GithubAuthHandler;
 import eu.cloudteams.util.github.GithubAuthResponse;
 import eu.cloudteams.util.github.GithubService;
-import java.io.IOException;
-import java.util.Optional;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import org.eclipse.egit.github.core.Repository;
-
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import static eu.cloudteams.controller.WebController.getCurrentUser;
 
 /**
  * Restful API for integration with CloudTeams Platform
@@ -159,7 +155,7 @@ public class GithubController {
 
         logger.info("Requesting info for repository assigned to project_id: " + project_id);
 
-       if (!WebController.hasAccessToken()) {
+        if (!WebController.hasAccessToken()) {
             logger.warning("Unauthorized access returing github sign-in fragment");
             return new JSONObject().put("code", MESSAGES.FAIL).put("message", "Unauthorized access returing github sign-in fragment").toString();
         }
@@ -168,7 +164,7 @@ public class GithubController {
         GithubProject project = projectService.findByProjectIdAndUser(project_id, user);
 
         GithubService github = new GithubService(user.getGithubToken());
-      
+
 
         logger.info("Fetching github-chart info for user:  " + getCurrentUser().getPrincipal() + " and project_id: " + project_id);
 
@@ -176,16 +172,16 @@ public class GithubController {
 
         if (repository.isPresent()) {
             //Generate github statistics
-            GithubStatisticsTO githubStatistics = new GithubStatisticsTO(github, repository.get(),"test");
+            GithubStatisticsTO githubStatistics = new GithubStatisticsTO(github, repository.get(), "test");
             JSONObject gatherInfoForcharts = githubStatistics.gatherInfoForcharts();
-      
 
-        return new JSONObject().put("code", MESSAGES.SUCCESS).put("message", "GithubCharts data sent successfully!").put("returnobject", gatherInfoForcharts).toString();
+
+            return new JSONObject().put("code", MESSAGES.SUCCESS).put("message", "GithubCharts data sent successfully!").put("returnobject", gatherInfoForcharts).toString();
         }
 
         return new JSONObject().put("code", MESSAGES.FAIL).put("message", "There are no information about this project").toString();
-        
-        
+
+
     }
 
     //Rest Controller
