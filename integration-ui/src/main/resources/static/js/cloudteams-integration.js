@@ -272,6 +272,51 @@ function githubUnassignRepository() {
     });
 };
 
+function getGithubChartsData() {
+
+    $(".charts-wrapper").prepend(getLoadingHTML("Loading charts. Please wait..."));
+
+    $.ajax({
+        type:"GET",
+        url: CLOUDTEAMS_GITHUB_REST_ENDPOINT + "/github/repository/repositorycharts/" + ct_project_id,
+    	contentType: "application/json; charset=utf-8",
+    	beforeSend: function (xhr) {
+            if (hasJiraAccessToken()) {
+                xhr.setRequestHeader(AUTHORIZATION_HEADER, localStorage.jira_auth_token);
+            }
+        },
+    }).complete(function(data, status, xhr) {
+
+        var parseData = JSON.parse(data.responseText);
+
+        if (parseData.code == "SUCCESS") {
+
+            var returnObject = parseData.returnobject;
+
+            // Labels
+            var labelsHighchartsOpts = jQuery.extend(true, {}, global_highcharts_options);
+            labelsHighchartsOpts.title.text = "Labels";
+            labelsHighchartsOpts.series.push({
+                name: "Labels",
+                colorByPoint: true,
+                data: returnObject.labelCount
+            });
+            Highcharts.chart("labels-chart", labelsHighchartsOpts);
+
+            $("#widget-loading").remove();
+            //$(".inner-wrap").show();
+            $("#ct-content-github hr").show();
+
+        } else {
+            console.log("Status: " + status + ". Something went wrong!");
+            $("#widget-loading").remove();
+            customModal("Info", "", "There are no data to show for this GitHub project", "OK");
+        }
+    }).error(function(data, textStatus, jqXHR) {
+        console.log("something went wrong");
+    });
+};
+
 /*
  *  Handlers for Sonarqube widget
  */

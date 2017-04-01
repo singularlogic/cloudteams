@@ -398,7 +398,7 @@
     </div>
 
     <span class="highlight">Name</span>
-    <p th:inline="text"><strong>[[${projectInfo.getProjectName()}]]</strong> ([[${projectInfo.getVersion()}]])</p>
+    <p th:inline="text"><strong>[[${projectInfo.getProjectName()}]]</strong> <!--/*([[${projectInfo.getVersion()}]])*/--></p>
 
     <span class="highlight">Description</span>
     <p th:inline="text">[[${projectInfo.getDescription()}]]</p>
